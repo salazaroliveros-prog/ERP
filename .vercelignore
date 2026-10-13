@@ -1,0 +1,13 @@
+.antigravity
+.antigravity/**
+.agents
+.agents/**
+*.pbtxt
+scratch
+scratch/**
+.git
+.git/**
+node_modules
+.next
+.vscode
+*.log
