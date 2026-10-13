@@ -5,6 +5,8 @@ import {
   doc,
   setDoc,
   deleteDoc,
+  getDoc,
+  getDocs,
   getDocFromServer,
   collection,
   query,
@@ -158,6 +160,37 @@ export async function deleteProjectFromFirestore(projectId: string) {
     return false;
   }
 }
+
+export async function getProjectFromFirestore(projectId: string): Promise<Project | null> {
+  const path = `projects/${projectId}`;
+  try {
+    const docSnap = await getDoc(doc(db, 'projects', projectId));
+    if (docSnap.exists()) {
+      return docSnap.data() as Project;
+    }
+    return null;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.GET, path);
+    return null;
+  }
+}
+
+export async function getProjectsFromFirestore(userId: string): Promise<Project[]> {
+  const path = 'projects';
+  try {
+    const q = query(collection(db, path), where('ownerId', '==', userId));
+    const snapshot = await getDocs(q);
+    const list: Project[] = [];
+    snapshot.forEach((docSnap) => {
+      list.push(docSnap.data() as Project);
+    });
+    return list;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.LIST, path);
+    return [];
+  }
+}
+
 
 // 2. Field Visits & Inspections
 export async function saveFieldVisitToFirestore(visit: FieldVisit, userId: string) {

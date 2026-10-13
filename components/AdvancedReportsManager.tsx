@@ -651,7 +651,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
           <select
             value={selectedProjectId}
             onChange={(e) => setSelectedProjectId(e.target.value)}
-            className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-slate-50 text-slate-800 font-medium"
+            className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
           >
             {projects.map((p) => (
               <option key={p.id} value={p.id}>
@@ -666,7 +666,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
           <select
             value={reportType}
             onChange={(e) => setReportType(e.target.value as ReportType)}
-            className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-slate-50 text-slate-800 font-medium"
+            className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
           >
             <option value="consolidated">Informe Integral Consolidado (Proyecto + Gastos + Bitácoras)</option>
             <option value="project_summary">Resumen Ejecutivo & Avances Físicos</option>
@@ -680,7 +680,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-slate-50 text-slate-800 font-medium"
+            className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
           >
             <option value="all">Todas las Categorías ({expenses.length} gastos)</option>
             <option value="Materiales (Cementos, Hierro)">Materiales (Cementos, Hierro)</option>

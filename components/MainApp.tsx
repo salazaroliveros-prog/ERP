@@ -49,6 +49,7 @@ const GmailManager = lazy(() => import('@/components/GmailManager').then((m) => 
 const AiAssistantModal = lazy(() => import('@/components/AiAssistantModal').then((m) => ({ default: m.AiAssistantModal })));
 const CompanyBrandingModal = lazy(() => import('@/components/CompanyBrandingModal').then((m) => ({ default: m.CompanyBrandingModal })));
 const NotificationRemindersModal = lazy(() => import('@/components/NotificationRemindersModal').then((m) => ({ default: m.NotificationRemindersModal })));
+const BilateralValidationModal = lazy(() => import('@/components/BilateralValidationModal').then((m) => ({ default: m.BilateralValidationModal })));
 import {
   playNotificationChime,
   checkProjectBudgetAndMargin,
@@ -96,10 +97,13 @@ import {
 import {
   saveOfflineData,
   loadOfflineData,
+  getLocalProjects,
+  saveLocalProjects,
   addOfflineAction,
   processOfflineQueue,
   registerServiceWorker,
 } from '@/lib/offlineStorage';
+import '@/lib/projectValidationScript';
 import { User } from 'firebase/auth';
 import { Sparkles, RotateCcw } from 'lucide-react';
 import {
@@ -111,7 +115,14 @@ import {
 
 export default function MainApp() {
   const [company, setCompany] = useState<CompanySettings>(initialCompanySettings);
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
+  const [projects, setProjects] = useState<Project[]>(() => {
+    if (typeof window !== 'undefined') {
+      const local = getLocalProjects();
+      if (local && local.length > 0) return local;
+      saveLocalProjects(initialProjects);
+    }
+    return initialProjects;
+  });
   const [activeProjectId, setActiveProjectId] = useState<string>('p1');
   const activeProject = projects.find((p) => p.id === activeProjectId) || projects[0];
   const [activeTab, setActiveTab] = useState<string>('dashboard');
@@ -140,7 +151,27 @@ export default function MainApp() {
 
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [isBrandingModalOpen, setIsBrandingModalOpen] = useState(false);
+  const [isValidationModalOpen, setIsValidationModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  // Sincronización bilateral continua: Persistir cambios de proyectos a DB Local
+  useEffect(() => {
+    if (projects && projects.length > 0) {
+      saveLocalProjects(projects);
+    }
+  }, [projects]);
+
+  // Escuchar eventos globales de sincronización desde consola o script de validación
+  useEffect(() => {
+    const handleExternalProjectsUpdate = () => {
+      const local = getLocalProjects();
+      if (local && local.length > 0) {
+        setProjects(local);
+      }
+    };
+    window.addEventListener('constructerp_projects_updated', handleExternalProjectsUpdate);
+    return () => window.removeEventListener('constructerp_projects_updated', handleExternalProjectsUpdate);
+  }, []);
 
   useEffect(() => {
     // Cargar marca y logotipo guardados en LocalStorage inmediatamente
@@ -172,6 +203,7 @@ export default function MainApp() {
     const unsubProjects = subscribeProjects(uid, (remoteProjects) => {
       if (remoteProjects && remoteProjects.length > 0) {
         setProjects(remoteProjects);
+        saveLocalProjects(remoteProjects);
       }
     });
 
@@ -395,7 +427,11 @@ export default function MainApp() {
   }, []);
 
   const handleAddProject = (p: Project) => {
-    setProjects((prev) => [p, ...prev]);
+    setProjects((prev) => {
+      const updated = [p, ...prev.filter((item) => item.id !== p.id)];
+      saveLocalProjects(updated);
+      return updated;
+    });
     setActiveProjectId(p.id);
     addOfflineAction('project', p, `Creación de proyecto: ${p.name}`);
     if (currentUser?.uid) {
@@ -404,7 +440,11 @@ export default function MainApp() {
   };
 
   const handleUpdateProject = (p: Project) => {
-    setProjects((prev) => prev.map((item) => (item.id === p.id ? p : item)));
+    setProjects((prev) => {
+      const updated = prev.map((item) => (item.id === p.id ? p : item));
+      saveLocalProjects(updated);
+      return updated;
+    });
     addOfflineAction('project', p, `Actualización de proyecto: ${p.name}`);
     if (currentUser?.uid) {
       saveProjectToFirestore(p, currentUser.uid).catch((err) => console.error(err));
@@ -413,7 +453,11 @@ export default function MainApp() {
   };
 
   const handleDeleteProject = (id: string) => {
-    setProjects((prev) => prev.filter((item) => item.id !== id));
+    setProjects((prev) => {
+      const updated = prev.filter((item) => item.id !== id);
+      saveLocalProjects(updated);
+      return updated;
+    });
     addOfflineAction('project_delete', { id }, `Eliminación de proyecto ID: ${id}`);
     if (currentUser?.uid) {
       deleteProjectFromFirestore(id).catch((err) => console.error(err));
@@ -761,6 +805,7 @@ export default function MainApp() {
         onToggleCurrency={() => setCurrency(currency === 'GTQ' ? 'USD' : 'GTQ')}
         onOpenAiAssistant={() => setIsAiModalOpen(true)}
         onOpenBranding={() => setIsBrandingModalOpen(true)}
+        onOpenBilateralValidation={() => setIsValidationModalOpen(true)}
         onQuickAction={(act) => {
           if (act === 'ai') setIsAiModalOpen(true);
         }}
@@ -855,6 +900,7 @@ export default function MainApp() {
               onAddProject={handleAddProject}
               onUpdateProject={handleUpdateProject}
               onDeleteProject={handleDeleteProject}
+              onOpenBilateralValidation={() => setIsValidationModalOpen(true)}
               fieldVisits={fieldVisits}
               onAddFieldVisit={handleAddFieldVisit}
               onUpdateFieldVisit={handleUpdateFieldVisit}
@@ -1007,6 +1053,12 @@ export default function MainApp() {
           onToggleReminder={handleToggleReminder}
           onDeleteReminder={handleDeleteReminder}
           onTriggerTestNotification={handleTriggerToast}
+        />
+        <BilateralValidationModal
+          isOpen={isValidationModalOpen}
+          onClose={() => setIsValidationModalOpen(false)}
+          onProjectsUpdated={(updatedList) => setProjects(updatedList)}
+          userId={currentUser?.uid}
         />
       </Suspense>
 

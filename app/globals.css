@@ -172,6 +172,80 @@
 }
 
 /* ==========================================================================
+   INPUT CONTRAST SYSTEM (HIGH VISIBILITY & CONTRAST IN ALL FORMS)
+   ========================================================================== */
+/* Inputs inside light containers (bg-white, bg-slate-50, bg-slate-100) MUST have sharp dark text */
+.bg-white input,
+.bg-white textarea,
+.bg-white select,
+.bg-slate-50 input,
+.bg-slate-50 textarea,
+.bg-slate-50 select,
+.bg-slate-100 input,
+.bg-slate-100 textarea,
+.bg-slate-100 select,
+input.bg-slate-50,
+input.bg-white,
+textarea.bg-slate-50,
+textarea.bg-white,
+select.bg-slate-50,
+select.bg-white {
+  color: #0f172a !important;
+  background-color: #ffffff;
+  border-color: #cbd5e1;
+}
+
+.bg-white input::placeholder,
+.bg-white textarea::placeholder,
+.bg-slate-50 input::placeholder,
+.bg-slate-50 textarea::placeholder,
+.bg-slate-100 input::placeholder,
+.bg-slate-100 textarea::placeholder,
+input.bg-slate-50::placeholder,
+input.bg-white::placeholder,
+textarea.bg-slate-50::placeholder,
+textarea.bg-white::placeholder {
+  color: #64748b !important;
+  opacity: 1;
+}
+
+/* Focused input styling in light containers */
+.bg-white input:focus,
+.bg-white textarea:focus,
+.bg-white select:focus,
+.bg-slate-50 input:focus,
+.bg-slate-50 textarea:focus,
+.bg-slate-50 select:focus,
+input.bg-slate-50:focus,
+input.bg-white:focus,
+textarea.bg-slate-50:focus,
+textarea.bg-white:focus {
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+  border-color: #2563eb !important;
+  outline: 2px solid rgba(37, 99, 235, 0.25) !important;
+}
+
+/* Dark mode inputs retain crisp white text */
+.bg-slate-900 input,
+.bg-slate-900 textarea,
+.bg-slate-900 select,
+.bg-slate-950 input,
+.bg-slate-950 textarea,
+.bg-slate-950 select,
+input.bg-slate-800,
+input.bg-slate-900,
+input.bg-slate-950,
+textarea.bg-slate-800,
+textarea.bg-slate-900,
+textarea.bg-slate-950,
+select.bg-slate-800,
+select.bg-slate-900,
+select.bg-slate-950 {
+  color: #f8fafc !important;
+}
+
+/* ==========================================================================
    PRINT ENGINE STYLES (CARTA / OFICIO / A4)
    ========================================================================== */
 @media print {

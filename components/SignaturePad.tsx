@@ -265,7 +265,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
             value={signerName}
             onChange={(e) => setSignerName(e.target.value)}
             placeholder="Ej. Don Mario Cifuentes"
-            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
             required
           />
         </div>
@@ -278,7 +278,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
             value={signerDpi}
             onChange={(e) => setSignerDpi(e.target.value)}
             placeholder="XXXX XXXXX XXXX"
-            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-mono font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none text-xs"
             required
           />
         </div>
@@ -291,7 +291,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
           value={signerRole}
           onChange={(e) => setSignerRole(e.target.value)}
           placeholder="Ej. Capataz General de Obra"
-          className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
         />
       </div>
 

@@ -26,6 +26,7 @@ import {
   LocateFixed,
   ExternalLink,
   Edit2,
+  ArrowRightLeft,
 } from 'lucide-react';
 import { Project, FieldVisit, FieldPhoto, CompanySettings, MachineryLog, ExpenseRecord, AttendanceRecord } from '@/lib/types';
 import { formatGTQ, formatUSD } from '@/lib/data';
@@ -44,6 +45,7 @@ interface ProjectsAndVisitsProps {
   onAddProject: (project: Project) => void;
   onUpdateProject?: (project: Project) => void;
   onDeleteProject?: (id: string) => void;
+  onOpenBilateralValidation?: () => void;
   fieldVisits: FieldVisit[];
   onAddFieldVisit: (visit: FieldVisit) => void;
   onUpdateFieldVisit?: (visit: FieldVisit) => void;
@@ -63,6 +65,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
   onAddProject,
   onUpdateProject,
   onDeleteProject,
+  onOpenBilateralValidation,
   fieldVisits,
   onAddFieldVisit,
   onUpdateFieldVisit,
@@ -397,12 +400,23 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
           </div>
 
           {activeSubTab === 'proyectos' ? (
-            <button
-              onClick={() => setIsNewProjectModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-sky-400 hover:bg-sky-300 text-slate-950 font-bold text-xs transition shadow-sm cursor-pointer"
-            >
-              <Plus className="w-4 h-4" /> Nuevo Proyecto
-            </button>
+            <div className="flex items-center gap-2">
+              {onOpenBilateralValidation && (
+                <button
+                  onClick={onOpenBilateralValidation}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600/90 hover:bg-indigo-500 text-white font-bold text-xs transition shadow-sm border border-indigo-400/30 cursor-pointer active:scale-95"
+                  title="Validador Bilateral de Base de Datos Local y Firestore"
+                >
+                  <ArrowRightLeft className="w-4 h-4" /> Validar DB Bilateral
+                </button>
+              )}
+              <button
+                onClick={() => setIsNewProjectModalOpen(true)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-sky-400 hover:bg-sky-300 text-slate-950 font-bold text-xs transition shadow-sm cursor-pointer"
+              >
+                <Plus className="w-4 h-4" /> Nuevo Proyecto
+              </button>
+            </div>
           ) : (
             <button
               onClick={() => {
@@ -798,7 +812,8 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   type="text"
                   value={newCode}
                   onChange={(e) => setNewCode(e.target.value)}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  placeholder="Ej. OBRA-001"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -809,7 +824,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   placeholder="Ej. Edificio Comercial Zona 10"
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -820,7 +835,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   value={newClient}
                   onChange={(e) => setNewClient(e.target.value)}
                   placeholder="Ej. Inmobiliaria Constructiva, S.A."
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                 />
               </div>
               <div>
@@ -830,7 +845,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   value={newLocation}
                   onChange={(e) => setNewLocation(e.target.value)}
                   placeholder="Ej. 4a Avenida 10-21 Zona 14"
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                 />
               </div>
               <div>
@@ -839,7 +854,8 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   type="number"
                   value={newBudget}
                   onChange={(e) => setNewBudget(e.target.value)}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  placeholder="0.00"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-bold placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -893,7 +909,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   <select
                     value={visitWeather}
                     onChange={(e: any) => setVisitWeather(e.target.value)}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                   >
                     <option value="Soleado">Soleado</option>
                     <option value="Nublado">Nublado</option>
@@ -907,7 +923,8 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                     type="number"
                     value={visitWorkersCount}
                     onChange={(e) => setVisitWorkersCount(e.target.value)}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    placeholder="0"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   />
                 </div>
               </div>
@@ -979,7 +996,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   value={visitNotes}
                   onChange={(e) => setVisitNotes(e.target.value)}
                   placeholder="Describa avances de fundición, recepción de materiales, inspección estructural o incidentes..."
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
                   required
                 />
               </div>
@@ -1173,7 +1190,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   type="text"
                   value={editingProject.code}
                   onChange={(e) => setEditingProject({ ...editingProject, code: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -1183,7 +1200,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   type="text"
                   value={editingProject.name}
                   onChange={(e) => setEditingProject({ ...editingProject, name: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -1193,7 +1210,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   type="text"
                   value={editingProject.client}
                   onChange={(e) => setEditingProject({ ...editingProject, client: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                 />
               </div>
               <div>
@@ -1202,7 +1219,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   type="text"
                   value={editingProject.location}
                   onChange={(e) => setEditingProject({ ...editingProject, location: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -1212,7 +1229,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                     type="number"
                     value={editingProject.budgetTotal}
                     onChange={(e) => setEditingProject({ ...editingProject, budgetTotal: Number(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-bold placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -1224,7 +1241,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                     max="100"
                     value={editingProject.progressPercent}
                     onChange={(e) => setEditingProject({ ...editingProject, progressPercent: Number(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-bold placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -1234,7 +1251,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                 <select
                   value={editingProject.status}
                   onChange={(e: any) => setEditingProject({ ...editingProject, status: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                 >
                   <option value="En Ejecución">En Ejecución</option>
                   <option value="Planificación">Planificación</option>
@@ -1279,7 +1296,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   type="text"
                   value={editingVisit.foremanName}
                   onChange={(e) => setEditingVisit({ ...editingVisit, foremanName: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -1289,7 +1306,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   <select
                     value={editingVisit.weather}
                     onChange={(e: any) => setEditingVisit({ ...editingVisit, weather: e.target.value })}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                   >
                     <option value="Soleado">Soleado</option>
                     <option value="Nublado">Nublado</option>
@@ -1303,7 +1320,8 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                     type="number"
                     value={editingVisit.workersCount}
                     onChange={(e) => setEditingVisit({ ...editingVisit, workersCount: Number(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    placeholder="0"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   />
                 </div>
               </div>
@@ -1313,7 +1331,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   rows={4}
                   value={editingVisit.notes}
                   onChange={(e) => setEditingVisit({ ...editingVisit, notes: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>

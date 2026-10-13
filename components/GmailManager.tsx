@@ -23,15 +23,15 @@ export const GmailManager: React.FC<GmailManagerProps> = ({ company }) => {
         <div className="space-y-3 text-xs">
           <div>
             <label className="block font-semibold text-slate-700 mb-1">Para (Correo Destino)</label>
-            <input type="email" placeholder="inversionistas@constructora.com" className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-slate-50" />
+            <input type="email" placeholder="inversionistas@constructora.com" className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none" />
           </div>
           <div>
             <label className="block font-semibold text-slate-700 mb-1">Asunto</label>
-            <input type="text" defaultValue="Informe Quincenal de Avance y Bitácora Firmada - ConstructERP Guatemala" className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-slate-50" />
+            <input type="text" defaultValue="Informe Quincenal de Avance y Bitácora Firmada - ConstructERP Guatemala" className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none" />
           </div>
           <div>
             <label className="block font-semibold text-slate-700 mb-1">Mensaje</label>
-            <textarea rows={4} defaultValue="Estimados señores, adjuntamos el informe consolidado con las firmas digitales de los capataces de obra." className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-slate-50" />
+            <textarea rows={4} defaultValue="Estimados señores, adjuntamos el informe consolidado con las firmas digitales de los capataces de obra." className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none" />
           </div>
           <button onClick={() => alert('¡Correo y reporte enviado con éxito a través del servidor!')} className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition cursor-pointer">
             <Send className="w-4 h-4" /> Enviar Correo

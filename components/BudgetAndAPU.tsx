@@ -549,7 +549,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                     value={aiPrompt}
                     onChange={(e) => setAiPrompt(e.target.value)}
                     placeholder="Ej. Muro perimetral de block 14x19x39 de 50 kg/cm² con solera intermedia y columnas de amarre..."
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 font-medium"
                     required
                   />
                 </div>
@@ -577,7 +577,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                     <select
                       value={aiUnit}
                       onChange={(e) => setAiUnit(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-slate-50"
+                      className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:bg-white"
                     >
                       <option value="m²">m² (Metro cuadrado)</option>
                       <option value="m³">m³ (Metro cúbico)</option>
@@ -594,7 +594,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                       type="number"
                       value={aiQty}
                       onChange={(e) => setAiQty(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-slate-50"
+                      className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-bold focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
                       required
                     />
                   </div>
@@ -829,7 +829,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                   value={marketSearchQuery}
                   onChange={(e) => setMarketSearchQuery(e.target.value)}
                   placeholder="Buscar insumo (ej. cemento, hierro, arena, block)..."
-                  className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-300 bg-white"
+                  className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 font-medium"
                 />
               </div>
 
@@ -978,7 +978,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                     type="text"
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-mono font-bold focus:bg-white focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -988,7 +988,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                     type="text"
                     value={unit}
                     onChange={(e) => setUnit(e.target.value)}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:bg-white focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -1001,7 +1001,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}
                   placeholder="Ej. Zapata de concreto f'c=280 kg/cm²"
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -1013,7 +1013,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                     type="number"
                     value={qty}
                     onChange={(e) => setQty(e.target.value)}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-bold focus:bg-white focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -1023,7 +1023,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                     type="number"
                     value={matCost}
                     onChange={(e) => setMatCost(e.target.value)}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-mono font-bold focus:bg-white focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -1036,7 +1036,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                     type="number"
                     value={labCost}
                     onChange={(e) => setLabCost(e.target.value)}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-mono font-bold focus:bg-white focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -1046,7 +1046,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                     type="number"
                     value={eqCost}
                     onChange={(e) => setEqCost(e.target.value)}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-mono font-bold focus:bg-white focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>

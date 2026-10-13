@@ -738,7 +738,7 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
                   type="text"
                   value={pmName}
                   onChange={(e) => setPmName(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-slate-50 focus:bg-white"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -753,7 +753,7 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
                   onChange={(e) => setApprovalNote(e.target.value)}
                   placeholder="Ej. Verificado físicamente contra entrega en obra y renglón APU correspondiente."
                   rows={3}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-slate-50 focus:bg-white resize-none"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:outline-none resize-none"
                 />
               </div>
 
@@ -889,7 +889,7 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
                 <select
                   value={category}
                   onChange={(e: any) => setCategory(e.target.value)}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                 >
                   <option value="Materiales (Cementos, Hierro)">Materiales (Cementos, Hierro)</option>
                   <option value="Mano de Obra">Mano de Obra</option>
@@ -920,7 +920,7 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
                       });
                     }
                   }}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 font-medium"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                 >
                   {budgetItems.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -938,7 +938,7 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
                     value={supplier}
                     onChange={(e) => setSupplier(e.target.value)}
                     placeholder="Ej. Discosa S.A."
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -949,7 +949,7 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
                     value={nit}
                     onChange={(e) => setNit(e.target.value)}
                     placeholder="Ej. 1294821-9"
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -963,7 +963,7 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
                     value={factura}
                     onChange={(e) => setFactura(e.target.value)}
                     placeholder="Ej. A-49201"
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -986,7 +986,7 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
                         });
                       }
                     }}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 font-bold"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-bold placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -999,7 +999,7 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}
                   placeholder="Ej. Compra de 250 bolsas de Cemento Progreso"
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>

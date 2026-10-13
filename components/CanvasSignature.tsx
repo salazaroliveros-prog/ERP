@@ -302,7 +302,7 @@ export const CanvasSignature: React.FC<CanvasSignatureProps> = ({
                 value={signerName}
                 onChange={(e) => setSignerName(e.target.value)}
                 placeholder="Don Mario Cifuentes"
-                className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 font-medium"
+                className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                 required
               />
               <UserCheck className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
@@ -317,7 +317,7 @@ export const CanvasSignature: React.FC<CanvasSignatureProps> = ({
               value={signerDpi}
               onChange={(e) => setSignerDpi(e.target.value)}
               placeholder="2489 10293 0101"
-              className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 font-medium font-mono"
+              className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-medium font-mono placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
             />
           </div>
         </div>

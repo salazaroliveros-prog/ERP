@@ -181,7 +181,8 @@ export const FieldVisit: React.FC<FieldVisitProps> = ({
                 type="text"
                 value={newForeman}
                 onChange={(e) => setNewForeman(e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white"
+                placeholder="Ej. Pedro Gómez"
+                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                 required
               />
             </div>
@@ -191,7 +192,8 @@ export const FieldVisit: React.FC<FieldVisitProps> = ({
                 type="text"
                 value={newDpi}
                 onChange={(e) => setNewDpi(e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white font-mono"
+                placeholder="Ej. 2489 19283 0101"
+                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-mono font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                 required
               />
             </div>
@@ -200,7 +202,7 @@ export const FieldVisit: React.FC<FieldVisitProps> = ({
               <select
                 value={newWeather}
                 onChange={(e) => setNewWeather(e.target.value as any)}
-                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white"
+                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
               >
                 <option value="Soleado">Soleado (Óptimo)</option>
                 <option value="Nublado">Nublado</option>
@@ -219,7 +221,7 @@ export const FieldVisit: React.FC<FieldVisitProps> = ({
               min="1"
               value={newWorkersCount}
               onChange={(e) => setNewWorkersCount(Number(e.target.value))}
-              className="w-full max-w-xs px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white"
+              className="w-full max-w-xs px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-bold focus:border-blue-600 focus:outline-none"
               required
             />
           </div>
@@ -233,7 +235,7 @@ export const FieldVisit: React.FC<FieldVisitProps> = ({
               value={newNotes}
               onChange={(e) => setNewNotes(e.target.value)}
               placeholder="Describa los frentes avanzados, fundiciones, recepción de materiales o incidencias del día..."
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
               required
             />
           </div>

@@ -518,7 +518,7 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
                       ? 'Ej. Factura FEL de Cemento Progreso #A-49201'
                       : 'Ej. Fundición y armado de columnas eje 4-C'
                   }
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-blue-600"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                 />
               </div>
 

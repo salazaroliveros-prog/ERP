@@ -419,7 +419,7 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                         }
                       }
                     }}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-slate-50 text-slate-800 font-medium"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                   >
                     {projects.map((p) => (
                       <option key={p.id} value={p.id}>
@@ -441,7 +441,7 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                   <select
                     value={selectedEmployeeId}
                     onChange={(e) => setSelectedEmployeeId(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-slate-50 text-slate-800 font-medium"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                   >
                     {employees.map((emp) => (
                       <option key={emp.id} value={emp.id}>
@@ -459,7 +459,7 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                       type="date"
                       value={attendanceDate}
                       onChange={(e) => setAttendanceDate(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-slate-50 text-slate-800"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                       required
                     />
                   </div>
@@ -472,7 +472,7 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                       max="12"
                       value={overtimeHours}
                       onChange={(e) => setOvertimeHours(Number(e.target.value))}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-slate-50 text-slate-800"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900 font-bold focus:border-blue-600 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -483,7 +483,7 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                   <select
                     value={status}
                     onChange={(e: any) => setStatus(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-slate-50 text-slate-800 font-medium"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                   >
                     <option value="Presente">Presente en Sitio</option>
                     <option value="Ausente">Ausente / Inasistencia</option>
@@ -640,7 +640,7 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                   <select
                     value={historyProjectFilter}
                     onChange={(e) => setHistoryProjectFilter(e.target.value)}
-                    className="px-2.5 py-1 text-xs rounded-lg border border-slate-300 bg-slate-50 text-slate-800"
+                    className="px-2.5 py-1 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                   >
                     <option value="all">Todos los Proyectos</option>
                     {projects.map((p) => (
@@ -833,7 +833,7 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ej. Juan Carlos Tumax"
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -843,7 +843,7 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                   <select
                     value={role}
                     onChange={(e: any) => setRole(e.target.value)}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                   >
                     <option value="Capataz">Capataz</option>
                     <option value="Albañil">Albañil</option>
@@ -859,7 +859,8 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                     type="number"
                     value={rate}
                     onChange={(e) => setRate(e.target.value)}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    placeholder="0.00"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-bold placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -870,7 +871,8 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                   type="text"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  placeholder="Ej. +502 5555-4444"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                 />
               </div>
               <div className="pt-2 flex justify-end gap-2">
@@ -922,7 +924,7 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                   type="text"
                   value={editingEmployee.name}
                   onChange={(e) => setEditingEmployee({ ...editingEmployee, name: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -932,7 +934,7 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                   <select
                     value={editingEmployee.role}
                     onChange={(e: any) => setEditingEmployee({ ...editingEmployee, role: e.target.value })}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                   >
                     <option value="Capataz">Capataz</option>
                     <option value="Albañil">Albañil</option>
@@ -948,7 +950,7 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                     type="number"
                     value={editingEmployee.dailyRateGTQ}
                     onChange={(e) => setEditingEmployee({ ...editingEmployee, dailyRateGTQ: Number(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-bold placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -959,7 +961,8 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                   type="text"
                   value={editingEmployee.phone}
                   onChange={(e) => setEditingEmployee({ ...editingEmployee, phone: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  placeholder="Ej. +502 5555-4444"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                 />
               </div>
               <div className="flex items-center gap-2 pt-1">

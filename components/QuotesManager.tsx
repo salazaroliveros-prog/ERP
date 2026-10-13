@@ -184,7 +184,7 @@ export const QuotesManager: React.FC<QuotesManagerProps> = ({
                   value={clientName}
                   onChange={(e) => setClientName(e.target.value)}
                   placeholder="Ej. Inmobiliaria El Bosque, S.A."
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -195,7 +195,7 @@ export const QuotesManager: React.FC<QuotesManagerProps> = ({
                   value={clientNit}
                   onChange={(e) => setClientNit(e.target.value)}
                   placeholder="Ej. 5920182-3"
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                 />
               </div>
               <div>
@@ -204,7 +204,8 @@ export const QuotesManager: React.FC<QuotesManagerProps> = ({
                   type="number"
                   value={total}
                   onChange={(e) => setTotal(e.target.value)}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  placeholder="0.00"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-bold placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -243,7 +244,7 @@ export const QuotesManager: React.FC<QuotesManagerProps> = ({
                   type="text"
                   value={editingQuote.clientName}
                   onChange={(e) => setEditingQuote({ ...editingQuote, clientName: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -253,7 +254,7 @@ export const QuotesManager: React.FC<QuotesManagerProps> = ({
                   type="text"
                   value={editingQuote.clientNit}
                   onChange={(e) => setEditingQuote({ ...editingQuote, clientNit: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -263,7 +264,7 @@ export const QuotesManager: React.FC<QuotesManagerProps> = ({
                     type="number"
                     value={editingQuote.totalGTQ}
                     onChange={(e) => setEditingQuote({ ...editingQuote, totalGTQ: Number(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-bold placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -272,7 +273,7 @@ export const QuotesManager: React.FC<QuotesManagerProps> = ({
                   <select
                     value={editingQuote.status}
                     onChange={(e: any) => setEditingQuote({ ...editingQuote, status: e.target.value })}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                   >
                     <option value="Borrador">Borrador</option>
                     <option value="Enviada">Enviada</option>

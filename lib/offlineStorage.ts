@@ -22,6 +22,42 @@ export function loadOfflineData<T>(key: string, fallback: T): T {
   }
 }
 
+// -------------------------------------------------------------
+// Dedicated Local Storage DB Helpers for Projects
+// -------------------------------------------------------------
+
+export function getLocalProjects(): Project[] {
+  return loadOfflineData<Project[]>('projects', []);
+}
+
+export function saveLocalProjects(projects: Project[]): void {
+  saveOfflineData('projects', projects);
+}
+
+export function saveLocalProject(project: Project): void {
+  const current = getLocalProjects();
+  const index = current.findIndex((p) => p.id === project.id);
+  let updated: Project[];
+  if (index >= 0) {
+    updated = current.map((p) => (p.id === project.id ? project : p));
+  } else {
+    updated = [project, ...current];
+  }
+  saveLocalProjects(updated);
+}
+
+export function getLocalProject(id: string): Project | undefined {
+  const current = getLocalProjects();
+  return current.find((p) => p.id === id);
+}
+
+export function deleteLocalProject(id: string): void {
+  const current = getLocalProjects();
+  const updated = current.filter((p) => p.id !== id);
+  saveLocalProjects(updated);
+}
+
+
 export function getOfflineQueue(): OfflineQueueItem[] {
   return loadOfflineData<OfflineQueueItem[]>('offline_queue', []);
 }

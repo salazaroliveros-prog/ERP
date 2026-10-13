@@ -226,7 +226,7 @@ export const FieldPhotoGallery: React.FC<FieldPhotoGalleryProps> = ({
             <select
               value={selectedFilterVisit}
               onChange={(e) => setSelectedFilterVisit(e.target.value)}
-              className="text-xs px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 text-slate-700 font-medium"
+              className="text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
             >
               <option value="all">Todas las Bitácoras ({allPhotos.length} fotos)</option>
               {projectVisits.map((v) => (
@@ -439,7 +439,7 @@ export const FieldPhotoGallery: React.FC<FieldPhotoGalleryProps> = ({
                   <select
                     value={selectedVisitId}
                     onChange={(e) => setSelectedVisitId(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                   >
                     {projectVisits.map((v) => (
                       <option key={v.id} value={v.id}>
@@ -456,7 +456,7 @@ export const FieldPhotoGallery: React.FC<FieldPhotoGalleryProps> = ({
                     value={caption}
                     onChange={(e) => setCaption(e.target.value)}
                     placeholder="Ej. Armado de acero en columna C-14, nivel 4"
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   />
                 </div>
 
@@ -466,7 +466,8 @@ export const FieldPhotoGallery: React.FC<FieldPhotoGalleryProps> = ({
                     type="text"
                     value={takenByName}
                     onChange={(e) => setTakenByName(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white"
+                    placeholder="Ej. Ing. Carlos Barrios"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   />
                 </div>
               </div>

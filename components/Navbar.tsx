@@ -25,6 +25,8 @@ import {
   ChevronDown,
   Bell,
   Sliders,
+  ArrowRightLeft,
+  Database,
 } from 'lucide-react';
 import { CompanySettings, Project } from '@/lib/types';
 import { User } from 'firebase/auth';
@@ -40,6 +42,7 @@ interface NavbarProps {
   onToggleCurrency: () => void;
   onOpenAiAssistant: () => void;
   onOpenBranding: () => void;
+  onOpenBilateralValidation?: () => void;
   onQuickAction: (action: string) => void;
   isFocusMode: boolean;
   onToggleFocusMode: () => void;
@@ -65,6 +68,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleCurrency,
   onOpenAiAssistant,
   onOpenBranding,
+  onOpenBilateralValidation,
   currentUser,
   onSignIn,
   onSignOut,
@@ -176,6 +180,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
 
+          {onOpenBilateralValidation && (
+            <button
+              onClick={onOpenBilateralValidation}
+              className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 hover:text-white text-xs font-semibold transition cursor-pointer"
+              title="Validador Bilateral de Base de Datos Local y Firestore"
+            >
+              <ArrowRightLeft className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Validar DB Bilateral</span>
+            </button>
+          )}
+
           <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 font-mono">
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#4ade80]"></span>
@@ -265,6 +280,19 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Sparkles className="w-4 h-4 text-amber-300" />
                 <span>Gemini IA Asistente</span>
               </button>
+
+              {onOpenBilateralValidation && (
+                <button
+                  onClick={() => {
+                    onOpenBilateralValidation();
+                    if (onToggleMobileSidebar) onToggleMobileSidebar();
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-300 text-xs font-semibold cursor-pointer active:scale-95 transition"
+                >
+                  <ArrowRightLeft className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Validar DB Bilateral</span>
+                </button>
+              )}
 
               <div className="grid grid-cols-2 gap-2">
                 <button
@@ -433,6 +461,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Settings className="w-3.5 h-3.5 text-sky-400" />
               <span className="hidden md:inline">Logo & Empresa</span>
             </button>
+
+            {/* Bilateral DB Validation Button */}
+            {onOpenBilateralValidation && (
+              <button
+                onClick={onOpenBilateralValidation}
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/35 text-xs font-semibold text-indigo-300 hover:text-white transition cursor-pointer"
+                title="Validador Bilateral de Base de Datos Local y Firestore"
+              >
+                <ArrowRightLeft className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                <span className="hidden lg:inline">Validar DB Bilateral</span>
+              </button>
+            )}
 
 
             {/* User Pill with Status Dot */}

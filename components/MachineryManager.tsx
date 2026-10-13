@@ -145,7 +145,7 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ej. Excavadora CAT 320"
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -156,7 +156,8 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
                     type="text"
                     value={model}
                     onChange={(e) => setModel(e.target.value)}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    placeholder="Ej. 2021"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -165,7 +166,8 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
                     type="text"
                     value={plate}
                     onChange={(e) => setPlate(e.target.value)}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                    placeholder="Ej. C-184BKL"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   />
                 </div>
               </div>
@@ -175,7 +177,8 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
                   type="number"
                   value={rate}
                   onChange={(e) => setRate(e.target.value)}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50"
+                  placeholder="0.00"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-bold placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -214,7 +217,7 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
                   type="text"
                   value={editingItem.name}
                   onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   required
                 />
               </div>
@@ -225,7 +228,7 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
                     type="text"
                     value={editingItem.model}
                     onChange={(e) => setEditingItem({ ...editingItem, model: e.target.value })}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -234,7 +237,7 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
                     type="text"
                     value={editingItem.plateOrCode}
                     onChange={(e) => setEditingItem({ ...editingItem, plateOrCode: e.target.value })}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                   />
                 </div>
               </div>
@@ -245,7 +248,7 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
                     type="number"
                     value={editingItem.hourlyRateGTQ}
                     onChange={(e) => setEditingItem({ ...editingItem, hourlyRateGTQ: Number(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-bold placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                     required
                   />
                 </div>
@@ -254,7 +257,7 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
                   <select
                     value={editingItem.status}
                     onChange={(e: any) => setEditingItem({ ...editingItem, status: e.target.value })}
-                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium focus:border-blue-600 focus:outline-none"
                   >
                     <option value="Disponible">Disponible</option>
                     <option value="En Obra">En Obra</option>

@@ -366,7 +366,7 @@ export const GuatemalanPayrollValidator: React.FC<GuatemalanPayrollValidatorProp
               placeholder="Buscar colaborador, puesto o DPI..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-blue-500"
+              className="w-full pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 font-medium placeholder:text-slate-400 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
             />
           </div>
 
@@ -455,7 +455,7 @@ export const GuatemalanPayrollValidator: React.FC<GuatemalanPayrollValidatorProp
                         type="text"
                         value={editForm.name || ''}
                         onChange={(e) => setEditForm((prev) => ({ ...prev, name: e.target.value }))}
-                        className="w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs"
+                        className="w-full px-3 py-1.5 border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 rounded-xl text-xs focus:border-blue-600 focus:outline-none"
                       />
                     </div>
 
@@ -466,7 +466,7 @@ export const GuatemalanPayrollValidator: React.FC<GuatemalanPayrollValidatorProp
                         step="0.5"
                         value={editForm.dailyRateGTQ || 0}
                         onChange={(e) => setEditForm((prev) => ({ ...prev, dailyRateGTQ: Number(e.target.value) }))}
-                        className="w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs font-mono"
+                        className="w-full px-3 py-1.5 border border-slate-300 bg-white text-slate-900 font-bold font-mono rounded-xl text-xs focus:border-blue-600 focus:outline-none"
                       />
                       <span className="text-[10px] text-slate-400">
                         Mensual: {formatGTQ((editForm.dailyRateGTQ || 0) * 30)}
@@ -480,7 +480,7 @@ export const GuatemalanPayrollValidator: React.FC<GuatemalanPayrollValidatorProp
                         value={editForm.dpi || ''}
                         onChange={(e) => setEditForm((prev) => ({ ...prev, dpi: e.target.value }))}
                         placeholder="2489 10293 0101"
-                        className="w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs font-mono"
+                        className="w-full px-3 py-1.5 border border-slate-300 bg-white text-slate-900 font-mono font-medium placeholder:text-slate-400 rounded-xl text-xs focus:border-blue-600 focus:outline-none"
                       />
                     </div>
 
@@ -491,7 +491,7 @@ export const GuatemalanPayrollValidator: React.FC<GuatemalanPayrollValidatorProp
                         value={editForm.igssNumber || ''}
                         onChange={(e) => setEditForm((prev) => ({ ...prev, igssNumber: e.target.value }))}
                         placeholder="No. Carnet IGSS"
-                        className="w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs font-mono"
+                        className="w-full px-3 py-1.5 border border-slate-300 bg-white text-slate-900 font-mono font-medium placeholder:text-slate-400 rounded-xl text-xs focus:border-blue-600 focus:outline-none"
                       />
                     </div>
                   </div>
