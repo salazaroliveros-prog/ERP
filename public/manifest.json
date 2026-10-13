@@ -1,0 +1,27 @@
+{
+  "short_name": "ConstructERP",
+  "name": "ConstructERP Guatemala - Control de Obras y Bitácoras",
+  "description": "ERP integral para arquitectos y constructoras en Guatemala: control remoto de obras, presupuestos APU, planillas guatemaltecas (IGSS, Bono 14, Aguinaldo) y firma digital de capataces.",
+  "icons": [
+    {
+      "src": "/assets/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "theme_color": "#1e3a8a",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "es-GT",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "utilities"]
+}

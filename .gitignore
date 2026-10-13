@@ -1,0 +1,38 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Testing
+/coverage
+
+# Next.js build output
+/.next/
+/out/
+/dist/
+
+# Production
+/build
+
+# Misc
+.DS_Store
+*.pem
+
+# Local env files
+.env
+.env*.local
+
+# Vercel
+.vercel
+
+# Antigravity & Agents
+.antigravity/
+.agents/
+*.pbtxt
+scratch/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+

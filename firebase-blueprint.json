@@ -1,0 +1,132 @@
+{
+  "entities": {
+    "Project": {
+      "title": "Project",
+      "description": "A construction project tracked in ConstructERP Guatemala",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "code": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 200 },
+        "client": { "type": "string", "maxLength": 200 },
+        "location": { "type": "string", "maxLength": 300 },
+        "municipality": { "type": "string", "maxLength": 100 },
+        "department": { "type": "string", "maxLength": 100 },
+        "budgetTotal": { "type": "number" },
+        "spentTotal": { "type": "number" },
+        "progressPercent": { "type": "number" },
+        "startDate": { "type": "string", "maxLength": 30 },
+        "endDate": { "type": "string", "maxLength": 30 },
+        "status": { "type": "string", "enum": ["En Ejecución", "Planificación", "Finalizado", "Suspendido"] },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "ownerId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "code", "name", "client", "budgetTotal", "spentTotal", "status", "ownerId"]
+    },
+    "FieldVisit": {
+      "title": "FieldVisit",
+      "description": "Daily field log and foreman report with digital signature",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "projectId": { "type": "string", "maxLength": 128 },
+        "projectName": { "type": "string", "maxLength": 200 },
+        "date": { "type": "string", "maxLength": 30 },
+        "foremanName": { "type": "string", "maxLength": 150 },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "weather": { "type": "string", "enum": ["Soleado", "Lluvia Moderada", "Tormenta Fuerte", "Nublado"] },
+        "workersCount": { "type": "number" },
+        "status": { "type": "string", "enum": ["Autorizado", "Pendiente", "Revisión"] },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "accuracy": { "type": "number" },
+        "geofenceValid": { "type": "boolean" },
+        "geofenceDistanceMeters": { "type": "number" },
+        "gpsTimestamp": { "type": "string", "maxLength": 50 },
+        "signatureDataUrl": { "type": "string", "maxLength": 500000 },
+        "signerDpi": { "type": "string", "maxLength": 50 },
+        "signerRole": { "type": "string", "maxLength": 100 },
+        "signedAt": { "type": "string", "maxLength": 50 },
+        "authorId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "projectId", "projectName", "date", "foremanName", "status", "authorId"]
+    },
+    "Expense": {
+      "title": "Expense",
+      "description": "Construction expenditure item and invoice",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "projectId": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 30 },
+        "category": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 500 },
+        "supplier": { "type": "string", "maxLength": 200 },
+        "nitSupplier": { "type": "string", "maxLength": 50 },
+        "facturaNumber": { "type": "string", "maxLength": 50 },
+        "amount": { "type": "number" },
+        "currency": { "type": "string", "enum": ["GTQ", "USD"] },
+        "paymentMethod": { "type": "string", "maxLength": 50 },
+        "authorId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "projectId", "date", "category", "amount", "currency", "authorId"]
+    },
+    "Attendance": {
+      "title": "Attendance",
+      "description": "Field worker daily attendance and labor record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "projectId": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 30 },
+        "employeeId": { "type": "string", "maxLength": 128 },
+        "employeeName": { "type": "string", "maxLength": 150 },
+        "status": { "type": "string", "enum": ["Presente", "Ausente", "Permiso", "Incapacidad IGSS"] },
+        "overtimeHours": { "type": "number" },
+        "authorId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "projectId", "date", "employeeId", "employeeName", "status", "authorId"]
+    },
+    "CompanySettings": {
+      "title": "CompanySettings",
+      "description": "Company configuration and architectural branding settings",
+      "type": "object",
+      "properties": {
+        "legalName": { "type": "string", "maxLength": 250 },
+        "commercialName": { "type": "string", "maxLength": 250 },
+        "nit": { "type": "string", "maxLength": 50 },
+        "architectName": { "type": "string", "maxLength": 150 },
+        "architectColNumber": { "type": "string", "maxLength": 50 },
+        "address": { "type": "string", "maxLength": 300 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "email": { "type": "string", "maxLength": 100 },
+        "exchangeRate": { "type": "number" },
+        "ownerId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["legalName", "commercialName", "ownerId"]
+    }
+  },
+  "firestore": {
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Construction projects registered in Guatemala"
+    },
+    "/fieldVisits/{visitId}": {
+      "schema": "FieldVisit",
+      "description": "Daily field reports, foreman digital logs, and inspections"
+    },
+    "/expenses/{expenseId}": {
+      "schema": "Expense",
+      "description": "Construction expenses, receipts, and material invoices"
+    },
+    "/attendance/{attendanceId}": {
+      "schema": "Attendance",
+      "description": "Daily employee attendance and IGSS records"
+    },
+    "/companySettings/{settingId}": {
+      "schema": "CompanySettings",
+      "description": "Organization and firm branding configuration"
+    }
+  }
+}
