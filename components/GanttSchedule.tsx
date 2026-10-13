@@ -21,6 +21,7 @@ import {
   ChevronRight,
   Filter,
   RefreshCw,
+  Trash2,
 } from 'lucide-react';
 import { ScheduleTask, Project, Milestone, TaskReminder } from '@/lib/types';
 import { initialMilestones, initialTaskReminders } from '@/lib/data';
@@ -686,18 +687,34 @@ export const GanttSchedule: React.FC<GanttScheduleProps> = ({
                         <span>{isCompleted ? 'Completada' : 'Finalizar'}</span>
                       </button>
 
-                      <button
-                        onClick={() => {
-                          if (onOpenReminderModal) {
-                            onOpenReminderModal(t.id);
-                          }
-                        }}
-                        className="w-full px-3 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/20 text-amber-300 text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer"
-                        title="Programar recordatorio para esta tarea"
-                      >
-                        <Bell className="w-3.5 h-3.5" />
-                        <span>Recordatorio</span>
-                      </button>
+                      <div className="flex items-center gap-1.5 w-full">
+                        <button
+                          onClick={() => {
+                            if (onOpenReminderModal) {
+                              onOpenReminderModal(t.id);
+                            }
+                          }}
+                          className="flex-1 px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/20 text-amber-300 text-xs font-semibold transition flex items-center justify-center gap-1 cursor-pointer"
+                          title="Programar recordatorio para esta tarea"
+                        >
+                          <Bell className="w-3.5 h-3.5" />
+                          <span>Aviso</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (onUpdateTasks && window.confirm(`¿Eliminar la tarea cronograma "${t.name}"?`)) {
+                              const remaining = tasks.filter((x) => x.id !== t.id);
+                              onUpdateTasks(remaining);
+                            }
+                          }}
+                          className="p-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-400/20 text-rose-300 hover:text-rose-100 transition flex items-center justify-center cursor-pointer"
+                          title="Eliminar tarea"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

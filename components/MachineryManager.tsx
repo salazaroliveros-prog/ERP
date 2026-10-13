@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Truck, Plus, CheckCircle2 } from 'lucide-react';
+import { Truck, Plus, CheckCircle2, Edit2, Trash2, X } from 'lucide-react';
 import { Machinery, MachineryLog, Project, CompanySettings } from '@/lib/types';
 import { formatGTQ, formatUSD } from '@/lib/data';
 
@@ -11,6 +11,8 @@ interface MachineryManagerProps {
   projects: Project[];
   activeProjectId: string;
   onAddMachinery: (m: Machinery) => void;
+  onUpdateMachinery?: (m: Machinery) => void;
+  onDeleteMachinery?: (id: string) => void;
   currency: 'GTQ' | 'USD';
   company: CompanySettings;
 }
@@ -21,10 +23,13 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
   projects,
   activeProjectId,
   onAddMachinery,
+  onUpdateMachinery,
+  onDeleteMachinery,
   currency,
   company,
 }) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [editingItem, setEditingItem] = useState<Machinery | null>(null);
   const [name, setName] = useState('');
   const [model, setModel] = useState('2023');
   const [plate, setPlate] = useState('EQ-01');
@@ -53,6 +58,20 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
     setName('');
   };
 
+  const handleSaveEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingItem || !onUpdateMachinery) return;
+    onUpdateMachinery(editingItem);
+    setEditingItem(null);
+  };
+
+  const handleDelete = (id: string, machName: string) => {
+    if (!onDeleteMachinery) return;
+    if (window.confirm(`¿Está seguro de eliminar la maquinaria "${machName}"?`)) {
+      onDeleteMachinery(id);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
@@ -70,18 +89,38 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {machinery.map((mach) => (
-          <div key={mach.id} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-3">
-            <div className="flex items-start justify-between">
-              <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-blue-50 text-blue-700">
-                {mach.plateOrCode}
-              </span>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                {mach.status}
-              </span>
-            </div>
-            <div>
-              <h3 className="font-bold text-sm text-slate-900">{mach.name}</h3>
-              <p className="text-xs text-slate-500">Modelo: {mach.model}</p>
+          <div key={mach.id} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-3 flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="flex items-start justify-between">
+                <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-blue-50 text-blue-700">
+                  {mach.plateOrCode}
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    {mach.status}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setEditingItem(mach)}
+                    className="p-1 text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded transition cursor-pointer"
+                    title="Editar Maquinaria"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(mach.id, mach.name)}
+                    className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition cursor-pointer"
+                    title="Eliminar Maquinaria"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+              <div>
+                <h3 className="font-bold text-sm text-slate-900">{mach.name}</h3>
+                <p className="text-xs text-slate-500">Modelo: {mach.model}</p>
+              </div>
             </div>
             <div className="pt-2 border-t border-slate-100 flex justify-between items-center text-xs">
               <span className="text-slate-500">Tarifa / Hora:</span>
@@ -153,6 +192,89 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
                   className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm"
                 >
                   Guardar Maquinaria
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Machinery Modal */}
+      {editingItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
+            <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+              <h3 className="font-bold text-base">Editar Maquinaria / Equipo</h3>
+              <button onClick={() => setEditingItem(null)} className="text-slate-400 hover:text-white">✕</button>
+            </div>
+            <form onSubmit={handleSaveEdit} className="p-5 space-y-3">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Nombre / Equipo</label>
+                <input
+                  type="text"
+                  value={editingItem.name}
+                  onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Modelo / Año</label>
+                  <input
+                    type="text"
+                    value={editingItem.model}
+                    onChange={(e) => setEditingItem({ ...editingItem, model: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Código / Placa</label>
+                  <input
+                    type="text"
+                    value={editingItem.plateOrCode}
+                    onChange={(e) => setEditingItem({ ...editingItem, plateOrCode: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Tarifa / Hora (GTQ)</label>
+                  <input
+                    type="number"
+                    value={editingItem.hourlyRateGTQ}
+                    onChange={(e) => setEditingItem({ ...editingItem, hourlyRateGTQ: Number(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Estado</label>
+                  <select
+                    value={editingItem.status}
+                    onChange={(e: any) => setEditingItem({ ...editingItem, status: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  >
+                    <option value="Disponible">Disponible</option>
+                    <option value="En Obra">En Obra</option>
+                    <option value="Mantenimiento">Mantenimiento</option>
+                  </select>
+                </div>
+              </div>
+              <div className="pt-2 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingItem(null)}
+                  className="px-4 py-2 rounded-xl text-sm text-slate-700 bg-slate-100 hover:bg-slate-200"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm"
+                >
+                  Guardar Cambios
                 </button>
               </div>
             </form>

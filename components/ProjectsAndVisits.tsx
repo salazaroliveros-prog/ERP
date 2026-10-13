@@ -25,6 +25,7 @@ import {
   Radio,
   LocateFixed,
   ExternalLink,
+  Edit2,
 } from 'lucide-react';
 import { Project, FieldVisit, FieldPhoto, CompanySettings, MachineryLog, ExpenseRecord, AttendanceRecord } from '@/lib/types';
 import { formatGTQ, formatUSD } from '@/lib/data';
@@ -41,9 +42,12 @@ interface ProjectsAndVisitsProps {
   activeProjectId: string;
   onSelectProject: (id: string) => void;
   onAddProject: (project: Project) => void;
+  onUpdateProject?: (project: Project) => void;
+  onDeleteProject?: (id: string) => void;
   fieldVisits: FieldVisit[];
   onAddFieldVisit: (visit: FieldVisit) => void;
   onUpdateFieldVisit?: (visit: FieldVisit) => void;
+  onDeleteFieldVisit?: (id: string) => void;
   currency: 'GTQ' | 'USD';
   company: CompanySettings;
   expenses: ExpenseRecord[];
@@ -57,9 +61,12 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
   activeProjectId,
   onSelectProject,
   onAddProject,
+  onUpdateProject,
+  onDeleteProject,
   fieldVisits,
   onAddFieldVisit,
   onUpdateFieldVisit,
+  onDeleteFieldVisit,
   currency,
   company,
 }) => {
@@ -130,6 +137,12 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
     setTimeout(cleanup, 2500);
   };
 
+  // Edit Project state
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+
+  // Edit Field Visit state
+  const [editingVisit, setEditingVisit] = useState<FieldVisit | null>(null);
+
   const handleCreateProject = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName.trim()) return;
@@ -157,6 +170,34 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
     setNewName('');
     setNewClient('');
     setNewLocation('');
+  };
+
+  const handleSaveEditProject = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProject || !onUpdateProject) return;
+    onUpdateProject(editingProject);
+    setEditingProject(null);
+  };
+
+  const handleDeleteProjectClick = (pId: string, pName: string) => {
+    if (!onDeleteProject) return;
+    if (window.confirm(`¿Está seguro de eliminar el proyecto "${pName}"? Esta acción removerá el proyecto y sus datos asociados.`)) {
+      onDeleteProject(pId);
+    }
+  };
+
+  const handleDeleteVisitClick = (vId: string) => {
+    if (!onDeleteFieldVisit) return;
+    if (window.confirm('¿Está seguro de eliminar esta bitácora de obra?')) {
+      onDeleteFieldVisit(vId);
+    }
+  };
+
+  const handleSaveEditVisit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingVisit || !onUpdateFieldVisit) return;
+    onUpdateFieldVisit(editingVisit);
+    setEditingVisit(null);
   };
 
   const handleSaveSignature = (signatureResult: SignatureResult) => {
@@ -429,19 +470,37 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                   </div>
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between">
+                <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
                   <div>
                     <p className="text-[10px] text-slate-400">Presupuesto</p>
                     <p className="text-xs font-bold text-white">{formatMoney(proj.budgetTotal)}</p>
                   </div>
-                  <button
-                    onClick={() => onSelectProject(proj.id)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                      isSelected ? 'bg-sky-400 text-slate-950 shadow-sm' : 'bg-white/[0.08] hover:bg-white/[0.14] text-white border border-white/10'
-                    }`}
-                  >
-                    {isSelected ? 'Proyecto Activo' : 'Seleccionar'}
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setEditingProject(proj)}
+                      className="p-1.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.16] text-sky-300 hover:text-white transition cursor-pointer"
+                      title="Editar Proyecto"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteProjectClick(proj.id, proj.name)}
+                      className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 hover:text-rose-100 transition cursor-pointer"
+                      title="Eliminar Proyecto"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => onSelectProject(proj.id)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+                        isSelected ? 'bg-sky-400 text-slate-950 shadow-sm' : 'bg-white/[0.08] hover:bg-white/[0.14] text-white border border-white/10'
+                      }`}
+                    >
+                      {isSelected ? 'Activo' : 'Seleccionar'}
+                    </button>
+                  </div>
                 </div>
               </div>
             );
@@ -478,7 +537,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
                     <span
                       className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${
                         visit.status === 'Autorizado'
@@ -488,6 +547,22 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" /> {visit.status}
                     </span>
+                    <button
+                      type="button"
+                      onClick={() => setEditingVisit(visit)}
+                      className="p-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-sky-300 hover:text-white transition cursor-pointer"
+                      title="Editar Bitácora de Campo"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteVisitClick(visit.id)}
+                      className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 hover:text-rose-100 transition cursor-pointer"
+                      title="Eliminar Bitácora de Campo"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                     <button
                       onClick={handlePrintVisit}
                       className="p-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-slate-300 hover:text-white transition cursor-pointer"
@@ -1077,6 +1152,187 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
               )}
               <span>{lightboxPhoto.date} • {lightboxPhoto.takenBy}</span>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Project Modal */}
+      {editingProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
+            <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+              <h3 className="font-bold text-base">Editar Proyecto / Obra</h3>
+              <button onClick={() => setEditingProject(null)} className="text-slate-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <form onSubmit={handleSaveEditProject} className="p-5 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Código de Obra</label>
+                <input
+                  type="text"
+                  value={editingProject.code}
+                  onChange={(e) => setEditingProject({ ...editingProject, code: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Nombre del Proyecto</label>
+                <input
+                  type="text"
+                  value={editingProject.name}
+                  onChange={(e) => setEditingProject({ ...editingProject, name: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Cliente / Propietario</label>
+                <input
+                  type="text"
+                  value={editingProject.client}
+                  onChange={(e) => setEditingProject({ ...editingProject, client: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Dirección / Ubicación</label>
+                <input
+                  type="text"
+                  value={editingProject.location}
+                  onChange={(e) => setEditingProject({ ...editingProject, location: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Presupuesto Total (GTQ)</label>
+                  <input
+                    type="number"
+                    value={editingProject.budgetTotal}
+                    onChange={(e) => setEditingProject({ ...editingProject, budgetTotal: Number(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Avance Físico (%)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={editingProject.progressPercent}
+                    onChange={(e) => setEditingProject({ ...editingProject, progressPercent: Number(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Estado de Obra</label>
+                <select
+                  value={editingProject.status}
+                  onChange={(e: any) => setEditingProject({ ...editingProject, status: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                >
+                  <option value="En Ejecución">En Ejecución</option>
+                  <option value="Planificación">Planificación</option>
+                  <option value="Finalizado">Finalizado</option>
+                  <option value="Suspendido">Suspendido</option>
+                </select>
+              </div>
+              <div className="pt-2 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingProject(null)}
+                  className="px-4 py-2 rounded-xl text-sm text-slate-700 bg-slate-100 hover:bg-slate-200"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm"
+                >
+                  Guardar Cambios
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Field Visit Modal */}
+      {editingVisit && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
+            <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+              <h3 className="font-bold text-base">Editar Bitácora de Campo</h3>
+              <button onClick={() => setEditingVisit(null)} className="text-slate-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <form onSubmit={handleSaveEditVisit} className="p-5 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Capataz / Inspector</label>
+                <input
+                  type="text"
+                  value={editingVisit.foremanName}
+                  onChange={(e) => setEditingVisit({ ...editingVisit, foremanName: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Clima</label>
+                  <select
+                    value={editingVisit.weather}
+                    onChange={(e: any) => setEditingVisit({ ...editingVisit, weather: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  >
+                    <option value="Soleado">Soleado</option>
+                    <option value="Nublado">Nublado</option>
+                    <option value="Lluvia Moderada">Lluvia Moderada</option>
+                    <option value="Tormenta Fuerte">Tormenta Fuerte</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Obreros en Frente</label>
+                  <input
+                    type="number"
+                    value={editingVisit.workersCount}
+                    onChange={(e) => setEditingVisit({ ...editingVisit, workersCount: Number(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Observaciones / Novedades</label>
+                <textarea
+                  rows={4}
+                  value={editingVisit.notes}
+                  onChange={(e) => setEditingVisit({ ...editingVisit, notes: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  required
+                />
+              </div>
+              <div className="pt-2 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingVisit(null)}
+                  className="px-4 py-2 rounded-xl text-sm text-slate-700 bg-slate-100 hover:bg-slate-200"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm"
+                >
+                  Guardar Cambios
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

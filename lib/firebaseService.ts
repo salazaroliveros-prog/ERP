@@ -555,3 +555,118 @@ export function subscribeTaskReminders(userId: string, callback: (list: TaskRemi
   }
 }
 
+// -------------------------------------------------------------
+// Universal Deletion Helpers for Remote Firestore
+// -------------------------------------------------------------
+
+export async function deleteFieldVisitFromFirestore(visitId: string) {
+  const path = `fieldVisits/${visitId}`;
+  try {
+    await deleteDoc(doc(db, 'fieldVisits', visitId));
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.DELETE, path);
+    return false;
+  }
+}
+
+export async function deleteExpenseFromFirestore(expenseId: string) {
+  const path = `expenses/${expenseId}`;
+  try {
+    await deleteDoc(doc(db, 'expenses', expenseId));
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.DELETE, path);
+    return false;
+  }
+}
+
+export async function deleteAttendanceFromFirestore(recordId: string) {
+  const path = `attendance/${recordId}`;
+  try {
+    await deleteDoc(doc(db, 'attendance', recordId));
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.DELETE, path);
+    return false;
+  }
+}
+
+export async function deleteMachineryFromFirestore(machineryId: string) {
+  const path = `machinery/${machineryId}`;
+  try {
+    await deleteDoc(doc(db, 'machinery', machineryId));
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.DELETE, path);
+    return false;
+  }
+}
+
+export async function deleteEmployeeFromFirestore(employeeId: string) {
+  const path = `employees/${employeeId}`;
+  try {
+    await deleteDoc(doc(db, 'employees', employeeId));
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.DELETE, path);
+    return false;
+  }
+}
+
+export async function deleteQuoteFromFirestore(quoteId: string) {
+  const path = `quotes/${quoteId}`;
+  try {
+    await deleteDoc(doc(db, 'quotes', quoteId));
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.DELETE, path);
+    return false;
+  }
+}
+
+export async function deleteAPUItemFromFirestore(apuId: string) {
+  const path = `apuItems/${apuId}`;
+  try {
+    await deleteDoc(doc(db, 'apuItems', apuId));
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.DELETE, path);
+    return false;
+  }
+}
+
+export async function deleteScheduleTaskFromFirestore(taskId: string) {
+  const path = `scheduleTasks/${taskId}`;
+  try {
+    await deleteDoc(doc(db, 'scheduleTasks', taskId));
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.DELETE, path);
+    return false;
+  }
+}
+
+export async function deleteMilestoneFromFirestore(milestoneId: string) {
+  const path = `milestones/${milestoneId}`;
+  try {
+    await deleteDoc(doc(db, 'milestones', milestoneId));
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.DELETE, path);
+    return false;
+  }
+}
+
+export async function deleteTaskReminderFromFirestore(reminderId: string) {
+  const path = `taskReminders/${reminderId}`;
+  try {
+    await deleteDoc(doc(db, 'taskReminders', reminderId));
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.DELETE, path);
+    return false;
+  }
+}
+
+

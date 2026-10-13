@@ -20,6 +20,8 @@ import {
   Info,
   Clock,
   Compass,
+  Edit2,
+  X,
 } from 'lucide-react';
 import { APUItem, Project, CompanySettings, ExpenseRecord, QuoteRecord, ScheduleTask } from '@/lib/types';
 import { formatGTQ, formatUSD } from '@/lib/data';
@@ -67,6 +69,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
   const [isMarketCatalogueOpen, setIsMarketCatalogueOpen] = useState(false);
   const [inspectingItem, setInspectingItem] = useState<APUItem | null>(null);
+  const [editingAPUItem, setEditingAPUItem] = useState<APUItem | null>(null);
   const [recalcToast, setRecalcToast] = useState<string | null>(null);
 
   // Manual Form State
@@ -478,9 +481,20 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                       >
                         <Eye className="w-4 h-4" />
                       </button>
+                      <button
+                        onClick={() => setEditingAPUItem(item)}
+                        className="p-1.5 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition cursor-pointer"
+                        title="Editar renglón APU"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
                       {onDeleteBudgetItem && (
                         <button
-                          onClick={() => onDeleteBudgetItem(item.id)}
+                          onClick={() => {
+                            if (window.confirm(`¿Eliminar partida ${item.code} (${item.description})?`)) {
+                              onDeleteBudgetItem(item.id);
+                            }
+                          }}
                           className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
                           title="Eliminar partida"
                         >
@@ -1051,6 +1065,135 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                   className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm"
                 >
                   Guardar Renglón APU
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 5: EDIT APU ITEM */}
+      {editingAPUItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 animate-in fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-slate-200 overflow-hidden">
+            <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Edit2 className="w-5 h-5 text-blue-400" />
+                <h3 className="font-bold text-base">Editar Renglón de Obra (APU)</h3>
+              </div>
+              <button onClick={() => setEditingAPUItem(null)} className="text-slate-400 hover:text-white">✕</button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (onUpdateBudgetItems && editingAPUItem) {
+                  const unitCost =
+                    editingAPUItem.materialUnitCostGTQ +
+                    editingAPUItem.laborUnitCostGTQ +
+                    editingAPUItem.equipmentUnitCostGTQ;
+                  const totalPrice = Math.round(unitCost * editingAPUItem.quantity * 100) / 100;
+                  const updatedItem: APUItem = {
+                    ...editingAPUItem,
+                    totalUnitCostGTQ: unitCost,
+                    totalPriceGTQ: totalPrice,
+                  };
+                  const updatedList = budgetItems.map((b) => (b.id === updatedItem.id ? updatedItem : b));
+                  onUpdateBudgetItems(updatedList);
+                  setEditingAPUItem(null);
+                }
+              }}
+              className="p-5 space-y-4"
+            >
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Código</label>
+                  <input
+                    type="text"
+                    value={editingAPUItem.code}
+                    onChange={(e) => setEditingAPUItem({ ...editingAPUItem, code: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900 font-mono"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Unidad</label>
+                  <input
+                    type="text"
+                    value={editingAPUItem.unit}
+                    onChange={(e) => setEditingAPUItem({ ...editingAPUItem, unit: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Cantidad</label>
+                  <input
+                    type="number"
+                    value={editingAPUItem.quantity}
+                    onChange={(e) => setEditingAPUItem({ ...editingAPUItem, quantity: Number(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Descripción del Renglón</label>
+                <textarea
+                  rows={2}
+                  value={editingAPUItem.description}
+                  onChange={(e) => setEditingAPUItem({ ...editingAPUItem, description: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Costo Material (Q)</label>
+                  <input
+                    type="number"
+                    value={editingAPUItem.materialUnitCostGTQ}
+                    onChange={(e) => setEditingAPUItem({ ...editingAPUItem, materialUnitCostGTQ: Number(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Costo M.O. (Q)</label>
+                  <input
+                    type="number"
+                    value={editingAPUItem.laborUnitCostGTQ}
+                    onChange={(e) => setEditingAPUItem({ ...editingAPUItem, laborUnitCostGTQ: Number(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Costo Equipo (Q)</label>
+                  <input
+                    type="number"
+                    value={editingAPUItem.equipmentUnitCostGTQ}
+                    onChange={(e) => setEditingAPUItem({ ...editingAPUItem, equipmentUnitCostGTQ: Number(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingAPUItem(null)}
+                  className="px-4 py-2 rounded-xl text-sm text-slate-700 bg-slate-100 hover:bg-slate-200"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm"
+                >
+                  Guardar Cambios
                 </button>
               </div>
             </form>

@@ -18,6 +18,8 @@ import {
   Filter,
   Smartphone,
   Calendar,
+  Edit2,
+  X,
 } from 'lucide-react';
 import { Employee, AttendanceRecord, Project } from '@/lib/types';
 import { formatGTQ } from '@/lib/data';
@@ -34,6 +36,8 @@ interface StaffAndAttendanceProps {
   projects: Project[];
   activeProjectId: string;
   onAddEmployee: (emp: Employee) => void;
+  onUpdateEmployee?: (emp: Employee) => void;
+  onDeleteEmployee?: (id: string) => void;
   onAddAttendance?: (record: AttendanceRecord) => void;
   onDeleteAttendance?: (id: string) => void;
 }
@@ -44,6 +48,8 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
   projects,
   activeProjectId,
   onAddEmployee,
+  onUpdateEmployee,
+  onDeleteEmployee,
   onAddAttendance,
   onDeleteAttendance,
 }) => {
@@ -52,6 +58,7 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
 
   // Employee creation modal
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [name, setName] = useState('');
   const [role, setRole] = useState<
     'Capataz' | 'Albañil' | 'Ayudante' | 'Arquitecto Residente' | 'Bodeguero' | 'Electricista'
@@ -757,20 +764,44 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
       {activeTab === 'personal' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {employees.map((emp) => (
-            <div key={emp.id} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-3">
-              <div className="flex items-start justify-between">
-                <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-blue-50 text-blue-700">
-                  {emp.role}
-                </span>
-                {emp.igssAffiliated && (
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">
-                    IGSS Afiliado
+            <div key={emp.id} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-3 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="flex items-start justify-between">
+                  <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-blue-50 text-blue-700">
+                    {emp.role}
                   </span>
-                )}
-              </div>
-              <div>
-                <h3 className="font-bold text-sm text-slate-900">{emp.name}</h3>
-                <p className="text-xs text-slate-500">{emp.phone}</p>
+                  <div className="flex items-center gap-1.5">
+                    {emp.igssAffiliated && (
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">
+                        IGSS
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setEditingEmployee(emp)}
+                      className="p-1 text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded transition cursor-pointer"
+                      title="Editar Empleado"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (onDeleteEmployee && window.confirm(`¿Eliminar al empleado "${emp.name}"?`)) {
+                          onDeleteEmployee(emp.id);
+                        }
+                      }}
+                      className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition cursor-pointer"
+                      title="Eliminar Empleado"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm text-slate-900">{emp.name}</h3>
+                  <p className="text-xs text-slate-500">{emp.phone}</p>
+                </div>
               </div>
               <div className="pt-2 border-t border-slate-100 flex justify-between items-center text-xs">
                 <span className="text-slate-500">Jornal Diario:</span>
@@ -855,6 +886,105 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                   className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm"
                 >
                   Guardar Empleado
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* EDIT EMPLOYEE MODAL */}
+      {editingEmployee && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 animate-in fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
+            <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+              <h3 className="font-bold text-base">Editar Empleado / Operario</h3>
+              <button
+                onClick={() => setEditingEmployee(null)}
+                className="text-slate-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (onUpdateEmployee && editingEmployee) {
+                  onUpdateEmployee(editingEmployee);
+                  setEditingEmployee(null);
+                }
+              }}
+              className="p-5 space-y-3"
+            >
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Nombre Completo</label>
+                <input
+                  type="text"
+                  value={editingEmployee.name}
+                  onChange={(e) => setEditingEmployee({ ...editingEmployee, name: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Puesto / Rol</label>
+                  <select
+                    value={editingEmployee.role}
+                    onChange={(e: any) => setEditingEmployee({ ...editingEmployee, role: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                  >
+                    <option value="Capataz">Capataz</option>
+                    <option value="Albañil">Albañil</option>
+                    <option value="Ayudante">Ayudante</option>
+                    <option value="Arquitecto Residente">Arquitecto Residente</option>
+                    <option value="Bodeguero">Bodeguero</option>
+                    <option value="Electricista">Electricista</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Jornal Diario (GTQ)</label>
+                  <input
+                    type="number"
+                    value={editingEmployee.dailyRateGTQ}
+                    onChange={(e) => setEditingEmployee({ ...editingEmployee, dailyRateGTQ: Number(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Teléfono</label>
+                <input
+                  type="text"
+                  value={editingEmployee.phone}
+                  onChange={(e) => setEditingEmployee({ ...editingEmployee, phone: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-slate-50 text-slate-900"
+                />
+              </div>
+              <div className="flex items-center gap-2 pt-1">
+                <input
+                  type="checkbox"
+                  id="editIgss"
+                  checked={editingEmployee.igssAffiliated}
+                  onChange={(e) => setEditingEmployee({ ...editingEmployee, igssAffiliated: e.target.checked })}
+                  className="rounded text-blue-600 w-4 h-4"
+                />
+                <label htmlFor="editIgss" className="text-xs font-medium text-slate-700">Afiliado al IGSS (Aplica retención laboral y patronal)</label>
+              </div>
+              <div className="pt-2 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingEmployee(null)}
+                  className="px-4 py-2 rounded-xl text-sm text-slate-700 bg-slate-100 hover:bg-slate-200"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm"
+                >
+                  Guardar Cambios
                 </button>
               </div>
             </form>

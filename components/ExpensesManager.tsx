@@ -36,6 +36,7 @@ interface ExpensesManagerProps {
   activeProjectId: string;
   onAddExpense: (e: ExpenseRecord) => void;
   onUpdateExpense?: (e: ExpenseRecord) => void;
+  onDeleteExpense?: (id: string) => void;
   currency: 'GTQ' | 'USD';
   company: CompanySettings;
   budgetItems?: APUItem[];
@@ -47,6 +48,7 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
   activeProjectId,
   onAddExpense,
   onUpdateExpense,
+  onDeleteExpense,
   currency,
   company,
   budgetItems = initialAPUItems,
@@ -629,6 +631,19 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
                           title="Ver Pista de Auditoría Completa"
                         >
                           <FileSearch className="w-4 h-4" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (onDeleteExpense && window.confirm(`¿Eliminar gasto de factura ${ex.facturaNumber}?`)) {
+                              onDeleteExpense(ex.id);
+                            }
+                          }}
+                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer"
+                          title="Eliminar Gasto"
+                        >
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </td>

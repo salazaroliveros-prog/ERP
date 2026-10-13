@@ -1,4 +1,4 @@
-import { OfflineQueueItem, AttendanceRecord, Project } from './types';
+import { OfflineQueueItem, OfflineActionType, AttendanceRecord, Project } from './types';
 
 const PREFIX = 'constructerp_';
 const QUEUE_KEY = `${PREFIX}offline_queue`;
@@ -27,7 +27,7 @@ export function getOfflineQueue(): OfflineQueueItem[] {
 }
 
 export function addOfflineAction(
-  type: 'attendance' | 'progress' | 'fieldVisit',
+  type: OfflineActionType,
   payload: any,
   description: string
 ): OfflineQueueItem {

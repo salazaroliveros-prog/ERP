@@ -262,12 +262,39 @@ export interface AiRecommendation {
   actionPrompt?: string;
 }
 
+export type OfflineActionType =
+  | 'project'
+  | 'project_delete'
+  | 'fieldVisit'
+  | 'fieldVisit_delete'
+  | 'expense'
+  | 'expense_delete'
+  | 'attendance'
+  | 'attendance_delete'
+  | 'machinery'
+  | 'machinery_delete'
+  | 'employee'
+  | 'employee_delete'
+  | 'quote'
+  | 'quote_delete'
+  | 'apuItem'
+  | 'apuItem_delete'
+  | 'scheduleTask'
+  | 'scheduleTask_delete'
+  | 'milestone'
+  | 'milestone_delete'
+  | 'reminder'
+  | 'reminder_delete'
+  | 'companySettings'
+  | 'progress';
+
 export interface OfflineQueueItem {
   id: string;
-  type: 'attendance' | 'progress' | 'fieldVisit';
+  type: OfflineActionType;
   timestamp: string;
   description: string;
   payload: any;
   synced: boolean;
 }
+
 
