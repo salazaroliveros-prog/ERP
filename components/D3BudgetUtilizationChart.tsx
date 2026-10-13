@@ -96,8 +96,8 @@ export const D3BudgetUtilizationChart: React.FC<D3BudgetUtilizationChartProps> =
     if (viewType === 'bars') {
       // -------------------------------------------------------------
       // VIEW A: D3 Real-Time Grouped & Bullet Budget vs Spend Chart
-      // -------------------------------------------------------------
-      const margin = { top: 25, right: 40, bottom: 45, left: 110 };
+      const isMobile = width < 520;
+      const margin = { top: 25, right: isMobile ? 15 : 40, bottom: 45, left: isMobile ? 70 : 110 };
       const innerWidth = width - margin.left - margin.right;
       const innerHeight = height - margin.top - margin.bottom;
 

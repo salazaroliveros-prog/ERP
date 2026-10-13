@@ -193,7 +193,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm"
             onClick={onToggleMobileSidebar}
           />
-          <aside className="relative w-72 max-w-[85vw] bg-slate-950/95 backdrop-blur-2xl border-r border-white/15 p-6 flex flex-col z-50 h-full overflow-y-auto">
+          <aside className="relative w-72 max-w-[85vw] bg-slate-950/95 backdrop-blur-2xl border-r border-white/15 p-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] flex flex-col z-50 h-full overflow-y-auto">
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
               <div className="flex items-center gap-2.5 overflow-hidden">
                 {company.logoUrl ? (
@@ -215,13 +215,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
               <button
                 onClick={onToggleMobileSidebar}
-                className="p-1.5 rounded-lg bg-white/10 text-slate-300 hover:text-white cursor-pointer"
+                className="p-2 rounded-xl bg-white/10 text-slate-300 hover:text-white cursor-pointer active:scale-95 transition"
+                aria-label="Cerrar Menú"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <nav className="flex-1 py-4 space-y-1 overflow-y-auto">
+            <nav className="flex-1 py-4 space-y-1 overflow-y-auto no-scrollbar">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -232,27 +233,99 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onSelectTab(tab.id);
                       if (onToggleMobileSidebar) onToggleMobileSidebar();
                     }}
-                    className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between transition cursor-pointer ${
+                    className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between transition cursor-pointer active:scale-[0.99] ${
                       isActive
                         ? 'bg-white/[0.1] text-sky-400 border border-white/20 shadow-[inset_0_0_10px_rgba(56,189,248,0.3)]'
                         : 'text-slate-300 hover:bg-white/[0.05]'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className="w-4 h-4" />
-                      <span>{tab.label}</span>
+                      <Icon className="w-4 h-4 shrink-0" />
+                      <span className="truncate">{tab.label}</span>
                     </div>
+                    {tab.badge && (
+                      <span className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                        {tab.badge}
+                      </span>
+                    )}
                   </button>
                 );
               })}
             </nav>
+
+            {/* Mobile Drawer Footer Controls */}
+            <div className="pt-4 border-t border-white/10 space-y-2.5 shrink-0">
+              <button
+                onClick={() => {
+                  onOpenAiAssistant();
+                  if (onToggleMobileSidebar) onToggleMobileSidebar();
+                }}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-gradient-to-r from-sky-500/20 to-indigo-500/20 border border-sky-400/30 hover:border-sky-400/60 text-sky-300 text-xs font-bold transition shadow-sm cursor-pointer active:scale-95"
+              >
+                <Sparkles className="w-4 h-4 text-amber-300" />
+                <span>Gemini IA Asistente</span>
+              </button>
+
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => {
+                    onOpenBranding();
+                    if (onToggleMobileSidebar) onToggleMobileSidebar();
+                  }}
+                  className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs text-slate-300 font-semibold cursor-pointer active:scale-95 transition"
+                >
+                  <Settings className="w-3.5 h-3.5 text-sky-400" />
+                  <span>Empresa</span>
+                </button>
+                <button
+                  onClick={onToggleCurrency}
+                  className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs text-amber-400 font-bold cursor-pointer active:scale-95 transition"
+                >
+                  <Globe className="w-3.5 h-3.5 text-amber-400" />
+                  <span>{currency === 'GTQ' ? 'Q (GTQ)' : '$ (USD)'}</span>
+                </button>
+              </div>
+
+              {/* Mobile Auth Button */}
+              {currentUser ? (
+                <button
+                  onClick={() => {
+                    onSignOut();
+                    if (onToggleMobileSidebar) onToggleMobileSidebar();
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-300 text-xs font-semibold cursor-pointer transition active:scale-95"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Cerrar Sesión</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    onSignIn();
+                    if (onToggleMobileSidebar) onToggleMobileSidebar();
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/30 text-sky-300 text-xs font-semibold cursor-pointer transition active:scale-95"
+                >
+                  <LogIn className="w-3.5 h-3.5" />
+                  <span>Iniciar Sesión con Google</span>
+                </button>
+              )}
+
+              <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 font-mono pt-1">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#4ade80]"></span>
+                  SAT & IGSS 2025
+                </span>
+                <span className="text-amber-400 font-bold">Q 7.80/USD</span>
+              </div>
+            </div>
           </aside>
         </div>
       )}
 
       {/* ================= GLASS TOP NAV BAR ================= */}
-      <header className="sticky top-0 z-40 bg-slate-950/40 backdrop-blur-xl border-b border-white/10 px-4 sm:px-6 lg:px-8 py-3 lg:ml-[280px]">
-        <div className="flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-40 bg-slate-950/40 backdrop-blur-xl border-b border-white/10 px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 lg:ml-[280px] pt-[max(0.65rem,env(safe-area-inset-top))]">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Left: Mobile menu toggle & View Meta */}
           <div className="flex items-center gap-3">
             <button
@@ -343,17 +416,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Currency Pill Toggle */}
             <button
               onClick={onToggleCurrency}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-xs font-bold text-amber-400 transition cursor-pointer"
+              className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-xs font-bold text-amber-400 transition cursor-pointer"
               title="Alternar entre Quetzales (GTQ) y Dólares (USD)"
             >
-              <Globe className="w-3.5 h-3.5 text-amber-400" />
-              <span>{currency === 'GTQ' ? 'Q (GTQ)' : '$ (USD)'}</span>
+              <Globe className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span className="hidden sm:inline">{currency === 'GTQ' ? 'Q (GTQ)' : '$ (USD)'}</span>
+              <span className="sm:hidden">{currency === 'GTQ' ? 'Q' : '$'}</span>
             </button>
 
             {/* Branding & Logo Button */}
             <button
               onClick={onOpenBranding}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs font-semibold text-sky-300 hover:text-white transition cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs font-semibold text-sky-300 hover:text-white transition cursor-pointer"
               title="Personalizar logotipo y nombre de la empresa"
             >
               <Settings className="w-3.5 h-3.5 text-sky-400" />
@@ -362,7 +436,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
 
             {/* User Pill with Status Dot */}
-            <div className="user-pill flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.06] border border-white/15 text-xs text-slate-200">
+            <div className="user-pill hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.06] border border-white/15 text-xs text-slate-200">
               <span className="status-dot w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#4ade80]"></span>
               <span className="font-semibold truncate max-w-[140px] sm:max-w-[180px]">
                 {currentUser?.email || 'salazaroliveros@gmail.com'}

@@ -112,13 +112,63 @@
   background: var(--glass-l3-bg);
   border: 1px solid var(--glass-l3-border);
   border-radius: 20px;
-  padding: 0.85rem 1.25rem;
+  padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+}
+
+@media (max-width: 640px) {
+  .ai-assistant-bar {
+    border-radius: 16px;
+    padding: 0.65rem 0.85rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+/* ==========================================================================
+   MOBILE UX/UI ENHANCEMENTS (Android / iOS Touch & Safe Areas)
+   ========================================================================== */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Smooth momentum scrolling on mobile touch devices */
+.overflow-x-auto,
+.overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent unwanted iOS Safari auto-zoom on input focus when font-size < 16px */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="date"],
+  input[type="tel"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Safe area padding utilities for notches, Dynamic Island, and Android gesture navigation bars */
+.safe-p-top {
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+
+.safe-p-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+.safe-h-screen {
+  min-height: 100dvh;
 }
 
 /* ==========================================================================

@@ -777,45 +777,49 @@ export default function MainApp() {
         remindersCount={reminders.filter((r) => r.enabled).length}
       />
 
-      <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 lg:ml-[280px] max-w-full lg:max-w-[calc(100vw-280px)] overflow-x-hidden">
+      <main className="flex-1 w-full p-3 sm:p-6 lg:p-8 lg:ml-[280px] max-w-full lg:max-w-[calc(100vw-280px)] overflow-x-hidden pb-[max(2rem,env(safe-area-inset-bottom))]">
         {/* Variation 5: AI Assistant Prompt Bar */}
-        <div className="ai-assistant-bar mb-6">
-          <Sparkles className="w-5 h-5 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)] shrink-0" />
-          <input
-            type="text"
-            value={aiPromptQuery}
-            onChange={(e) => setAiPromptQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                setIsAiModalOpen(true);
-              }
-            }}
-            placeholder="Gemini IA: ¿Cuál es el impacto de la lluvia hoy en la ruta crítica?"
-            className="bg-transparent border-none text-slate-100 placeholder:text-slate-400 text-xs sm:text-sm flex-1 outline-none font-sans"
-          />
-          <button
-            onClick={() => setIsAiModalOpen(true)}
-            className="bg-slate-100 hover:bg-white text-slate-950 px-3.5 py-2 rounded-xl text-xs font-bold tracking-wider uppercase transition cursor-pointer shadow-md hover:scale-[1.02] shrink-0"
-          >
-            Analizar
-          </button>
-          <button
-            type="button"
-            onClick={handleManualBudgetAudit}
-            className="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-3.5 py-2 rounded-xl text-xs font-bold tracking-wider transition cursor-pointer shadow-md shrink-0 flex items-center gap-1.5"
-            title="Verificar si algún proyecto alcanzó el 80% del presupuesto o excedió el margen de utilidad esperado (15%)"
-          >
-            <span>Alerta 80% & Margen</span>
-          </button>
-          <button
-            type="button"
-            onClick={handleResetSeedData}
-            className="bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3 py-2 rounded-xl text-xs font-semibold tracking-wider transition cursor-pointer shadow-md shrink-0 flex items-center gap-1.5"
-            title="Restaurar datos iniciales de prueba (Seed Data) o reiniciar para cargar datos reales"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Restaurar Semilla</span>
-          </button>
+        <div className="ai-assistant-bar mb-6 flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="flex items-center gap-2.5 flex-1 min-w-0">
+            <Sparkles className="w-5 h-5 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)] shrink-0" />
+            <input
+              type="text"
+              value={aiPromptQuery}
+              onChange={(e) => setAiPromptQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  setIsAiModalOpen(true);
+                }
+              }}
+              placeholder="Gemini IA: ¿Cuál es el impacto de la lluvia hoy en la ruta crítica?"
+              className="bg-transparent border-none text-slate-100 placeholder:text-slate-400 text-xs sm:text-sm flex-1 outline-none font-sans min-w-0"
+            />
+          </div>
+          <div className="flex items-center gap-2 self-end sm:self-center flex-wrap shrink-0">
+            <button
+              onClick={() => setIsAiModalOpen(true)}
+              className="bg-slate-100 hover:bg-white text-slate-950 px-3.5 py-2 rounded-xl text-xs font-bold tracking-wider uppercase transition cursor-pointer shadow-md hover:scale-[1.02] shrink-0"
+            >
+              Analizar
+            </button>
+            <button
+              type="button"
+              onClick={handleManualBudgetAudit}
+              className="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-3 py-2 rounded-xl text-xs font-bold tracking-wider transition cursor-pointer shadow-md shrink-0 flex items-center gap-1.5"
+              title="Verificar si algún proyecto alcanzó el 80% del presupuesto o excedió el margen de utilidad esperado (15%)"
+            >
+              <span>Alerta 80%</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleResetSeedData}
+              className="bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3 py-2 rounded-xl text-xs font-semibold tracking-wider transition cursor-pointer shadow-md shrink-0 flex items-center gap-1.5"
+              title="Restaurar datos iniciales de prueba (Seed Data) o reiniciar para cargar datos reales"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Restaurar Semilla</span>
+            </button>
+          </div>
         </div>
 
         <Suspense fallback={
