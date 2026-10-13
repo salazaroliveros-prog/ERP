@@ -70,6 +70,12 @@ import {
 } from '@/lib/firebaseService';
 import { User } from 'firebase/auth';
 import { Sparkles } from 'lucide-react';
+import {
+  applyCompanyBrandingToDOM,
+  loadSavedCompanyBranding,
+  saveCompanyBrandingLocal,
+} from '@/lib/brandingService';
+
 
 export default function MainApp() {
   const [company, setCompany] = useState<CompanySettings>(initialCompanySettings);
@@ -105,12 +111,26 @@ export default function MainApp() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
+    // Cargar marca y logotipo guardados en LocalStorage inmediatamente
+    const saved = loadSavedCompanyBranding();
+    if (saved) {
+      setCompany(saved);
+      applyCompanyBrandingToDOM(saved);
+    }
+  }, []);
+
+  useEffect(() => {
+    applyCompanyBrandingToDOM(company);
+  }, [company]);
+
+  useEffect(() => {
     const unsubscribe = initAuth(
       (user) => setCurrentUser(user),
       () => setCurrentUser(null)
     );
     return () => unsubscribe();
   }, []);
+
 
   // Listen to Firestore real-time collections when user is signed in
   useEffect(() => {
@@ -144,8 +164,11 @@ export default function MainApp() {
     const unsubCompany = subscribeCompanySettings(uid, (remoteCompany) => {
       if (remoteCompany) {
         setCompany(remoteCompany);
+        saveCompanyBrandingLocal(remoteCompany);
+        applyCompanyBrandingToDOM(remoteCompany);
       }
     });
+
 
     return () => {
       unsubProjects();
@@ -327,10 +350,13 @@ export default function MainApp() {
 
   const handleUpdateCompany = (updatedCompany: CompanySettings) => {
     setCompany(updatedCompany);
+    saveCompanyBrandingLocal(updatedCompany);
+    applyCompanyBrandingToDOM(updatedCompany);
     if (currentUser?.uid) {
       saveCompanySettingsToFirestore(updatedCompany, currentUser.uid).catch((err) => console.error(err));
     }
   };
+
 
   const handleUpdateTasks = (updatedTasks: ScheduleTask[]) => {
     setTasks(updatedTasks);

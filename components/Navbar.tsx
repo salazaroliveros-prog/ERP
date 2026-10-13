@@ -98,21 +98,35 @@ export const Navbar: React.FC<NavbarProps> = ({
       <aside className="hidden lg:flex fixed top-0 left-0 bottom-0 w-[280px] z-50 flex-col bg-slate-950/60 backdrop-blur-xl border-r border-white/10 p-6 overflow-y-auto select-none">
         {/* Brand Header */}
         <div className="pb-6 border-b border-white/10 space-y-3">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-500 flex items-center justify-center shadow-[0_8px_24px_rgba(56,189,248,0.4)]">
-            <Building2 className="w-6 h-6 text-white stroke-[2.5]" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-extrabold tracking-tight text-white">ConstructERP</h1>
-              <span className="font-mono text-[10px] uppercase font-bold tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/30 px-2 py-0.5 rounded">
-                Guatemala
+          <div className="flex items-center gap-3">
+            {company.logoUrl ? (
+              <div className="w-12 h-12 rounded-xl bg-white/10 p-1 border border-white/20 shadow-[0_8px_20px_rgba(56,189,248,0.25)] flex items-center justify-center overflow-hidden shrink-0">
+                {/* eslint-disable-next-js-next-image */}
+                <img
+                  src={company.logoUrl}
+                  alt={company.commercialName || company.legalName || 'Logotipo'}
+                  className="max-w-full max-h-full object-contain"
+                />
+              </div>
+            ) : (
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-500 flex items-center justify-center shadow-[0_8px_24px_rgba(56,189,248,0.4)] shrink-0">
+                <Building2 className="w-6 h-6 text-white stroke-[2.5]" />
+              </div>
+            )}
+            <div className="overflow-hidden">
+              <h1 className="text-sm font-extrabold tracking-tight text-white truncate" title={company.headerTitle || company.commercialName || company.legalName || 'ConstructERP'}>
+                {company.headerTitle || company.commercialName || company.legalName || 'ConstructERP'}
+              </h1>
+              <span className="font-mono text-[9px] uppercase font-bold tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/30 px-1.5 py-0.5 rounded inline-block mt-0.5">
+                Guatemala ERP
               </span>
             </div>
-            <p className="text-xs text-slate-400 font-medium mt-1 truncate">
-              {company.commercialName || 'Volcanes Proyectos & Ingeniería'}
-            </p>
           </div>
+          <p className="text-xs text-slate-400 font-medium truncate">
+            {company.commercialName || company.legalName || 'Control de Obras & Bitácoras'}
+          </p>
         </div>
+
 
         {/* Navigation List */}
         <nav className="flex-1 py-6 space-y-1.5 overflow-y-auto no-scrollbar">
@@ -181,13 +195,22 @@ export const Navbar: React.FC<NavbarProps> = ({
           />
           <aside className="relative w-72 max-w-[85vw] bg-slate-950/95 backdrop-blur-2xl border-r border-white/15 p-6 flex flex-col z-50 h-full overflow-y-auto">
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center shadow-md">
-                  <Building2 className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-base font-bold text-white leading-tight">ConstructERP</h2>
-                  <span className="font-mono text-[9px] uppercase text-amber-400 font-bold">Guate Glass</span>
+              <div className="flex items-center gap-2.5 overflow-hidden">
+                {company.logoUrl ? (
+                  <div className="w-9 h-9 rounded-lg bg-white/10 p-1 border border-white/20 flex items-center justify-center overflow-hidden shrink-0">
+                    {/* eslint-disable-next-js-next-image */}
+                    <img src={company.logoUrl} alt="Logo" className="max-w-full max-h-full object-contain" />
+                  </div>
+                ) : (
+                  <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center shadow-md shrink-0">
+                    <Building2 className="w-5 h-5 text-white" />
+                  </div>
+                )}
+                <div className="overflow-hidden">
+                  <h2 className="text-sm font-bold text-white leading-tight truncate">
+                    {company.headerTitle || company.commercialName || company.legalName || 'ConstructERP'}
+                  </h2>
+                  <span className="font-mono text-[9px] uppercase text-amber-400 font-bold">Guatemala ERP</span>
                 </div>
               </div>
               <button
@@ -240,15 +263,24 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Menu className="w-5 h-5" />
             </button>
 
-            <div className="flex flex-col">
-              <span className="font-mono text-[11px] uppercase tracking-wider text-slate-400">
-                VISTA DE {currentTabName.toUpperCase()} / {currency === 'GTQ' ? 'Q (Quetzales)' : '$ (USD)'}
-              </span>
-              <span className="text-xs font-bold text-white hidden sm:block">
-                {activeProject ? `${activeProject.code} - ${activeProject.name}` : 'ConstructERP Guatemala'}
-              </span>
+            <div className="flex items-center gap-2.5">
+              {company.logoUrl && (
+                <div className="w-8 h-8 rounded-lg bg-white/10 p-0.5 border border-white/15 hidden sm:flex items-center justify-center overflow-hidden shrink-0">
+                  {/* eslint-disable-next-js-next-image */}
+                  <img src={company.logoUrl} alt="Logo" className="max-w-full max-h-full object-contain" />
+                </div>
+              )}
+              <div className="flex flex-col">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400 truncate max-w-[200px] sm:max-w-xs">
+                  {company.headerTitle || company.commercialName || 'ConstructERP'} • {currentTabName.toUpperCase()}
+                </span>
+                <span className="text-xs font-bold text-white hidden sm:block truncate max-w-sm">
+                  {activeProject ? `${activeProject.code} - ${activeProject.name}` : company.legalName || 'Control de Obras'}
+                </span>
+              </div>
             </div>
           </div>
+
 
           {/* Right Controls */}
           <div className="flex items-center gap-2 sm:gap-3">
@@ -317,6 +349,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Globe className="w-3.5 h-3.5 text-amber-400" />
               <span>{currency === 'GTQ' ? 'Q (GTQ)' : '$ (USD)'}</span>
             </button>
+
+            {/* Branding & Logo Button */}
+            <button
+              onClick={onOpenBranding}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs font-semibold text-sky-300 hover:text-white transition cursor-pointer"
+              title="Personalizar logotipo y nombre de la empresa"
+            >
+              <Settings className="w-3.5 h-3.5 text-sky-400" />
+              <span className="hidden md:inline">Logo & Empresa</span>
+            </button>
+
 
             {/* User Pill with Status Dot */}
             <div className="user-pill flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.06] border border-white/15 text-xs text-slate-200">

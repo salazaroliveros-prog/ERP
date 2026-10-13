@@ -1,6 +1,8 @@
 export interface CompanySettings {
   legalName: string;
   commercialName: string;
+  headerTitle?: string; // Título / Nombre de encabezado personalizado para app y reportes
+  companyName?: string; // Alias común para compatibilidad
   nit: string;
   architectName: string;
   architectColNumber: string;
@@ -10,7 +12,11 @@ export interface CompanySettings {
   exchangeRate: number; // e.g. 7.85 GTQ per USD
   primaryColor: string;
   secondaryColor: string;
+  logoUrl?: string; // Base64 Data URL (PNG o JPEG) o URL del logotipo
+  logoType?: 'image/png' | 'image/jpeg';
+  updatedAt?: string;
 }
+
 
 export interface Project {
   id: string;

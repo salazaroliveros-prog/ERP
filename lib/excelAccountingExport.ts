@@ -320,7 +320,8 @@ export async function exportProjectAccountingWorkbook({
 
   const summaryData: (string | number)[][] = [
     ['CONSTRUCTERP GUATEMALA - REPORTE CONTABLE Y BITÁCORAS DE OBRA', '', '', '', ''],
-    [`Empresa: ${company.commercialName || company.legalName}`, '', `NIT: ${company.nit}`, '', `Fecha: ${new Date().toLocaleDateString('es-GT')}`],
+    [`Empresa: ${company.headerTitle || company.commercialName || company.legalName}`, '', `NIT: ${company.nit}`, '', `Fecha: ${new Date().toLocaleDateString('es-GT')}`],
+
     [`Arquitecto / Colegiado: ${company.architectName} (${company.architectColNumber})`, '', `Dirección: ${company.address}`, '', ''],
     ['', '', '', '', ''],
     ['DATOS GENERALES DEL PROYECTO', '', '', '', ''],
@@ -487,7 +488,8 @@ export async function exportProjectAccountingWorkbook({
 
   const attendanceRows: (string | number)[][] = [
     [`AUDITORÍA CONSOLIDADA DE ASISTENCIA EN OBRA Y RETENCIONES LABORALES (SAT / IGSS) - PROYECTO: ${project.code}`],
-    [`Empresa Contratista: ${company.commercialName || company.legalName} | NIT: ${company.nit} | Geocerca Máxima: 500m | Fecha Reporte: ${new Date().toLocaleDateString('es-GT')}`],
+    [`Empresa Contratista: ${company.headerTitle || company.commercialName || company.legalName} | NIT: ${company.nit} | Geocerca Máxima: 500m | Fecha Reporte: ${new Date().toLocaleDateString('es-GT')}`],
+
     attendanceHeaders,
   ];
 

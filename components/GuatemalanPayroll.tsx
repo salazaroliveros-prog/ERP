@@ -269,17 +269,29 @@ export const GuatemalanPayroll: React.FC<GuatemalanPayrollProps> = ({
         {/* Printable Official Header */}
         <div className="p-6 border-b border-slate-200 bg-slate-50/70 print:bg-white print:p-0 print:border-b-2 print:border-black">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <Building className="w-5 h-5 text-blue-600 print:text-black" />
+            <div className="flex items-center gap-3">
+              {company.logoUrl ? (
+                <div className="w-12 h-12 rounded-xl border border-slate-200 bg-white p-1 flex items-center justify-center shrink-0 shadow-xs print:border-none">
+                  {/* eslint-disable-next-js-next-image */}
+                  <img
+                    src={company.logoUrl}
+                    alt={company.commercialName || 'Logo Empresa'}
+                    className="max-w-full max-h-full object-contain"
+                  />
+                </div>
+              ) : (
+                <Building className="w-6 h-6 text-blue-600 print:text-black shrink-0" />
+              )}
+              <div>
                 <h3 className="font-extrabold text-base text-slate-900 print:text-lg">
-                  {company.commercialName || 'ConstructERP Guatemala, S.A.'}
+                  {company.headerTitle || company.commercialName || company.legalName || 'ConstructERP Guatemala, S.A.'}
                 </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  NIT: {company.nit || '1049281-2'} • No. Patronal IGSS: 08-94102-3 • {company.address || 'Guatemala, C.A.'}
+                </p>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                NIT: {company.nit || '1049281-2'} • No. Patronal IGSS: 08-94102-3 • {company.address || 'Guatemala, C.A.'}
-              </p>
             </div>
+
             <div className="text-left sm:text-right">
               <span className="inline-block px-2.5 py-1 rounded-md bg-blue-100 text-blue-800 font-bold text-xs print:border print:border-black print:bg-transparent print:text-black">
                 RESUMEN OFICIAL DE PRESTACIONES DE LEY

@@ -144,21 +144,45 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
         doc.setFillColor(245, 158, 11); // amber-500
         doc.rect(margin, y + 25, pageWidth - margin * 2, 1.5, 'F');
 
+        // Company logo image
+        let textStartX = margin + 5;
+        if (company.logoUrl && company.logoUrl.startsWith('data:image')) {
+          try {
+            const format = company.logoUrl.includes('jpeg') || company.logoUrl.includes('jpg') ? 'JPEG' : 'PNG';
+            // Draw clean background box for logo
+            doc.setFillColor(255, 255, 255);
+            doc.roundedRect(margin + 2, y + 2, 22, 22, 2, 2, 'F');
+            doc.addImage(company.logoUrl, format, margin + 3, y + 3, 20, 20);
+            textStartX = margin + 28;
+          } catch (imgErr) {
+            console.warn('Error al incrustar logo en PDF:', imgErr);
+          }
+        }
+
+        const reportCompanyName = (
+          company.headerTitle?.trim() ||
+          company.commercialName?.trim() ||
+          company.companyName?.trim() ||
+          company.legalName?.trim() ||
+          'ConstructERP Guatemala'
+        ).toUpperCase();
+
         // Company title & subtitle
         doc.setTextColor(255, 255, 255);
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(13);
-        doc.text(company.companyName.toUpperCase(), margin + 5, y + 7);
+        doc.setFontSize(12);
+        doc.text(reportCompanyName, textStartX, y + 7);
 
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
+        doc.setFontSize(7.5);
         doc.setTextColor(203, 213, 225); // slate-300
-        doc.text(`NIT: ${company.nit} • ${company.address} • Tel: ${company.phone}`, margin + 5, y + 13);
+        doc.text(`NIT: ${company.nit} • ${company.address} • Tel: ${company.phone}`, textStartX, y + 13);
         doc.text(
           `Documento Oficial de Control y Liquidación de Obra • Moneda: ${currency} • T.C.: Q ${company.exchangeRate.toFixed(2)}`,
-          margin + 5,
+          textStartX,
           y + 19
         );
+
 
         // Date of generation
         doc.setFontSize(8);
@@ -634,13 +658,28 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
             </p>
           </div>
 
-          <div className="text-right text-xs text-slate-500 sm:border-l sm:border-slate-100 sm:pl-6">
-            <p className="font-bold text-slate-900">{company.companyName}</p>
-            <p>NIT: {company.nit}</p>
-            <p className="font-mono text-[11px] text-slate-400 mt-0.5">
-              Emisión: {new Date().toLocaleDateString('es-GT')}
-            </p>
+          <div className="flex items-center gap-4 text-right text-xs text-slate-500 sm:border-l sm:border-slate-100 sm:pl-6 justify-end">
+            {company.logoUrl && (
+              <div className="w-14 h-14 rounded-xl border border-slate-200 bg-white p-1 flex items-center justify-center shrink-0 shadow-xs">
+                {/* eslint-disable-next-js-next-image */}
+                <img
+                  src={company.logoUrl}
+                  alt={company.commercialName || 'Logo Empresa'}
+                  className="max-w-full max-h-full object-contain"
+                />
+              </div>
+            )}
+            <div className="text-right">
+              <p className="font-bold text-slate-900 text-sm">
+                {company.headerTitle || company.commercialName || company.legalName || 'ConstructERP Guatemala'}
+              </p>
+              <p>NIT: {company.nit} • Colegiado: {company.architectColNumber || 'CIG'}</p>
+              <p className="font-mono text-[11px] text-slate-400 mt-0.5">
+                Emisión: {new Date().toLocaleDateString('es-GT')}
+              </p>
+            </div>
           </div>
+
         </div>
 
         {/* Financial KPI Summary Cards */}

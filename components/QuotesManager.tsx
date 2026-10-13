@@ -74,18 +74,31 @@ export const QuotesManager: React.FC<QuotesManagerProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {quotes.map((quote) => (
           <div key={quote.id} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
-            <div className="flex items-start justify-between">
-              <div>
-                <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-blue-50 text-blue-700">
-                  Cotización #{quote.id}
-                </span>
-                <h3 className="font-bold text-base text-slate-900 mt-1">{quote.clientName}</h3>
-                <p className="text-xs text-slate-500">NIT: {quote.clientNit} • Fecha: {quote.date}</p>
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                {company.logoUrl && (
+                  <div className="w-8 h-8 rounded-lg border border-slate-200 bg-white p-0.5 flex items-center justify-center shrink-0">
+                    {/* eslint-disable-next-js-next-image */}
+                    <img src={company.logoUrl} alt="Logo" className="max-w-full max-h-full object-contain" />
+                  </div>
+                )}
+                <div>
+                  <p className="text-xs font-bold text-slate-800">
+                    {company.headerTitle || company.commercialName || company.legalName}
+                  </p>
+                  <p className="text-[10px] text-slate-400">NIT: {company.nit} • Cotización #{quote.id}</p>
+                </div>
               </div>
               <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                 {quote.status}
               </span>
             </div>
+
+            <div>
+              <h3 className="font-bold text-base text-slate-900">{quote.clientName}</h3>
+              <p className="text-xs text-slate-500">NIT Cliente: {quote.clientNit} • Fecha: {quote.date}</p>
+            </div>
+
 
             <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
               {quote.items.map((it, idx) => (
