@@ -20,6 +20,12 @@ import {
 import { Employee, CompanySettings, AttendanceRecord } from '@/lib/types';
 import { formatGTQ } from '@/lib/data';
 import { GuatemalanPayrollValidator } from './GuatemalanPayrollValidator';
+import {
+  PaperFormat,
+  PageOrientation,
+  MarginSize,
+  injectPrintPageStyles,
+} from '@/lib/reportExportEngine';
 
 interface GuatemalanPayrollProps {
   employees: Employee[];
@@ -36,6 +42,9 @@ export const GuatemalanPayroll: React.FC<GuatemalanPayrollProps> = ({
 }) => {
   const [viewMode, setViewMode] = useState<'validador' | 'summary_prestaciones' | 'regular'>('validador');
   const [selectedMonth, setSelectedMonth] = useState<string>('Septiembre 2026');
+  const [payrollFormat, setPayrollFormat] = useState<PaperFormat>('oficio');
+  const [payrollOrientation, setPayrollOrientation] = useState<PageOrientation>('landscape');
+  const [payrollMargin, setPayrollMargin] = useState<MarginSize>('estrecho');
 
   // Statutory calculation helpers for Guatemalan Labor Code
   const getPayrollBreakdown = (emp: Employee) => {
@@ -100,7 +109,9 @@ export const GuatemalanPayroll: React.FC<GuatemalanPayrollProps> = ({
   );
 
   const handlePrint = () => {
+    const cleanup = injectPrintPageStyles(payrollFormat, payrollOrientation, payrollMargin);
     window.print();
+    setTimeout(cleanup, 2500);
   };
 
   const handleExportCSV = () => {
@@ -198,6 +209,30 @@ export const GuatemalanPayroll: React.FC<GuatemalanPayrollProps> = ({
             </button>
           </div>
 
+          {/* Paper Format Selector for Payroll Print */}
+          <div className="hidden md:flex items-center gap-1 bg-slate-100 px-2.5 py-1.5 rounded-xl text-xs border border-slate-200">
+            <span className="text-[11px] text-slate-500 font-medium">Hoja:</span>
+            <select
+              value={payrollFormat}
+              onChange={(e) => setPayrollFormat(e.target.value as PaperFormat)}
+              className="bg-transparent font-bold text-slate-800 outline-none cursor-pointer text-xs"
+              title="Formato de hoja para imprimir planilla oficial"
+            >
+              <option value="oficio">Oficio (8.5" × 14") [Estándar Planilla GT]</option>
+              <option value="carta">Carta (8.5" × 11")</option>
+              <option value="a4">A4</option>
+            </select>
+            <select
+              value={payrollOrientation}
+              onChange={(e) => setPayrollOrientation(e.target.value as PageOrientation)}
+              className="bg-transparent font-bold text-slate-800 outline-none cursor-pointer text-xs ml-1 border-l border-slate-300 pl-1"
+              title="Orientación de la hoja"
+            >
+              <option value="landscape">Horizontal (Recomendado)</option>
+              <option value="portrait">Vertical</option>
+            </select>
+          </div>
+
           <button
             onClick={handleExportCSV}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition cursor-pointer"
@@ -208,6 +243,7 @@ export const GuatemalanPayroll: React.FC<GuatemalanPayrollProps> = ({
           <button
             onClick={handlePrint}
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition shadow-sm cursor-pointer"
+            title={`Imprimir planilla en tamaño ${payrollFormat.toUpperCase()} (${payrollOrientation})`}
           >
             <Printer className="w-3.5 h-3.5" /> Imprimir / PDF
           </button>

@@ -34,6 +34,7 @@ import { SignatureCanvas, SignatureCanvasResult } from '@/components/SignatureCa
 import { GoogleMapsSafetyView } from '@/components/GoogleMapsSafetyView';
 import { FieldPhotoGallery } from '@/components/FieldPhotoGallery';
 import { CameraCaptureModal } from '@/components/CameraCaptureModal';
+import { injectPrintPageStyles } from '@/lib/reportExportEngine';
 
 interface ProjectsAndVisitsProps {
   projects: Project[];
@@ -121,6 +122,12 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
 
   const formatMoney = (amount: number) => {
     return currency === 'GTQ' ? formatGTQ(amount) : formatUSD(amount, company.exchangeRate);
+  };
+
+  const handlePrintVisit = () => {
+    const cleanup = injectPrintPageStyles('carta', 'portrait', 'normal');
+    window.print();
+    setTimeout(cleanup, 2500);
   };
 
   const handleCreateProject = (e: React.FormEvent) => {
@@ -482,9 +489,9 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                       <CheckCircle2 className="w-3.5 h-3.5" /> {visit.status}
                     </span>
                     <button
-                      onClick={() => window.print()}
+                      onClick={handlePrintVisit}
                       className="p-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-slate-300 hover:text-white transition cursor-pointer"
-                      title="Imprimir Bitácora"
+                      title="Imprimir Bitácora (Formato Carta)"
                     >
                       <Printer className="w-4 h-4" />
                     </button>

@@ -23,6 +23,8 @@ import {
   Check,
   Info,
   Terminal,
+  SlidersHorizontal,
+  Layout,
 } from 'lucide-react';
 import { Project, CompanySettings, ExpenseRecord, FieldVisit, AttendanceRecord, Employee } from '@/lib/types';
 import { formatGTQ, formatUSD } from '@/lib/data';
@@ -31,6 +33,17 @@ import {
   downloadVbaMacroFile,
   GUATEMALAN_ACCOUNTING_VBA_MACROS,
 } from '@/lib/excelAccountingExport';
+import {
+  PaperFormat,
+  PageOrientation,
+  MarginSize,
+  getPageMetrics,
+  injectPrintPageStyles,
+  drawPdfHeader,
+  stampPdfFooters,
+} from '@/lib/reportExportEngine';
+import { getEffectiveCompanyName } from '@/lib/brandingService';
+
 
 interface AdvancedReportsManagerProps {
   projects: Project[];
@@ -58,11 +71,15 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
   const [selectedProjectId, setSelectedProjectId] = useState<string>(activeProjectId);
   const [reportType, setReportType] = useState<ReportType>('consolidated');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [paperFormat, setPaperFormat] = useState<PaperFormat>('carta');
+  const [orientation, setOrientation] = useState<PageOrientation>('portrait');
+  const [marginSize, setMarginSize] = useState<MarginSize>('normal');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isExportingExcel, setIsExportingExcel] = useState(false);
   const [isCopiedVba, setIsCopiedVba] = useState(false);
   const [showMacroModal, setShowMacroModal] = useState(false);
   const [excelSuccessToast, setExcelSuccessToast] = useState(false);
+
 
   const activeProject = projects.find((p) => p.id === selectedProjectId) || projects[0];
 
@@ -118,111 +135,28 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
     setTimeout(() => setIsCopiedVba(false), 2500);
   };
 
-  // Generate Professional Formatted PDF with jsPDF
+  // Handler for Native Print with Dynamic Page CSS
+  const handlePrint = () => {
+    const cleanup = injectPrintPageStyles(paperFormat, orientation, marginSize);
+    window.print();
+    setTimeout(cleanup, 2500);
+  };
+
+  // Generate Professional Formatted PDF with jsPDF adaptative to Carta / Oficio / A4
   const generatePDF = async () => {
     setIsGenerating(true);
     try {
       const { jsPDF } = await import('jspdf');
+      const metrics = getPageMetrics(paperFormat, orientation, marginSize);
+
       const doc = new jsPDF({
-        orientation: 'portrait',
+        orientation: orientation,
         unit: 'mm',
-        format: 'a4',
+        format: [metrics.pageWidth, metrics.pageHeight],
       });
 
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const pageHeight = doc.internal.pageSize.getHeight();
-      const margin = 15;
-      let y = margin;
-
-      // Helper for header banner
-      const drawHeader = (titleText: string, subTitleText: string) => {
-        // Dark top accent bar
-        doc.setFillColor(30, 41, 59); // slate-800
-        doc.rect(margin, y, pageWidth - margin * 2, 26, 'F');
-
-        // Gold brand accent line
-        doc.setFillColor(245, 158, 11); // amber-500
-        doc.rect(margin, y + 25, pageWidth - margin * 2, 1.5, 'F');
-
-        // Company logo image
-        let textStartX = margin + 5;
-        if (company.logoUrl && company.logoUrl.startsWith('data:image')) {
-          try {
-            const format = company.logoUrl.includes('jpeg') || company.logoUrl.includes('jpg') ? 'JPEG' : 'PNG';
-            // Draw clean background box for logo
-            doc.setFillColor(255, 255, 255);
-            doc.roundedRect(margin + 2, y + 2, 22, 22, 2, 2, 'F');
-            doc.addImage(company.logoUrl, format, margin + 3, y + 3, 20, 20);
-            textStartX = margin + 28;
-          } catch (imgErr) {
-            console.warn('Error al incrustar logo en PDF:', imgErr);
-          }
-        }
-
-        const reportCompanyName = (
-          company.headerTitle?.trim() ||
-          company.commercialName?.trim() ||
-          company.companyName?.trim() ||
-          company.legalName?.trim() ||
-          'ConstructERP Guatemala'
-        ).toUpperCase();
-
-        // Company title & subtitle
-        doc.setTextColor(255, 255, 255);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text(reportCompanyName, textStartX, y + 7);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7.5);
-        doc.setTextColor(203, 213, 225); // slate-300
-        doc.text(`NIT: ${company.nit} • ${company.address} • Tel: ${company.phone}`, textStartX, y + 13);
-        doc.text(
-          `Documento Oficial de Control y Liquidación de Obra • Moneda: ${currency} • T.C.: Q ${company.exchangeRate.toFixed(2)}`,
-          textStartX,
-          y + 19
-        );
-
-
-        // Date of generation
-        doc.setFontSize(8);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(253, 224, 71); // amber-300
-        const dateStr = `Fecha Emisión: ${new Date().toLocaleDateString('es-GT')} ${new Date().toLocaleTimeString('es-GT', { hour: '2-digit', minute: '2-digit' })}`;
-        doc.text(dateStr, pageWidth - margin - 5, y + 7, { align: 'right' });
-
-        y += 33;
-
-        // Title box
-        doc.setTextColor(15, 23, 42); // slate-900
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(14);
-        doc.text(titleText, margin, y);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(100, 116, 139); // slate-500
-        doc.text(subTitleText, margin, y + 5);
-
-        y += 12;
-      };
-
-      // Helper for page check
-      const checkPageBreak = (neededHeight: number) => {
-        if (y + neededHeight > pageHeight - 20) {
-          doc.addPage();
-          y = margin;
-          // Running small header on subsequent pages
-          doc.setFillColor(241, 245, 249);
-          doc.rect(margin, y, pageWidth - margin * 2, 7, 'F');
-          doc.setTextColor(100, 116, 139);
-          doc.setFontSize(7);
-          doc.setFont('helvetica', 'italic');
-          doc.text(`ConstructERP Guatemala • ${activeProject.code} - ${activeProject.name}`, margin + 3, y + 4.5);
-          doc.text(`Página ${doc.getNumberOfPages()}`, pageWidth - margin - 3, y + 4.5, { align: 'right' });
-          y += 12;
-        }
-      };
+      const { pageWidth, pageHeight, marginMm, contentWidth } = metrics;
+      let y = marginMm;
 
       // Draw Main Header
       let reportMainTitle = 'INFORME CONSOLIDADO EJECUTIVO DE OBRA';
@@ -239,7 +173,26 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
         reportSubTitle = `Firmas de Capataz y Registros Georreferenciados en ${activeProject.name}`;
       }
 
-      drawHeader(reportMainTitle, reportSubTitle);
+      // Draw dynamic company header
+      y = drawPdfHeader(doc, company, reportMainTitle, reportSubTitle, metrics, y, currency);
+
+      // Helper for page check with optional callback to redraw table header
+      const checkPageBreak = (neededHeight: number, onBreak?: () => void) => {
+        if (y + neededHeight > pageHeight - marginMm - 14) {
+          doc.addPage();
+          y = marginMm;
+          // Running small header on subsequent pages
+          doc.setFillColor(241, 245, 249);
+          doc.rect(marginMm, y, contentWidth, 6, 'F');
+          doc.setTextColor(100, 116, 139);
+          doc.setFontSize(6.5);
+          doc.setFont('helvetica', 'italic');
+          doc.text(`ConstructERP Guatemala • ${activeProject.code} - ${activeProject.name} (${metrics.formatLabel})`, marginMm + 3, y + 4.2);
+          doc.text(`Página ${doc.getNumberOfPages()}`, pageWidth - marginMm - 3, y + 4.2, { align: 'right' });
+          y += 9;
+          if (onBreak) onBreak();
+        }
+      };
 
       // 1. PROJECT METADATA & FINANCIAL SUMMARY CARDS
       if (reportType === 'project_summary' || reportType === 'consolidated') {
@@ -248,53 +201,54 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
         // Project Info Box
         doc.setFillColor(248, 250, 252);
         doc.setDrawColor(226, 232, 240);
-        doc.roundedRect(margin, y, pageWidth - margin * 2, 28, 2, 2, 'FD');
+        doc.roundedRect(marginMm, y, contentWidth, 28, 2, 2, 'FD');
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(8.5);
         doc.setTextColor(30, 41, 59);
-        doc.text('DATOS GENERALES DEL PROYECTO', margin + 4, y + 6);
+        doc.text('DATOS GENERALES DEL PROYECTO', marginMm + 4, y + 6);
 
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
         doc.setTextColor(71, 85, 105);
 
-        // Col 1
-        doc.text(`Cliente / Propietario: ${activeProject.client}`, margin + 4, y + 12);
-        doc.text(`Ubicación: ${activeProject.location}`, margin + 4, y + 17);
-        doc.text(`Municipio / Depto: ${activeProject.municipality}, ${activeProject.department}`, margin + 4, y + 22);
+        // Responsive columns for project info
+        const col2X = marginMm + contentWidth * 0.42;
+        const col3X = pageWidth - marginMm - 4;
 
-        // Col 2
-        const col2X = margin + 95;
+        doc.text(`Cliente / Propietario: ${activeProject.client}`, marginMm + 4, y + 12);
+        doc.text(`Ubicación: ${activeProject.location}`, marginMm + 4, y + 17);
+        doc.text(`Municipio / Depto: ${activeProject.municipality}, ${activeProject.department}`, marginMm + 4, y + 22);
+
         doc.text(`Código Obra: ${activeProject.code}`, col2X, y + 12);
         doc.text(`Estado Actual: ${activeProject.status}`, col2X, y + 17);
         doc.text(`Avance Físico Certificado: ${activeProject.progressPercent}%`, col2X, y + 22);
 
-        // Col 3
-        const col3X = pageWidth - margin - 35;
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(37, 99, 235);
         doc.text(`Progreso: ${activeProject.progressPercent}%`, col3X, y + 15, { align: 'right' });
 
         y += 32;
 
-        // KPI Metric Cards Row
+        // KPI Metric Cards Row (Responsive width)
         checkPageBreak(24);
-        const cardWidth = (pageWidth - margin * 2 - 6) / 3;
+        const cardGap = 4;
+        const numCards = 3;
+        const cardWidth = (contentWidth - cardGap * (numCards - 1)) / numCards;
 
         // Card 1: Presupuesto
         doc.setFillColor(239, 246, 255); // blue-50
         doc.setDrawColor(191, 219, 254);
-        doc.roundedRect(margin, y, cardWidth, 18, 2, 2, 'FD');
+        doc.roundedRect(marginMm, y, cardWidth, 18, 2, 2, 'FD');
         doc.setFontSize(7.5);
         doc.setTextColor(30, 64, 175);
         doc.setFont('helvetica', 'bold');
-        doc.text('PRESUPUESTO AUTORIZADO', margin + 3, y + 6);
+        doc.text('PRESUPUESTO AUTORIZADO', marginMm + 3, y + 6);
         doc.setFontSize(10.5);
-        doc.text(formatMoney(totalBudget), margin + 3, y + 13);
+        doc.text(formatMoney(totalBudget), marginMm + 3, y + 13);
 
         // Card 2: Ejecutado
-        const card2X = margin + cardWidth + 3;
+        const card2X = marginMm + cardWidth + cardGap;
         doc.setFillColor(254, 242, 242); // red-50
         doc.setDrawColor(254, 202, 202);
         doc.roundedRect(card2X, y, cardWidth, 18, 2, 2, 'FD');
@@ -305,7 +259,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
         doc.text(formatMoney(totalSpent), card2X + 3, y + 13);
 
         // Card 3: Saldo
-        const card3X = card2X + cardWidth + 3;
+        const card3X = card2X + cardWidth + cardGap;
         doc.setFillColor(240, 253, 244); // green-50
         doc.setDrawColor(187, 247, 208);
         doc.roundedRect(card3X, y, cardWidth, 18, 2, 2, 'FD');
@@ -318,63 +272,88 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
         y += 24;
       }
 
-      // 2. EXPENSE REPORT TABLE
+      // 2. EXPENSE REPORT TABLE (Responsive Columns)
       if (reportType === 'expense_report' || reportType === 'consolidated') {
         checkPageBreak(40);
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(10);
         doc.setTextColor(15, 23, 42);
-        doc.text('DETALLE DE GASTOS Y COMPRAS CERTIFICADAS (SAT)', margin, y);
+        doc.text('DETALLE DE GASTOS Y COMPRAS CERTIFICADAS (SAT)', marginMm, y);
         y += 5;
 
-        // Table Header
-        const tableW = pageWidth - margin * 2;
-        doc.setFillColor(30, 41, 59); // slate-800
-        doc.rect(margin, y, tableW, 7, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(7.5);
-        doc.setFont('helvetica', 'bold');
+        const isLandscape = orientation === 'landscape';
 
-        doc.text('Fecha', margin + 2, y + 4.5);
-        doc.text('Proveedor / Empresa', margin + 20, y + 4.5);
-        doc.text('NIT', margin + 65, y + 4.5);
-        doc.text('No. Factura', margin + 88, y + 4.5);
-        doc.text('Categoría / Concepto', margin + 112, y + 4.5);
-        doc.text(`Total (${currency})`, pageWidth - margin - 2, y + 4.5, { align: 'right' });
+        // Helper to draw expense table header
+        const drawExpenseTableHeader = () => {
+          doc.setFillColor(30, 41, 59); // slate-800
+          doc.rect(marginMm, y, contentWidth, 7, 'F');
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(7.5);
+          doc.setFont('helvetica', 'bold');
 
-        y += 7;
+          if (isLandscape) {
+            doc.text('Fecha', marginMm + 2, y + 4.5);
+            doc.text('Proveedor / Empresa', marginMm + contentWidth * 0.10, y + 4.5);
+            doc.text('NIT SAT', marginMm + contentWidth * 0.34, y + 4.5);
+            doc.text('No. Factura', marginMm + contentWidth * 0.46, y + 4.5);
+            doc.text('Categoría Contable', marginMm + contentWidth * 0.58, y + 4.5);
+            doc.text('Subtotal (s/IVA)', marginMm + contentWidth * 0.76, y + 4.5);
+            doc.text(`Total (${currency})`, pageWidth - marginMm - 2, y + 4.5, { align: 'right' });
+          } else {
+            doc.text('Fecha', marginMm + 2, y + 4.5);
+            doc.text('Proveedor / Empresa', marginMm + contentWidth * 0.12, y + 4.5);
+            doc.text('NIT', marginMm + contentWidth * 0.38, y + 4.5);
+            doc.text('No. Factura', marginMm + contentWidth * 0.52, y + 4.5);
+            doc.text('Categoría / Concepto', marginMm + contentWidth * 0.66, y + 4.5);
+            doc.text(`Total (${currency})`, pageWidth - marginMm - 2, y + 4.5, { align: 'right' });
+          }
+          y += 7;
+        };
+
+        drawExpenseTableHeader();
 
         // Table Rows
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
 
         projectExpenses.forEach((exp, idx) => {
-          checkPageBreak(8);
+          checkPageBreak(8, drawExpenseTableHeader);
 
           if (idx % 2 === 0) {
             doc.setFillColor(248, 250, 252);
-            doc.rect(margin, y, tableW, 6.5, 'F');
+            doc.rect(marginMm, y, contentWidth, 6.5, 'F');
           }
 
           doc.setDrawColor(241, 245, 249);
-          doc.line(margin, y + 6.5, pageWidth - margin, y + 6.5);
-
+          doc.line(marginMm, y + 6.5, pageWidth - marginMm, y + 6.5);
           doc.setTextColor(51, 65, 85);
-          doc.text(exp.date, margin + 2, y + 4.5);
 
-          // Truncate supplier if too long
-          const supplierClean = exp.supplier.length > 25 ? exp.supplier.substring(0, 25) + '...' : exp.supplier;
-          doc.text(supplierClean, margin + 20, y + 4.5);
-          doc.text(exp.nitSupplier, margin + 65, y + 4.5);
-          doc.text(exp.facturaNumber, margin + 88, y + 4.5);
-
-          const descClean = exp.description.length > 30 ? exp.description.substring(0, 30) + '...' : exp.description;
-          doc.text(descClean, margin + 112, y + 4.5);
-
-          doc.setFont('helvetica', 'bold');
-          doc.text(formatMoney(exp.amount), pageWidth - margin - 2, y + 4.5, { align: 'right' });
-          doc.setFont('helvetica', 'normal');
+          if (isLandscape) {
+            doc.text(exp.date, marginMm + 2, y + 4.5);
+            const supplierClean = exp.supplier.length > 30 ? exp.supplier.substring(0, 30) + '...' : exp.supplier;
+            doc.text(supplierClean, marginMm + contentWidth * 0.10, y + 4.5);
+            doc.text(exp.nitSupplier, marginMm + contentWidth * 0.34, y + 4.5);
+            doc.text(exp.facturaNumber, marginMm + contentWidth * 0.46, y + 4.5);
+            const descClean = exp.description.length > 25 ? exp.description.substring(0, 25) + '...' : exp.description;
+            doc.text(descClean, marginMm + contentWidth * 0.58, y + 4.5);
+            const subtotalSinIva = exp.amount / 1.12;
+            doc.text(formatMoney(subtotalSinIva), marginMm + contentWidth * 0.76, y + 4.5);
+            doc.setFont('helvetica', 'bold');
+            doc.text(formatMoney(exp.amount), pageWidth - marginMm - 2, y + 4.5, { align: 'right' });
+            doc.setFont('helvetica', 'normal');
+          } else {
+            doc.text(exp.date, marginMm + 2, y + 4.5);
+            const supplierClean = exp.supplier.length > 24 ? exp.supplier.substring(0, 24) + '...' : exp.supplier;
+            doc.text(supplierClean, marginMm + contentWidth * 0.12, y + 4.5);
+            doc.text(exp.nitSupplier, marginMm + contentWidth * 0.38, y + 4.5);
+            doc.text(exp.facturaNumber, marginMm + contentWidth * 0.52, y + 4.5);
+            const descClean = exp.description.length > 28 ? exp.description.substring(0, 28) + '...' : exp.description;
+            doc.text(descClean, marginMm + contentWidth * 0.66, y + 4.5);
+            doc.setFont('helvetica', 'bold');
+            doc.text(formatMoney(exp.amount), pageWidth - marginMm - 2, y + 4.5, { align: 'right' });
+            doc.setFont('helvetica', 'normal');
+          }
 
           y += 6.5;
         });
@@ -382,12 +361,12 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
         // Table Total Summary Box
         checkPageBreak(12);
         doc.setFillColor(241, 245, 249);
-        doc.rect(margin, y, tableW, 7, 'F');
+        doc.rect(marginMm, y, contentWidth, 7, 'F');
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(8);
         doc.setTextColor(15, 23, 42);
-        doc.text(`TOTAL EJECUTADO (${projectExpenses.length} REGISTROS):`, margin + 2, y + 4.8);
-        doc.text(formatMoney(totalSpent), pageWidth - margin - 2, y + 4.8, { align: 'right' });
+        doc.text(`TOTAL EJECUTADO (${projectExpenses.length} REGISTROS CERTIFICADOS):`, marginMm + 2, y + 4.8);
+        doc.text(formatMoney(totalSpent), pageWidth - marginMm - 2, y + 4.8, { align: 'right' });
         y += 12;
       }
 
@@ -398,7 +377,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(10);
         doc.setTextColor(15, 23, 42);
-        doc.text('REGISTRO DE BITÁCORAS DE CAMPO & FIRMAS AUTORIZADAS', margin, y);
+        doc.text('REGISTRO DE BITÁCORAS DE CAMPO & FIRMAS AUTORIZADAS', marginMm, y);
         y += 5;
 
         projectVisits.forEach((visit) => {
@@ -406,34 +385,35 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
 
           doc.setFillColor(248, 250, 252);
           doc.setDrawColor(226, 232, 240);
-          doc.roundedRect(margin, y, pageWidth - margin * 2, 19, 1.5, 1.5, 'FD');
+          doc.roundedRect(marginMm, y, contentWidth, 19, 1.5, 1.5, 'FD');
 
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(7.5);
           doc.setTextColor(30, 41, 59);
-          doc.text(`Fecha: ${visit.date} • Clima: ${visit.weather} • Obreros: ${visit.workersCount}`, margin + 3, y + 5);
+          doc.text(`Fecha: ${visit.date} • Clima: ${visit.weather} • Obreros: ${visit.workersCount}`, marginMm + 3, y + 5);
 
           // Status stamp
           doc.setTextColor(16, 185, 129); // emerald
-          doc.text(`[ ${visit.status.toUpperCase()} ]`, pageWidth - margin - 4, y + 5, { align: 'right' });
+          doc.text(`[ ${visit.status.toUpperCase()} ]`, pageWidth - marginMm - 4, y + 5, { align: 'right' });
 
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(7);
           doc.setTextColor(71, 85, 105);
 
-          const notesClean = visit.notes.length > 95 ? visit.notes.substring(0, 95) + '...' : visit.notes;
-          doc.text(`Novedades: "${notesClean}"`, margin + 3, y + 10);
+          const maxNotesLen = orientation === 'landscape' ? 140 : 95;
+          const notesClean = visit.notes.length > maxNotesLen ? visit.notes.substring(0, maxNotesLen) + '...' : visit.notes;
+          doc.text(`Novedades: "${notesClean}"`, marginMm + 3, y + 10);
 
           doc.setFont('helvetica', 'bold');
           doc.setTextColor(51, 65, 85);
           const foremanText = `Capataz: ${visit.foremanName} • DPI: ${visit.signerDpi || '2489 10293 0101'}`;
-          doc.text(foremanText, margin + 3, y + 15);
+          doc.text(foremanText, marginMm + 3, y + 15);
 
           if (visit.gpsCoords) {
             doc.setFont('courier', 'normal');
             doc.setFontSize(6.5);
             doc.setTextColor(100, 116, 139);
-            doc.text(`GPS: ${visit.gpsCoords.lat.toFixed(4)}°N, ${visit.gpsCoords.lng.toFixed(4)}°W`, pageWidth - margin - 4, y + 15, {
+            doc.text(`GPS: ${visit.gpsCoords.lat.toFixed(4)}°N, ${visit.gpsCoords.lng.toFixed(4)}°W`, pageWidth - marginMm - 4, y + 15, {
               align: 'right',
             });
           }
@@ -446,25 +426,26 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
       checkPageBreak(38);
       y += 4;
       doc.setDrawColor(203, 213, 225);
-      doc.line(margin, y, pageWidth - margin, y);
+      doc.line(marginMm, y, pageWidth - marginMm, y);
       y += 8;
 
-      const sigWidth = (pageWidth - margin * 2 - 20) / 3;
+      const sigGap = 8;
+      const sigWidth = (contentWidth - sigGap * 2) / 3;
 
       // Sig 1: Ing. Residente
       doc.setDrawColor(100, 116, 139);
-      doc.line(margin, y + 12, margin + sigWidth, y + 12);
+      doc.line(marginMm, y + 12, marginMm + sigWidth, y + 12);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(7.5);
       doc.setTextColor(15, 23, 42);
-      doc.text('Ing. Residente de Obra', margin + sigWidth / 2, y + 16, { align: 'center' });
+      doc.text(company.architectName || 'Ing. Residente de Obra', marginMm + sigWidth / 2, y + 16, { align: 'center' });
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(6.5);
       doc.setTextColor(100, 116, 139);
-      doc.text('Colegiado Activo No. 14,892', margin + sigWidth / 2, y + 19.5, { align: 'center' });
+      doc.text(`Colegiado: ${company.architectColNumber || 'CIG-14,892'}`, marginMm + sigWidth / 2, y + 19.5, { align: 'center' });
 
       // Sig 2: Capataz General
-      const sig2X = margin + sigWidth + 10;
+      const sig2X = marginMm + sigWidth + sigGap;
       doc.line(sig2X, y + 12, sig2X + sigWidth, y + 12);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(7.5);
@@ -476,7 +457,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
       doc.text('Supervisión y Validación en Sitio', sig2X + sigWidth / 2, y + 19.5, { align: 'center' });
 
       // Sig 3: Auditoria Financiera
-      const sig3X = sig2X + sigWidth + 10;
+      const sig3X = sig2X + sigWidth + sigGap;
       doc.line(sig3X, y + 12, sig3X + sigWidth, y + 12);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(7.5);
@@ -487,23 +468,12 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
       doc.setTextColor(100, 116, 139);
       doc.text('Sello y Visto Bueno Oficial', sig3X + sigWidth / 2, y + 19.5, { align: 'center' });
 
-      // Document Legal Footer
-      const totalPages = doc.getNumberOfPages();
-      for (let i = 1; i <= totalPages; i++) {
-        doc.setPage(i);
-        doc.setFontSize(6.5);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(148, 163, 184);
-        doc.text(
-          'ConstructERP Guatemala © Sistema Integral de Costos, Rendimientos & Bitácoras de Obra para la República de Guatemala.',
-          margin,
-          pageHeight - 6
-        );
-        doc.text(`Página ${i} de ${totalPages}`, pageWidth - margin, pageHeight - 6, { align: 'right' });
-      }
+      // Stamp dynamic legal footers with page numbers
+      const effectiveName = getEffectiveCompanyName(company);
+      stampPdfFooters(doc, metrics, effectiveName);
 
       // Save PDF file
-      const fileName = `Informe_${activeProject.code}_${reportType}_${new Date().toISOString().split('T')[0]}.pdf`;
+      const fileName = `Informe_${activeProject.code}_${reportType}_${paperFormat}_${orientation}_${new Date().toISOString().split('T')[0]}.pdf`;
       doc.save(fileName);
     } catch (err) {
       console.error('Error generating PDF:', err);
@@ -511,6 +481,8 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
       setIsGenerating(false);
     }
   };
+
+  const currentMetrics = getPageMetrics(paperFormat, orientation, marginSize);
 
   return (
     <div className="space-y-6">
@@ -551,8 +523,9 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
           </button>
 
           <button
-            onClick={() => window.print()}
+            onClick={handlePrint}
             className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition cursor-pointer"
+            title="Imprimir con formato de hoja configurado (Carta / Oficio / A4)"
           >
             <Printer className="w-4 h-4 text-slate-500" />
             Imprimir
@@ -591,6 +564,85 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
           </button>
         </div>
       )}
+
+      {/* Paper & Layout Format Configuration Toolbar */}
+      <div className="bg-slate-900 text-white p-4 rounded-2xl border border-slate-800 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-blue-600/30 text-blue-400 border border-blue-500/30">
+            <Layout className="w-4 h-4" />
+          </div>
+          <div>
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+              <span>Formato de Hoja & Márgenes de Impresión</span>
+              <span className="text-[10px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded border border-amber-500/30 font-normal lowercase">
+                carta / oficio / a4
+              </span>
+            </h3>
+            <p className="text-[11px] text-slate-400">
+              Personaliza dimensiones milimétricas, orientación y márgenes para exportación PDF e impresión oficial.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2.5">
+          {/* Paper Format Selector */}
+          <div className="flex items-center gap-1.5 bg-slate-800 px-2.5 py-1.5 rounded-xl border border-slate-700">
+            <span className="text-[11px] text-slate-400 font-medium">Hoja:</span>
+            <select
+              value={paperFormat}
+              onChange={(e) => setPaperFormat(e.target.value as PaperFormat)}
+              className="bg-transparent text-xs font-bold text-amber-300 outline-none cursor-pointer"
+            >
+              <option value="carta" className="bg-slate-900 text-white">Carta (Letter 8.5" × 11") — Estándar GT</option>
+              <option value="oficio" className="bg-slate-900 text-white">Oficio (Legal 8.5" × 14") — Notarial/Contratos GT</option>
+              <option value="a4" className="bg-slate-900 text-white">A4 (210 × 297 mm) — Internacional</option>
+            </select>
+          </div>
+
+          {/* Orientation Toggle */}
+          <div className="flex items-center bg-slate-800 p-0.5 rounded-xl border border-slate-700 text-xs">
+            <button
+              type="button"
+              onClick={() => setOrientation('portrait')}
+              className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
+                orientation === 'portrait' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Vertical
+            </button>
+            <button
+              type="button"
+              onClick={() => setOrientation('landscape')}
+              className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
+                orientation === 'landscape' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Horizontal
+            </button>
+          </div>
+
+          {/* Margins Selector */}
+          <div className="flex items-center gap-1.5 bg-slate-800 px-2.5 py-1.5 rounded-xl border border-slate-700">
+            <span className="text-[11px] text-slate-400 font-medium">Márgenes:</span>
+            <select
+              value={marginSize}
+              onChange={(e) => setMarginSize(e.target.value as MarginSize)}
+              className="bg-transparent text-xs font-bold text-emerald-400 outline-none cursor-pointer"
+            >
+              <option value="normal" className="bg-slate-900 text-white">Normal (15 mm)</option>
+              <option value="estrecho" className="bg-slate-900 text-white">Estrecho (10 mm)</option>
+              <option value="amplio" className="bg-slate-900 text-white">Amplio (20 mm)</option>
+            </select>
+          </div>
+
+          {/* Computed Badge */}
+          <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 text-[11px] font-mono text-slate-300">
+            <span>{currentMetrics.pageWidth} × {currentMetrics.pageHeight} mm</span>
+            <span className="text-slate-500">•</span>
+            <span className="text-amber-400">{currentMetrics.contentWidth.toFixed(1)} mm útiles</span>
+          </div>
+        </div>
+      </div>
 
       {/* Filter & Configuration Bar */}
       <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -641,6 +693,21 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
 
       {/* Printable Preview Canvas / Document Container */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6 print:p-0 print:border-none print:shadow-none">
+        {/* Paper Sheet Format Indicator Header (visible only on screen preview) */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 text-xs text-slate-500 print:hidden">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="px-2 py-0.5 rounded bg-slate-100 font-semibold text-slate-700 font-mono text-[11px]">
+              Vista Previa: {currentMetrics.formatLabel} ({currentMetrics.orientationLabel})
+            </span>
+            <span className="text-[11px] text-slate-400">
+              Márgenes: {currentMetrics.marginMm} mm • Área útil: {currentMetrics.contentWidth.toFixed(1)} × {currentMetrics.contentHeight.toFixed(1)} mm
+            </span>
+          </div>
+          <span className="text-[11px] text-emerald-700 font-medium bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+            Diseño Adaptable al 100%
+          </span>
+        </div>
+
         {/* Document Header */}
         <div className="border-b border-slate-200 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -708,9 +775,11 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
           <div className="flex items-center justify-between">
             <h4 className="font-bold text-sm text-slate-900 flex items-center gap-1.5">
               <Receipt className="w-4 h-4 text-slate-500" />
-              Detalle de Gastos y Facturas para Auditoría
+              Detalle de Gastos y Facturas para Auditoría SAT
             </h4>
-            <span className="text-xs text-slate-500">{projectExpenses.length} registros</span>
+            <span className="text-xs text-slate-500">
+              {projectExpenses.length} registros {projectExpenses.length > 10 ? '(10 en vista previa, 100% en PDF/Excel)' : ''}
+            </span>
           </div>
 
           <div className="overflow-x-auto rounded-xl border border-slate-200">
@@ -719,10 +788,13 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
                 <tr>
                   <th className="py-2.5 px-3">Fecha</th>
                   <th className="py-2.5 px-3">Proveedor</th>
-                  <th className="py-2.5 px-3">NIT</th>
+                  <th className="py-2.5 px-3">NIT SAT</th>
                   <th className="py-2.5 px-3">Factura</th>
                   <th className="py-2.5 px-3">Concepto</th>
-                  <th className="py-2.5 px-3 text-right">Monto</th>
+                  {orientation === 'landscape' && (
+                    <th className="py-2.5 px-3 text-right">Subtotal s/IVA (12%)</th>
+                  )}
+                  <th className="py-2.5 px-3 text-right">Monto ({currency})</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -733,13 +805,18 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
                     <td className="py-2 px-3 text-slate-500 font-mono text-[11px]">{exp.nitSupplier}</td>
                     <td className="py-2 px-3 text-slate-600 font-mono text-[11px]">{exp.facturaNumber}</td>
                     <td className="py-2 px-3 text-slate-600">{exp.description}</td>
+                    {orientation === 'landscape' && (
+                      <td className="py-2 px-3 text-right text-slate-500 font-mono text-[11px]">
+                        {formatMoney(exp.amount / 1.12)}
+                      </td>
+                    )}
                     <td className="py-2 px-3 text-right font-bold text-slate-900">{formatMoney(exp.amount)}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot className="bg-slate-50 font-bold border-t border-slate-200 text-slate-900">
                 <tr>
-                  <td colSpan={5} className="py-2.5 px-3 text-right">
+                  <td colSpan={orientation === 'landscape' ? 6 : 5} className="py-2.5 px-3 text-right">
                     Total Gastos en Este Reporte:
                   </td>
                   <td className="py-2.5 px-3 text-right text-blue-600 font-bold">{formatMoney(totalSpent)}</td>

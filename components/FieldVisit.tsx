@@ -20,6 +20,7 @@ import {
 import { FieldVisit as FieldVisitType, FieldPhoto, Project } from '@/lib/types';
 import { SignaturePad, SignatureResult } from '@/components/SignaturePad';
 import { SignatureCanvas, SignatureCanvasResult } from '@/components/SignatureCanvas';
+import { injectPrintPageStyles } from '@/lib/reportExportEngine';
 
 export interface FieldVisitProps {
   visit?: FieldVisitType;
@@ -62,6 +63,12 @@ export const FieldVisit: React.FC<FieldVisitProps> = ({
 
   // Determine list of visits to display
   const displayVisits: FieldVisitType[] = visits || (visit ? [visit] : []);
+
+  const handlePrintVisit = () => {
+    const cleanup = injectPrintPageStyles('carta', 'portrait', 'normal');
+    window.print();
+    setTimeout(cleanup, 2500);
+  };
 
   const handleSignatureSaved = (visitId: string, result: SignatureResult) => {
     if (onSignVisit) {
@@ -345,9 +352,9 @@ export const FieldVisit: React.FC<FieldVisitProps> = ({
                     </span>
                     <button
                       type="button"
-                      onClick={() => window.print()}
+                      onClick={handlePrintVisit}
                       className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer"
-                      title="Imprimir Bitácora"
+                      title="Imprimir Bitácora (Formato Carta)"
                     >
                       <Printer className="w-4 h-4" />
                     </button>

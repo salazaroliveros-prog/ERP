@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { FileText, Plus, CheckCircle2, Printer, X } from 'lucide-react';
 import { QuoteRecord, Project, CompanySettings, APUItem } from '@/lib/types';
 import { formatGTQ, formatUSD } from '@/lib/data';
+import { injectPrintPageStyles } from '@/lib/reportExportEngine';
 
 interface QuotesManagerProps {
   quotes: QuoteRecord[];
@@ -32,6 +33,12 @@ export const QuotesManager: React.FC<QuotesManagerProps> = ({
 
   const formatMoney = (amount: number) => {
     return currency === 'GTQ' ? formatGTQ(amount) : formatUSD(amount, company.exchangeRate);
+  };
+
+  const handlePrintQuote = () => {
+    const cleanup = injectPrintPageStyles('carta', 'portrait', 'normal');
+    window.print();
+    setTimeout(cleanup, 2500);
   };
 
   const handleCreate = (e: React.FormEvent) => {
@@ -115,8 +122,9 @@ export const QuotesManager: React.FC<QuotesManagerProps> = ({
                 <p className="text-base font-bold text-slate-900">{formatMoney(quote.totalGTQ)}</p>
               </div>
               <button
-                onClick={() => window.print()}
+                onClick={handlePrintQuote}
                 className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer"
+                title="Imprimir Cotización en Hoja Carta (Letter)"
               >
                 <Printer className="w-3.5 h-3.5" /> Imprimir PDF
               </button>
