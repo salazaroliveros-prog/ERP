@@ -10,6 +10,8 @@ import {
   QuoteRecord,
   APUItem,
   ScheduleTask,
+  Milestone,
+  TaskReminder,
   AiRecommendation,
 } from './types';
 

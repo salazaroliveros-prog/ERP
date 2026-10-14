@@ -15,6 +15,7 @@ import {
   HardHat,
   Search,
   CloudLightning,
+  CloudSun,
   Sparkles,
   Layers,
 } from 'lucide-react';

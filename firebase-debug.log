@@ -1,0 +1,368 @@
+[debug] [2026-10-14T02:50:14.960Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:50:14.962Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:50:14.962Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:50:14.966Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:50:14.966Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:50:14.966Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:50:15.000Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:50:15.000Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:50:15.000Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:50:15.003Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:50:15.003Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:50:15.003Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:50:15.004Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T02:50:15.004Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T02:51:43.944Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:51:43.946Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:51:43.946Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:51:43.949Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:51:43.949Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:51:43.949Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:51:43.979Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:51:43.979Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:51:43.979Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:51:43.982Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:51:43.982Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:51:43.982Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:51:43.983Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T02:51:43.983Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T02:56:53.256Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:56:53.258Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:56:53.258Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:56:53.261Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:56:53.261Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:56:53.261Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:56:53.293Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:56:53.293Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:56:53.293Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:56:53.295Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:56:53.295Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:56:53.295Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:56:53.296Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T02:56:53.296Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T02:56:53.301Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:56:53.301Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:56:53.301Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:56:53.303Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:56:53.303Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:56:53.303Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:56:53.304Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T02:56:53.304Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T02:56:53.404Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:56:53.404Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:56:53.404Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:56:53.406Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:56:53.406Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:56:53.406Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T02:56:53.407Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T02:56:53.407Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T02:56:53.407Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T02:56:53.407Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T02:56:53.407Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:20:43.043Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:20:43.046Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:20:43.046Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:20:43.049Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:20:43.049Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:20:43.049Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:20:43.104Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:20:43.105Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:20:43.105Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:20:43.109Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:20:43.109Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:20:43.109Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:20:43.111Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T19:20:43.111Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T19:23:34.760Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:23:34.762Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:23:34.762Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:23:34.765Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:23:34.765Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:23:34.765Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:23:34.793Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:23:34.793Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:23:34.793Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:23:34.796Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:23:34.796Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:23:34.796Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:23:34.797Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T19:23:34.797Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T19:27:39.915Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:27:39.916Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:27:39.917Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:27:39.919Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:27:39.919Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:27:39.920Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:27:39.952Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:27:39.953Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:27:39.953Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:27:39.955Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:27:39.955Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:27:39.955Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:27:39.956Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T19:27:39.957Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T19:27:39.962Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:27:39.962Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:27:39.962Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:27:39.964Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:27:39.964Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:27:39.964Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:27:39.965Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T19:27:39.966Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T19:27:40.041Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:27:40.041Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:27:40.041Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:27:40.042Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:27:40.042Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:27:40.042Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:27:40.043Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T19:27:40.043Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T19:27:40.044Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:27:40.044Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:27:40.044Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.739Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.740Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.740Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.743Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.743Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.743Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.775Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.775Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.775Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.777Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.777Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.777Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.778Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T19:56:32.778Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T19:56:32.784Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.784Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.784Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.786Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.786Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.786Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.787Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T19:56:32.787Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T19:56:32.888Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.888Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.888Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.889Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.889Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.889Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.890Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T19:56:32.890Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T19:56:32.890Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.890Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.890Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.893Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.893Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.894Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.894Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.895Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.895Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.895Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.895Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.895Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.896Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.896Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.896Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.897Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T19:56:32.897Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T19:56:32.897Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T19:56:32.897Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T19:56:32.897Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.897Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.897Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T19:56:32.898Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T19:56:32.898Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T19:56:32.898Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.253Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.255Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.255Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.258Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.259Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.259Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.292Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.292Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.292Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.294Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.294Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.294Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.295Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T20:10:33.296Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T20:10:33.300Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.300Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.300Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.303Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.303Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.303Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.304Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T20:10:33.304Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T20:10:33.405Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.405Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.405Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.407Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.407Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.407Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.407Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T20:10:33.407Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T20:10:33.408Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.408Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.408Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.411Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.411Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.411Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.412Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.412Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.412Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.413Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.413Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.413Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.414Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.414Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.414Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.414Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T20:10:33.414Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T20:10:33.414Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T20:10:33.415Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T20:10:33.415Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.415Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.415Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:10:33.415Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:10:33.415Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:10:33.415Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:24:20.171Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:24:20.175Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:24:20.175Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:24:20.182Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:24:20.182Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:24:20.183Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:24:20.253Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:24:20.254Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:24:20.254Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:24:20.260Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:24:20.260Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:24:20.260Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:24:20.262Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T20:24:20.263Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T20:28:04.859Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:28:04.861Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:28:04.861Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:28:04.864Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:28:04.864Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:28:04.865Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:28:04.893Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:28:04.893Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:28:04.893Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:28:04.895Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:28:04.896Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:28:04.896Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:28:04.897Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T20:28:04.897Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T20:28:04.902Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:28:04.902Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:28:04.902Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:28:04.905Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:28:04.905Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:28:04.905Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:28:04.906Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T20:28:04.906Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T20:28:05.022Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:28:05.023Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:28:05.023Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:28:05.024Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:28:05.024Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:28:05.024Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:28:05.025Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T20:28:05.025Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T20:28:05.025Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:28:05.025Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:28:05.025Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:28:39.677Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:28:39.679Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:28:39.679Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:28:39.683Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:28:39.684Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:28:39.684Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:28:39.709Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:28:39.709Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:28:39.709Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:28:39.711Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:28:39.712Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:28:39.712Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:28:39.713Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T20:28:39.713Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T20:30:45.532Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:30:45.534Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:30:45.534Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:30:45.538Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:30:45.538Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:30:45.538Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:30:45.579Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:30:45.579Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:30:45.579Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:30:45.584Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:30:45.584Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:30:45.585Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:30:45.587Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T20:30:45.587Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T20:32:11.487Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:32:11.489Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:32:11.489Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:32:11.492Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:32:11.493Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:32:11.493Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:32:11.522Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:32:11.522Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:32:11.523Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:32:11.526Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T20:32:11.526Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T20:32:11.526Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T20:32:11.527Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T20:32:11.527Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T21:15:03.746Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T21:15:03.749Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T21:15:03.749Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T21:15:03.754Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T21:15:03.754Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T21:15:03.755Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T21:15:03.795Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T21:15:03.795Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T21:15:03.795Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T21:15:03.800Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T21:15:03.800Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T21:15:03.800Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T21:15:03.802Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T21:15:03.802Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T22:31:47.360Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T22:31:47.361Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T22:31:47.361Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T22:31:47.364Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T22:31:47.364Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T22:31:47.364Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T22:31:47.385Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T22:31:47.385Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T22:31:47.385Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T22:31:47.387Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T22:31:47.388Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T22:31:47.388Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T22:31:47.388Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T22:31:47.389Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T22:31:47.394Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T22:31:47.394Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T22:31:47.394Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T22:31:47.396Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T22:31:47.396Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T22:31:47.396Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T22:31:47.397Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T22:31:47.397Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T22:31:47.522Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T22:31:47.522Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T22:31:47.522Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T22:31:47.523Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T22:31:47.523Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T22:31:47.523Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-10-14T22:31:47.524Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-10-14T22:31:47.524Z] > authorizing via signed-in user (sistemadecontrol090@gmail.com)
+[debug] [2026-10-14T22:31:47.524Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"databaseId"}
+[debug] [2026-10-14T22:31:47.524Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-10-14T22:31:47.524Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf

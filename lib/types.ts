@@ -159,6 +159,7 @@ export interface ExpenseRecord {
   auditObservations?: string;
   assignedApuId?: string;
   assignedApuCode?: string;
+  assignedApuDescription?: string;
 }
 
 export interface QuoteRecord {
