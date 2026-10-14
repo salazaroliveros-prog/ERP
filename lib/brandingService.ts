@@ -22,9 +22,13 @@ export function getEffectiveCompanyName(company?: Partial<CompanySettings> | nul
  * Valida estrictamente formato PNG o JPEG.
  * Utiliza un Canvas para normalizar el tamaño (hasta 512x512 píxeles) preservando
  * nitidez y transparencia para PNG o fondo blanco para JPEG.
+ * Genera múltiples tamaños: 192x192, 512x512 (normal y maskable).
  */
 export async function processLogoFile(file: File): Promise<{
-  dataUrl: string;
+  dataUrl192: string;
+  dataUrl512: string;
+  dataUrl192Maskable: string;
+  dataUrl512Maskable: string;
   mimeType: 'image/png' | 'image/jpeg';
   width: number;
   height: number;
@@ -46,51 +50,83 @@ export async function processLogoFile(file: File): Promise<{
       img.onerror = () => reject(new Error('No se pudo decodificar la imagen del logotipo.'));
       img.onload = () => {
         try {
-          // Normalizar dimensiones cuadradas hasta 512x512
-          const targetSize = 512;
-          const canvas = document.createElement('canvas');
-          canvas.width = targetSize;
-          canvas.height = targetSize;
-          const ctx = canvas.getContext('2d');
+          // Función para generar icono a un tamaño específico
+          const generateIcon = (size: number, isMaskable: boolean) => {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
 
-          if (!ctx) {
-            resolve({
-              dataUrl: reader.result as string,
-              mimeType: targetMime,
-              width: img.width,
-              height: img.height,
-            });
-            return;
+            if (!ctx) return null;
+
+            // Para maskable: fondo seguro, para normal: transparencia (PNG) o blanco (JPEG)
+            if (isMaskable) {
+              // Safe zone para maskable: 40% del centro (60% padding)
+              ctx.fillStyle = isPng ? 'rgba(0,0,0,0)' : '#ffffff';
+            } else if (!isPng) {
+              ctx.fillStyle = '#ffffff';
+            }
+            ctx.fillRect(0, 0, size, size);
+
+            // Calcular escalado manteniendo proporción centrado
+            const scale = Math.min(size / img.width, size / img.height);
+            const drawW = img.width * scale;
+            const drawH = img.height * scale;
+            const offsetX = (size - drawW) / 2;
+            const offsetY = (size - drawH) / 2;
+
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
+
+            return canvas.toDataURL(targetMime, isPng ? 0.95 : 0.9);
+          };
+
+          const dataUrl192 = generateIcon(192, false);
+          const dataUrl512 = generateIcon(512, false);
+          const dataUrl192Maskable = generateIcon(192, true);
+          const dataUrl512Maskable = generateIcon(512, true);
+
+          // Log del logotipo subido
+          const uploadLog = {
+            timestamp: new Date().toISOString(),
+            fileName: file.name,
+            fileSize: file.size,
+            mimeType: file.type,
+            processedMimeType: targetMime,
+            originalDimensions: `${img.width}x${img.height}`,
+            processedSizes: ['192x192', '512x512', '192x192-maskable', '512x512-maskable'],
+          };
+          console.log('[ConstructERP] Logotipo subido y procesado:', uploadLog);
+          
+          // Guardar log en localStorage para auditoría
+          if (typeof window !== 'undefined') {
+            try {
+              const logs = JSON.parse(localStorage.getItem('constructerp_logo_upload_logs') || '[]');
+              logs.unshift(uploadLog);
+              // Mantener solo los últimos 50 logs
+              localStorage.setItem('constructerp_logo_upload_logs', JSON.stringify(logs.slice(0, 50)));
+            } catch (e) {
+              console.warn('No se pudo guardar log de subida de logotipo:', e);
+            }
           }
 
-          // Para JPEG, pintar fondo blanco limpio; para PNG mantener transparencia
-          if (!isPng) {
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, targetSize, targetSize);
-          }
-
-          // Calcular escalado manteniendo proporción centrado
-          const scale = Math.min(targetSize / img.width, targetSize / img.height);
-          const drawW = img.width * scale;
-          const drawH = img.height * scale;
-          const offsetX = (targetSize - drawW) / 2;
-          const offsetY = (targetSize - drawH) / 2;
-
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = 'high';
-          ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
-
-          const finalDataUrl = canvas.toDataURL(targetMime, isPng ? 0.95 : 0.9);
           resolve({
-            dataUrl: finalDataUrl,
+            dataUrl192: dataUrl192 || (reader.result as string),
+            dataUrl512: dataUrl512 || (reader.result as string),
+            dataUrl192Maskable: dataUrl192Maskable || (reader.result as string),
+            dataUrl512Maskable: dataUrl512Maskable || (reader.result as string),
             mimeType: targetMime,
-            width: targetSize,
-            height: targetSize,
+            width: 512,
+            height: 512,
           });
         } catch {
           // Si falla canvas, retornar data URL original
           resolve({
-            dataUrl: reader.result as string,
+            dataUrl192: reader.result as string,
+            dataUrl512: reader.result as string,
+            dataUrl192Maskable: reader.result as string,
+            dataUrl512Maskable: reader.result as string,
             mimeType: targetMime,
             width: img.width,
             height: img.height,
@@ -101,6 +137,26 @@ export async function processLogoFile(file: File): Promise<{
     };
     reader.readAsDataURL(file);
   });
+}
+
+/**
+ * Obtiene el historial de subidas de logotipos para auditoría.
+ */
+export function getLogoUploadLogs(): Array<{
+  timestamp: string;
+  fileName: string;
+  fileSize: number;
+  mimeType: string;
+  processedMimeType: string;
+  originalDimensions: string;
+  processedSizes: string[];
+}> {
+  if (typeof window === 'undefined') return [];
+  try {
+    return JSON.parse(localStorage.getItem('constructerp_logo_upload_logs') || '[]');
+  } catch {
+    return [];
+  }
 }
 
 /**
@@ -137,6 +193,7 @@ export function loadSavedCompanyBranding(): CompanySettings | null {
  * 3. Icono de pantalla de inicio Apple / iOS (link[rel="apple-touch-icon"]).
  * 4. PWA Web App Manifest dinámico generado en Blob para que la app
  *    se instale con este logotipo e icono en Android, Windows, Mac o iOS.
+ *    Incluye versiones normales y maskable en 192x192 y 512x512.
  */
 export function applyCompanyBrandingToDOM(company: CompanySettings): void {
   if (typeof document === 'undefined') return;
@@ -148,7 +205,9 @@ export function applyCompanyBrandingToDOM(company: CompanySettings): void {
 
   // 2. Si hay logotipo, actualizar favicon e iconos de instalación de dispositivos
   if (company.logoUrl && company.logoUrl.startsWith('data:image')) {
-    const logoUrl = company.logoUrl;
+    const logoUrl192 = company.logoUrl; // Usar la versión 192 para favicon
+    const logoUrl512 = company.logoUrl; // Usar la versión 512 para manifest
+    const logoType = company.logoType || 'image/png';
 
     // Actualizar / crear link favicon
     const updateOrCreateLink = (rel: string, href: string) => {
@@ -161,12 +220,12 @@ export function applyCompanyBrandingToDOM(company: CompanySettings): void {
       link.href = href;
     };
 
-    updateOrCreateLink('icon', logoUrl);
-    updateOrCreateLink('shortcut icon', logoUrl);
-    updateOrCreateLink('apple-touch-icon', logoUrl);
-    updateOrCreateLink('apple-touch-icon-precomposed', logoUrl);
+    updateOrCreateLink('icon', logoUrl192);
+    updateOrCreateLink('shortcut icon', logoUrl192);
+    updateOrCreateLink('apple-touch-icon', logoUrl192);
+    updateOrCreateLink('apple-touch-icon-precomposed', logoUrl192);
 
-    // 3. Generar y enlazar Web App Manifest dinámico en Blob
+    // 3. Generar y enlazar Web App Manifest dinámico en Blob con iconos maskable
     try {
       const dynamicManifest = {
         name: `${companyName} - ConstructERP Guatemala`,
@@ -178,16 +237,28 @@ export function applyCompanyBrandingToDOM(company: CompanySettings): void {
         theme_color: company.primaryColor || '#0284c7',
         icons: [
           {
-            src: logoUrl,
+            src: logoUrl192,
             sizes: '192x192',
-            type: company.logoType || 'image/png',
+            type: logoType,
             purpose: 'any',
           },
           {
-            src: logoUrl,
+            src: logoUrl512,
             sizes: '512x512',
-            type: company.logoType || 'image/png',
+            type: logoType,
             purpose: 'any maskable',
+          },
+          {
+            src: logoUrl192,
+            sizes: '192x192',
+            type: logoType,
+            purpose: 'maskable',
+          },
+          {
+            src: logoUrl512,
+            sizes: '512x512',
+            type: logoType,
+            purpose: 'maskable',
           },
         ],
       };

@@ -6,7 +6,8 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const name = searchParams.get('name') || 'ConstructERP Guatemala - Control de Obras';
   const shortName = searchParams.get('shortName') || 'ConstructERP';
-  const icon = searchParams.get('icon') || '/assets/icon-192.png';
+  const icon192 = searchParams.get('icon192') || '/icons/logo-192x192.png';
+  const icon512 = searchParams.get('icon512') || '/icons/logo-512x512.png';
 
   const manifest = {
     name: name,
@@ -19,16 +20,28 @@ export async function GET(request: Request) {
     orientation: 'portrait-primary',
     icons: [
       {
-        src: icon,
+        src: icon192,
         sizes: '192x192',
         type: 'image/png',
         purpose: 'any',
       },
       {
-        src: icon,
+        src: icon512,
         sizes: '512x512',
         type: 'image/png',
         purpose: 'any maskable',
+      },
+      {
+        src: icon192,
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+      {
+        src: icon512,
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
       },
     ],
   };

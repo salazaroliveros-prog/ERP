@@ -43,6 +43,10 @@ export const CompanyBrandingModal: React.FC<CompanyBrandingModalProps> = ({
 
   // Logotipo state
   const [logoUrl, setLogoUrl] = useState<string | undefined>(company.logoUrl);
+  const [logoUrl192, setLogoUrl192] = useState<string | undefined>(company.logoUrl);
+  const [logoUrl512, setLogoUrl512] = useState<string | undefined>(company.logoUrl);
+  const [logoUrl192Maskable, setLogoUrl192Maskable] = useState<string | undefined>(company.logoUrl);
+  const [logoUrl512Maskable, setLogoUrl512Maskable] = useState<string | undefined>(company.logoUrl);
   const [logoType, setLogoType] = useState<'image/png' | 'image/jpeg' | undefined>(company.logoType);
   const [isProcessingLogo, setIsProcessingLogo] = useState(false);
   const [logoError, setLogoError] = useState<string | null>(null);
@@ -62,9 +66,13 @@ export const CompanyBrandingModal: React.FC<CompanyBrandingModalProps> = ({
 
     try {
       const processed = await processLogoFile(file);
-      setLogoUrl(processed.dataUrl);
+      setLogoUrl(processed.dataUrl512);
+      setLogoUrl192(processed.dataUrl192);
+      setLogoUrl512(processed.dataUrl512);
+      setLogoUrl192Maskable(processed.dataUrl192Maskable);
+      setLogoUrl512Maskable(processed.dataUrl512Maskable);
       setLogoType(processed.mimeType);
-      setUploadSuccess(`Logotipo (${processed.mimeType === 'image/png' ? 'PNG' : 'JPEG'}) procesado correctamente.`);
+      setUploadSuccess(`Logotipo (${processed.mimeType === 'image/png' ? 'PNG' : 'JPEG'}) procesado correctamente en 4 tamaños: 192x192, 512x512, 192x192-maskable, 512x512-maskable.`);
     } catch (err) {
       setLogoError(err instanceof Error ? err.message : 'Error al procesar el archivo.');
     } finally {
@@ -75,6 +83,10 @@ export const CompanyBrandingModal: React.FC<CompanyBrandingModalProps> = ({
 
   const handleRemoveLogo = () => {
     setLogoUrl(undefined);
+    setLogoUrl192(undefined);
+    setLogoUrl512(undefined);
+    setLogoUrl192Maskable(undefined);
+    setLogoUrl512Maskable(undefined);
     setLogoType(undefined);
     setUploadSuccess(null);
     setLogoError(null);

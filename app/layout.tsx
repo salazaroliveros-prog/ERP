@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   },
   applicationName: 'ConstructERP Guatemala',
   icons: {
-    icon: '/favicon.ico',
-    apple: '/assets/icon-192.png',
+    icon: '/icons/logo-192x192.png',
+    apple: '/icons/logo-192x192.png',
   },
 };
 
