@@ -91,10 +91,17 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
   // Filter for history
   const [historyProjectFilter, setHistoryProjectFilter] = useState<string>(activeProjectId);
 
-  const currentProject = projects.find((p) => p.id === selectedProjectId) || projects[0];
+  const currentProject = projects.find((p) => p.id === selectedProjectId) || (projects.length > 0 ? projects[0] : undefined);
+
+  if (!currentProject) return null;
 
   // Recalculate distance whenever user coords or selected project changes
   const runGeofenceCheck = (coords: { lat: number; lng: number }) => {
+    if (!currentProject) {
+      setDistanceMeters(0);
+      setIsWithinGeofence(false);
+      return;
+    }
     const res = validateProjectGeofence(
       coords.lat,
       coords.lng,
@@ -468,6 +475,8 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                     <label className="block text-xs font-semibold text-slate-700 mb-1">Horas Extras</label>
                     <input
                       type="number"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       min="0"
                       max="12"
                       value={overtimeHours}
@@ -814,8 +823,8 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
 
       {/* CREATE EMPLOYEE MODAL */}
       {isOpenModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 animate-in fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto animate-in fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[85vh] overflow-y-auto sm:overflow-hidden border border-slate-200">
             <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
               <h3 className="font-bold text-base">Registrar Nuevo Empleado</h3>
               <button
@@ -857,6 +866,8 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Jornal Diario (Q)</label>
                   <input
                     type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={rate}
                     onChange={(e) => setRate(e.target.value)}
                     placeholder="0.00"
@@ -897,8 +908,8 @@ export const StaffAndAttendance: React.FC<StaffAndAttendanceProps> = ({
 
       {/* EDIT EMPLOYEE MODAL */}
       {editingEmployee && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 animate-in fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto animate-in fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[85vh] overflow-y-auto sm:overflow-hidden border border-slate-200">
             <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
               <h3 className="font-bold text-base">Editar Empleado / Operario</h3>
               <button

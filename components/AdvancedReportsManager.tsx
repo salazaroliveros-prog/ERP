@@ -81,18 +81,20 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
   const [excelSuccessToast, setExcelSuccessToast] = useState(false);
 
 
-  const activeProject = projects.find((p) => p.id === selectedProjectId) || projects[0];
+  const activeProject = projects.find((p) => p.id === selectedProjectId) || (projects.length > 0 ? projects[0] : undefined);
 
   // Filtered data
   const projectExpenses = expenses.filter((e) => {
-    const matchProject = selectedProjectId === 'all' || e.projectId === activeProject.id;
+    const matchProject = selectedProjectId === 'all' || (!!activeProject && e.projectId === activeProject.id);
     const matchCategory = selectedCategory === 'all' || e.category === selectedCategory;
     return matchProject && matchCategory;
   });
 
   const projectVisits = fieldVisits.filter((v) => {
-    return selectedProjectId === 'all' || v.projectId === activeProject.id;
+    return selectedProjectId === 'all' || (!!activeProject && v.projectId === activeProject.id);
   });
+
+  if (!activeProject) return null;
 
   const totalSpent = projectExpenses.reduce((sum, e) => sum + e.amount, 0);
   const totalBudget = selectedProjectId === 'all'
@@ -505,7 +507,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
           <button
             onClick={handleExportExcel}
             disabled={isExportingExcel}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition cursor-pointer disabled:opacity-50 min-h-[44px]"
             title="Exportar todas las bitácoras y registros de gastos a formato .xlsx profesional con macros preconfiguradas"
           >
             <FileSpreadsheet className="w-4 h-4" />
@@ -515,7 +517,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
           {/* View Preconfigured VBA Macros */}
           <button
             onClick={() => setShowMacroModal(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs transition cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs transition cursor-pointer min-h-[44px]"
             title="Ver las macros contables preconfiguradas para SAT y pólizas de diario"
           >
             <Code2 className="w-4 h-4 text-emerald-700" />
@@ -524,7 +526,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
 
           <button
             onClick={handlePrint}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition cursor-pointer min-h-[44px]"
             title="Imprimir con formato de hoja configurado (Carta / Oficio / A4)"
           >
             <Printer className="w-4 h-4 text-slate-500" />
@@ -534,7 +536,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
           <button
             onClick={generatePDF}
             disabled={isGenerating}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition cursor-pointer disabled:opacity-50 min-h-[44px]"
           >
             <Download className="w-4 h-4" />
             {isGenerating ? 'Generando PDF...' : 'Descargar PDF'}
@@ -591,7 +593,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
             <select
               value={paperFormat}
               onChange={(e) => setPaperFormat(e.target.value as PaperFormat)}
-              className="bg-transparent text-xs font-bold text-amber-300 outline-none cursor-pointer"
+              className="bg-transparent text-xs font-bold text-amber-300 outline-none cursor-pointer min-h-[44px]"
             >
               <option value="carta" className="bg-slate-900 text-white">Carta (Letter 8.5" × 11") — Estándar GT</option>
               <option value="oficio" className="bg-slate-900 text-white">Oficio (Legal 8.5" × 14") — Notarial/Contratos GT</option>
@@ -627,7 +629,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
             <select
               value={marginSize}
               onChange={(e) => setMarginSize(e.target.value as MarginSize)}
-              className="bg-transparent text-xs font-bold text-emerald-400 outline-none cursor-pointer"
+              className="bg-transparent text-xs font-bold text-emerald-400 outline-none cursor-pointer min-h-[44px]"
             >
               <option value="normal" className="bg-slate-900 text-white">Normal (15 mm)</option>
               <option value="estrecho" className="bg-slate-900 text-white">Estrecho (10 mm)</option>
@@ -941,7 +943,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
                   <span className="text-xs font-bold text-slate-700">Código Fuente VBA (Visual Basic for Applications):</span>
                   <button
                     onClick={handleCopyVba}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition cursor-pointer min-h-[44px]"
                   >
                     {isCopiedVba ? (
                       <>
@@ -966,7 +968,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
             <div className="bg-slate-50 p-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
               <button
                 onClick={() => downloadVbaMacroFile(activeProject)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs transition cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs transition cursor-pointer min-h-[44px]"
               >
                 <Download className="w-4 h-4" /> Descargar Archivo .BAS
               </button>
@@ -983,7 +985,7 @@ export const AdvancedReportsManager: React.FC<AdvancedReportsManagerProps> = ({
                     handleExportExcel();
                     setShowMacroModal(false);
                   }}
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition cursor-pointer"
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition cursor-pointer min-h-[44px]"
                 >
                   <FileSpreadsheet className="w-4 h-4" /> Descargar .xlsx Completo
                 </button>

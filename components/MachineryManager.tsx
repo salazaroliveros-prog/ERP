@@ -131,9 +131,9 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
       </div>
 
       {isOpenModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
-            <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[85vh] overflow-y-auto sm:overflow-hidden border border-slate-200">
+            <div className="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
               <h3 className="font-bold text-base">Registrar Nueva Maquinaria</h3>
               <button onClick={() => setIsOpenModal(false)} className="text-slate-400 hover:text-white">✕</button>
             </div>
@@ -175,6 +175,8 @@ export const MachineryManager: React.FC<MachineryManagerProps> = ({
                 <label className="block text-xs font-semibold text-slate-700 mb-1">Tarifa por Hora (GTQ)</label>
                 <input
                   type="number"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   value={rate}
                   onChange={(e) => setRate(e.target.value)}
                   placeholder="0.00"

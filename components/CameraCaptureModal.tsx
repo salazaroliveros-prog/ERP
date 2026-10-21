@@ -63,6 +63,29 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
   // Active tab: 'camera' vs 'upload'
   const [inputTab, setInputTab] = useState<'camera' | 'upload'>('camera');
 
+  // Detect iOS Safari for specific camera handling
+  const isIOS = typeof window !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.platform);
+  const isIOSSafari = isIOS && /WebKit/.test(navigator.userAgent) && !/CriOS/.test(navigator.userAgent);
+
+  // Haptic feedback helper for mobile devices
+  const hapticFeedback = (style: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light') => {
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      const patterns: Record<string, number[]> = {
+        light: [10],
+        medium: [20],
+        heavy: [35],
+        success: [10, 50, 10],
+        warning: [20, 30, 20],
+        error: [50, 50, 50],
+      };
+      try {
+        navigator.vibrate(patterns[style] ?? patterns.light);
+      } catch {
+        // Vibration API not supported or blocked
+      }
+    }
+  };
+
   // Audio shutter effect using Web Audio API
   const playShutterSound = () => {
     try {
@@ -144,7 +167,9 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
     } catch (err: any) {
       console.warn('getUserMedia error:', err);
       let msg = 'No se pudo activar la cámara del dispositivo.';
-      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+      if (isIOSSafari) {
+        msg = 'En iOS Safari, la cámara requiere HTTPS y permisos explícitos. Vaya a Configuración de Safari y active el acceso a la cámara. O use la opción "Subir archivo" para seleccionar una foto de la galería.';
+      } else if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
         msg = 'Permiso denegado para acceder a la cámara. Permita el acceso a la cámara o use la opción de subir archivo.';
       } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
         msg = 'No se encontró ninguna cámara conectada en este equipo.';
@@ -271,6 +296,7 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
   // Confirm and save
   const handleConfirm = () => {
     if (!previewDataUrl) return;
+    hapticFeedback('success');
     const now = new Date();
     const timestamp = `${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT', { hour: '2-digit', minute: '2-digit' })}`;
 
@@ -283,6 +309,7 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
   };
 
   const handleRetake = () => {
+    hapticFeedback('light');
     setPreviewDataUrl(null);
     if (inputTab === 'camera') {
       startCameraStream(facingMode);
@@ -323,6 +350,18 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
             <X className="w-5 h-5" />
           </button>
         </div>
+
+        {/* iOS Safari warning banner */}
+        {isIOSSafari && (
+          <div className="bg-amber-500/10 border border-amber-500/30 p-3 px-4 mb-2">
+            <div className="flex items-start gap-2 text-xs text-amber-900">
+              <span className="text-amber-600">ℹ️</span>
+              <span>
+                En iOS Safari, si la cámara no se activa, use la pestaña "Subir archivo" para seleccionar una foto de su galería. Asegúrese de permitir acceso a la cámara en Configuración de Safari.
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Tab Switcher: Cámara vs Archivo */}
         {!previewDataUrl && (

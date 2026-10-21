@@ -97,11 +97,13 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
     spentTotal: number;
   } | null>(null);
 
-  const activeProject = projects.find((p) => p.id === activeProjectId) || projects[0];
+  const activeProject = projects.find((p) => p.id === activeProjectId) || (projects.length > 0 ? projects[0] : undefined);
 
   const formatMoney = (val: number) => {
     return currency === 'GTQ' ? formatGTQ(val) : formatUSD(val, company.exchangeRate);
   };
+
+  if (!activeProject) return null;
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
@@ -657,8 +659,8 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
 
       {/* Modal: Two-Step Approval by Project Manager */}
       {approvalModalExpense && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-150">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[85vh] overflow-y-auto sm:overflow-hidden border border-slate-200">
             <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-emerald-400" />
@@ -971,6 +973,8 @@ export const ExpensesManager: React.FC<ExpensesManagerProps> = ({
                   <label className="block text-xs font-semibold text-slate-700 mb-1">Monto (GTQ)</label>
                   <input
                     type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={amount}
                     onChange={(e) => {
                       const newAmt = e.target.value;

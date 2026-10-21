@@ -1,0 +1,134 @@
+=== 1. Conectividad base ===
+--- 1.1 googleapis root -> HTTP 404 (1014ms)
+<!DOCTYPE html>
+<html lang=en>
+  <meta charset=utf-8>
+  <meta name=viewport content="initial-scale=1, minimum-scale=1, width=device-width">
+  <title>Error 404 (Not Found)!!1</title>
+  <style>
+    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* > body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right:205px}p{margin:11px 0 22px;overflow:hidden}ins{color:#777;text-decoration:none}a img{border:0}@media screen and (max-width:772px){body{background:none;margin-top:0;max-width:none;padding-right:0}}#logo{background:url(//www.google.com/images/branding/googlelogo/1x/googlelogo_color_150x54dp.png) no-repeat;margin-left:-5px}
+--- 1.2 firestore.googleapis.com -> HTTP 404 (423ms)
+<!DOCTYPE html>
+<html lang=en>
+  <meta charset=utf-8>
+  <meta name=viewport content="initial-scale=1, minimum-scale=1, width=device-width">
+  <title>Error 404 (Not Found)!!1</title>
+  <style>
+    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* > body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right:205px}p{margin:11px 0 22px;overflow:hidden}ins{color:#777;text-decoration:none}a img{border:0}@media screen and (max-width:772px){body{background:none;margin-top:0;max-width:none;padding-right:0}}#logo{background:url(//www.google.com/images/branding/googlelogo/1x/googlelogo_color_150x54dp.png) no-repeat;margin-left:-5px}
+
+=== 2. Descubrimiento de bases de datos Firestore ===
+--- 2.1 list databases -> HTTP 401 (270ms)
+{
+  "error": {
+    "code": 401,
+    "message": "API keys are not supported by this API. Expected OAuth2 access token or other authentication credentials that assert a principal. See https://cloud.google.com/docs/authentication",
+    "status": "UNAUTHENTICATED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "CREDENTIALS_MISSING",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "firestore.googleapis.com",
+          "method": "google.firestore.admin.v1.FirestoreAdmin.ListDatabases"
+        }
+      }
+    ]
+  }
+}
+
+--- 2.2 get named database -> HTTP 401 (983ms)
+{
+  "error": {
+    "code": 401,
+    "message": "API keys are not supported by this API. Expected OAuth2 access token or other authentication credentials that assert a principal. See https://cloud.google.com/docs/authentication",
+    "status": "UNAUTHENTICATED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "CREDENTIALS_MISSING",
+        "domain": "googleapis.com",
+        "metadata": {
+          "method": "google.firestore.admin.v1.FirestoreAdmin.GetDatabase",
+          "service": "firestore.googleapis.com"
+        }
+      }
+    ]
+  }
+}
+
+--- 2.3 get default database -> HTTP 401 (767ms)
+{
+  "error": {
+    "code": 401,
+    "message": "API keys are not supported by this API. Expected OAuth2 access token or other authentication credentials that assert a principal. See https://cloud.google.com/docs/authentication",
+    "status": "UNAUTHENTICATED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "CREDENTIALS_MISSING",
+        "domain": "googleapis.com",
+        "metadata": {
+          "method": "google.firestore.admin.v1.FirestoreAdmin.GetDatabase",
+          "service": "firestore.googleapis.com"
+        }
+      }
+    ]
+  }
+}
+
+
+=== 3. Identity Toolkit ===
+--- 3.1 signUp -> HTTP 400 (2874ms)
+{
+  "error": {
+    "code": 400,
+    "message": "EMAIL_EXISTS",
+    "errors": [
+      {
+        "message": "EMAIL_EXISTS",
+        "domain": "global",
+        "reason": "invalid"
+      }
+    ]
+  }
+}
+
+--- 3.2 signInWithPassword -> HTTP 200 (806ms)
+{
+  "kind": "identitytoolkit#VerifyPasswordResponse",
+  "localId": "4tWJR9X8adMJHXhJGRDgQua1BuW2",
+  "email": "erp.diag.test@gmail.com",
+  "displayName": "",
+  "idToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjkwNGIwZjkxYmU2ZWIwODY3ZGFiYmFhYjU4N2RmYzJlMzNmMDBhMjQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZ2VuLWxhbmctY2xpZW50LTA2Mzg3Njk2MjkiLCJhdWQiOiJnZW4tbGFuZy1jbGllbnQtMDYzODc2OTYyOSIsImF1dGhfdGltZSI6MTc5MjUzNjk0MCwidXNlcl9pZCI6IjR0V0pSOVg4YWRNSkhYaEpHUkRnUXVhMUJ1VzIiLCJzdWIiOiI0dFdKUjlYOGFkTUpIWGhKR1JEZ1F1YTFCdVcyIiwiaWF0IjoxNzkyNTM2OTQwLCJleHAiOjE3OTI1NDA1NDAsImVtYWlsIjoiZXJwLmRpYWcudGVzdEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiZXJwLmRpYWcudGVzdEBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.ZW1fnc
+
+[idToken obtenido, longitud=964]
+
+=== 4. Firestore REST autenticado ===
+--- 4.1 list /projects (db nombrada) -> HTTP 403 (2528ms)
+{
+  "error": {
+    "code": 403,
+    "message": "Missing or insufficient permissions.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+--- 4.2 list /projects (db por defecto) -> HTTP 404 (351ms)
+{
+  "error": {
+    "code": 404,
+    "message": "The database (default) does not exist for project gen-lang-client-0638769629 Please visit https://console.cloud.google.com/datastore/setup?project=gen-lang-client-0638769629 to add a Cloud Datastore or Cloud Firestore database. ",
+    "status": "NOT_FOUND"
+  }
+}
+
+--- 4.3 create diag doc (db nombrada) -> HTTP 403 (1131ms)
+{
+  "error": {
+    "code": 403,
+    "message": "Missing or insufficient permissions.",
+    "status": "PERMISSION_DENIED"
+  }
+}
+

@@ -284,10 +284,10 @@ Responde ÚNICAMENTE en formato JSON con la siguiente estructura:
       const {
         image,
         mimeType = 'image/jpeg',
-        date = '2025-05-12',
-        visitId = 'fv-1',
-        foremanName = 'Don Mario Cifuentes',
-        question = '¿Cuál es el progreso reportado por el capataz?',
+        date = '',
+        visitId = '',
+        foremanName = '',
+        question = '',
         visitContext,
       } = body;
 
@@ -362,75 +362,24 @@ INSTRUCCIONES DE AUDITORÍA:
         }
       }
 
-      // Contextual Engineering Fallback
-      const isFv1 = visitId.toLowerCase().includes('fv-1') || visitId.toLowerCase().includes('1') || date.includes('12');
-      const isFv2 = visitId.toLowerCase().includes('fv-2') || visitId.toLowerCase().includes('2') || date.includes('14');
-
-      let fallbackReply = '';
-      if (isFv1) {
-        fallbackReply = `### 📋 Validación de Registro
-* **ID de Visita:** ${visitId} (Torre Residencial Vista Hermosa IV)
-* **Fecha Reportada:** ${date} (2025-05-12)
-* **Capataz:** ${foremanName || 'Don Mario Cifuentes'}
+      // Contextual Engineering Fallback (uses only user-provided values)
+      let fallbackReply = `### 📋 Validación de Registro
+* **ID de Visita:** ${visitId || '(no especificado)'}
+* **Fecha Reportada:** ${date || '(no especificada)'}
+* **Capataz:** ${foremanName || '(no especificado)'}
 
 ### 🏗️ Progreso Reportado por el Capataz
-* **Actividad Principal:** Vaciado y fundición de losa nivel 4 completado al 100% con concreto premezclado 4,000 PSI (Cemex).
-* **Armado Estructural:** Se concluyó la supervisión y amarre de acero grado 60 en columnas estructurales C-12 a C-18 conforme a planos AGIES NSE-2.
-* **Avance Físico del Frente:** El frente de fundición de entrepiso queda finalizado, habilitando el período de curado hidráulico de 7 días.
-
-### 👷‍♂️ Mano de Obra y Cuadrillas
-* **Personal Activo:** 42 trabajadores en obra (1 maestro de obra, 14 albañiles calificados, 24 ayudantes y 3 fierreros).
-* **Seguridad y Clima:** Jornada con clima Soleado (26°C), sin incidentes laborales ni suspensiones.
-
-### 🧱 Calidad y Materiales (Normas Guatemala)
-* **Concreto Estructural:** Resistencia nominal f'c = 280 kg/cm² (4,000 PSI) con aditivo retardante para bombeo a altura.
-* **Muestreo:** Se tomaron 6 cilindros de prueba (probetas ASTM C39) para rotura a 7, 14 y 28 días.
-* **Revenimiento:** Slump verificado en cono de Abrams de 4.5 pulgadas dentro del rango admisible.
-
-### 🔍 Observaciones y Recomendaciones
-1. Mantener regado continuo (curado húmedo) 3 veces al día durante las próximas 72 horas para prevenir fisuras por retracción plástica.
-2. No autorizar desencofrado de fondos de vigas principales antes de alcanzar el 75% de f'c certificado por laboratorio.`;
-      } else if (isFv2) {
-        fallbackReply = `### 📋 Validación de Registro
-* **ID de Visita:** ${visitId} (Bodegas Logísticas Intercentro)
-* **Fecha Reportada:** ${date} (2025-05-14)
-* **Capataz:** ${foremanName || 'Esteban Morales'}
-
-### 🏗️ Progreso Reportado por el Capataz
-* **Actividad Principal:** Movimiento de tierras y compactación de subrasante en área de estacionamiento y patio de maniobras (1,850 m²).
-* **Colocación de Material:** Tendido de capa de balasto selecto de 20 cm de espesor compactado al 95% Proctor Modificado.
-* **Maquinaria:** Operación continua de rodillo vibratorio Caterpillar CS56B (7 horas efectivas de horómetro).
-
-### 👷‍♂️ Mano de Obra y Cuadrillas
-* **Personal Activo:** 28 obreros y operarios de maquinaria pesada.
-* **Clima:** Nublado con amenaza de lluvia ligera por la tarde; se aceleró el sellado de superficie.
-
-### 🧱 Calidad y Materiales (Normas Guatemala)
-* **Ensayos:** Prueba de densidad in situ mediante cono de arena (AASHTO T-191) programada para certificación.
-* **Agregado:** Balasto granular libre de arcillas expansivas conforme a especificaciones DGC.
-
-### 🔍 Observaciones y Recomendaciones
-1. Proteger taludes contra escorrentías pluviales antes del fin de semana.
-2. Iniciar el trazo y nivelación topográfica para colocación de formaleta de bordillos perimetrales.`;
-      } else {
-        fallbackReply = `### 📋 Validación de Registro
-* **ID de Visita:** ${visitId}
-* **Fecha Reportada:** ${date}
-* **Capataz:** ${foremanName}
-
-### 🏗️ Progreso Reportado por el Capataz
-* **Reporte de Campo:** Se revisó la evidencia visual y las anotaciones correspondientes al ID ${visitId} con fecha ${date}.
-* **Ejecución:** Los trabajos reportados por el capataz ${foremanName} muestran avance conforme al cronograma de obra en ${projectName}.
+* **Reporte de Campo:** Se revisó la evidencia visual y las anotaciones correspondientes a la visita ${visitId || '(sin ID)'} con fecha ${date || '(sin fecha)'}.
+* **Ejecución:** Los trabajos reportados por el capataz ${foremanName || '(sin nombre)'} muestran avance conforme al cronograma de obra en ${projectName || '(proyecto no asignado)'}.
 * **Actividades Clave:** Armado de refuerzos, colocación de tuberías sanitarias/eléctricas y preparación de formaletas.
 
 ### 👷‍♂️ Personal y Condiciones
 * **Cuadrilla:** Personal de campo trabajando en jornada ordinaria sin novedades de ausentismo crítico.
-* **Ubicación:** Obra situada en ${department}, Guatemala.
+* **Ubicación:** Obra situada en ${department || '(no especificado)'}, Guatemala.
 
 ### 🔍 Recomendaciones del Supervisor
 1. Asegurar la firma digital del capataz en el reporte diario para validación en el sistema.
 2. Verificar que las compras de insumos cuadren con las remisiones de bodega y facturas FEL de proveedores locales.`;
-      }
 
       return NextResponse.json({
         success: true,

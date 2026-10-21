@@ -53,7 +53,7 @@ export const FieldVisit: React.FC<FieldVisitProps> = ({
   const [isCreatingNew, setIsCreatingNew] = useState(false);
 
   // New Visit Form State
-  const [newForeman, setNewForeman] = useState('Don Mario Cifuentes');
+  const [newForeman, setNewForeman] = useState('');
   const [newDpi, setNewDpi] = useState('2489 10293 0101');
   const [newNotes, setNewNotes] = useState('');
   const [newWeather, setNewWeather] = useState<'Soleado' | 'Lluvia Moderada' | 'Tormenta Fuerte' | 'Nublado'>('Soleado');
@@ -100,7 +100,7 @@ export const FieldVisit: React.FC<FieldVisitProps> = ({
 
     const newRecord: FieldVisitType = {
       id: `fv-${Date.now()}`,
-      projectId: project?.id || 'p1',
+      projectId: project?.id || '',
       projectName: project?.name || 'Proyecto Activo',
       date: new Date().toISOString().split('T')[0],
       foremanName: newSignatureResult ? newSignatureResult.signerName : newForeman,
@@ -484,7 +484,7 @@ export const FieldVisit: React.FC<FieldVisitProps> = ({
           visit={displayVisits.find((v) => v.id === activeSigningVisitId)}
           visitId={activeSigningVisitId}
           onSave={(dataUrl, result) => handleSignatureSaved(activeSigningVisitId, result as SignatureResult)}
-          defaultSignerName={displayVisits.find((v) => v.id === activeSigningVisitId)?.foremanName || 'Don Mario Cifuentes'}
+          defaultSignerName={displayVisits.find((v) => v.id === activeSigningVisitId)?.foremanName || ''}
           defaultSignerDpi={displayVisits.find((v) => v.id === activeSigningVisitId)?.signerDpi || '2489 10293 0101'}
           title="Firma Digital del Capataz (SignatureCanvas)"
           subtitle={`Autorización legal de bitácora #${activeSigningVisitId}`}

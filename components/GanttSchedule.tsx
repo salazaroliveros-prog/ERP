@@ -60,7 +60,7 @@ export const GanttSchedule: React.FC<GanttScheduleProps> = ({
   onDeleteReminder,
   onOpenReminderModal,
 }) => {
-  const activeProject = projects.find((p) => p.id === activeProjectId) || projects[0];
+  const activeProject = projects.find((p) => p.id === activeProjectId) || (projects.length > 0 ? projects[0] : undefined);
 
   // Local state fallbacks if parent does not pass full handlers
   const [localMilestones, setLocalMilestones] = useState<Milestone[]>(
@@ -78,6 +78,8 @@ export const GanttSchedule: React.FC<GanttScheduleProps> = ({
   const [newTaskName, setNewTaskName] = useState('');
   const [newTaskPhase, setNewTaskPhase] = useState('Estructura');
   const [newTaskStart, setNewTaskStart] = useState('2025-05-20');
+
+  if (!activeProject) return null;
   const [newTaskEnd, setNewTaskEnd] = useState('2025-06-15');
   const [newTaskCritical, setNewTaskCritical] = useState(false);
   const [newTaskAssigned, setNewTaskAssigned] = useState('');
@@ -980,7 +982,7 @@ export const GanttSchedule: React.FC<GanttScheduleProps> = ({
                 </label>
                 <input
                   type="text"
-                  placeholder="Ej. Don Mario Cifuentes / Cuadrilla Armadores"
+                  placeholder="Ej. Nombre del capataz / cuadrilla"
                   value={newTaskAssigned}
                   onChange={(e) => setNewTaskAssigned(e.target.value)}
                   className="w-full bg-slate-800 border border-white/15 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-sky-400"

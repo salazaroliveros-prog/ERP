@@ -56,7 +56,9 @@ export const GoogleMapsSafetyView: React.FC<GoogleMapsSafetyViewProps> = ({
   const [weatherSource, setWeatherSource] = useState<string>('INSIVUMEH & Red Meteorológica');
   const [activeTabFilter, setActiveTabFilter] = useState<'all' | 'critical'>('all');
 
-  const activeProject = projects.find((p) => p.id === selectedSiteId) || projects[0];
+  const activeProject = projects.find((p) => p.id === selectedSiteId) || (projects.length > 0 ? projects[0] : undefined);
+
+  if (!activeProject) return null;
 
   const fetchWeatherAlerts = async () => {
     setIsLoadingWeather(true);

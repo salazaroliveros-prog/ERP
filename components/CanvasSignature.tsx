@@ -32,7 +32,7 @@ export const CanvasSignature: React.FC<CanvasSignatureProps> = ({
   isOpen = true,
   onClose,
   onSaveSignature,
-  defaultSignerName = 'Don Mario Cifuentes',
+  defaultSignerName = '',
   defaultSignerDpi = '2489 10293 0101',
   defaultSignerRole = 'Capataz General de Obra',
   inline = false,
@@ -301,7 +301,7 @@ export const CanvasSignature: React.FC<CanvasSignatureProps> = ({
                 type="text"
                 value={signerName}
                 onChange={(e) => setSignerName(e.target.value)}
-                placeholder="Don Mario Cifuentes"
+                placeholder=""
                 className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
                 required
               />

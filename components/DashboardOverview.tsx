@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Building2,
   TrendingUp,
@@ -13,6 +13,10 @@ import {
   HardHat,
   Users,
   CheckCircle2,
+  MapPinned,
+  NotebookPen,
+  Shield,
+  Bot,
   Calendar,
   BarChart3,
   Layers,
@@ -78,15 +82,27 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   apuItems,
 }) => {
   const [expenditureViewMode, setExpenditureViewMode] = useState<'projects' | 'categories'>('projects');
-  const activeProject = projects.find((p) => p.id === activeProjectId) || projects[0];
+  const activeProject = projects.find((p) => p.id === activeProjectId) || (projects.length > 0 ? projects[0] : undefined);
 
   const formatMoney = (amount: number) => {
     return currency === 'GTQ' ? formatGTQ(amount) : formatUSD(amount, company.exchangeRate);
   };
 
-  const totalBudget = projects.reduce((acc, p) => acc + p.budgetTotal, 0);
-  const totalSpent = projects.reduce((acc, p) => acc + p.spentTotal, 0);
-  const totalWorkersToday = attendance.filter((a) => a.date === '2025-05-12' && a.status === 'Presente').length || 14;
+  const dashboardSummary = useMemo(() => {
+    const totalBudget = projects.reduce((acc, p) => acc + p.budgetTotal, 0);
+    const totalSpent = projects.reduce((acc, p) => acc + p.spentTotal, 0);
+    const today = new Date().toISOString().split('T')[0];
+    const totalWorkersToday = attendance.filter((a) => a.date === today && a.status === 'Presente').length;
+
+    return {
+      totalBudget,
+      totalSpent,
+      totalWorkersToday,
+      executionRate: totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0,
+    };
+  }, [projects, attendance]);
+
+  const { totalBudget, totalSpent, totalWorkersToday } = dashboardSummary;
 
   const chartData = [
     { mes: 'Ene', inversion: 1200000, presupuesto: 1500000 },
@@ -101,6 +117,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const [monthlyScope, setMonthlyScope] = useState<'consolidated' | 'active'>('consolidated');
   const [showTolerance, setShowTolerance] = useState<boolean>(true);
   const [selectedMonthDetail, setSelectedMonthDetail] = useState<string>('Mar 25');
+
+  if (!activeProject) return null;
 
   const isConsolidated = monthlyScope === 'consolidated';
   const scaleRatio = isConsolidated ? 1 : Math.max(0.2, activeProject.budgetTotal / (totalBudget || 1));
@@ -240,10 +258,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   return (
     <div className="space-y-6">
       {/* Company Branding Top Banner */}
-      <div className="glass-panel p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-white/10 bg-gradient-to-r from-slate-900/90 via-slate-950/90 to-slate-900/90 shadow-xl">
-        <div className="flex items-center gap-3.5">
+      <div className="glass-panel p-4 sm:p-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border border-white/10 bg-gradient-to-r from-slate-900/90 via-slate-950/90 to-slate-900/90 shadow-xl">
+        <div className="flex items-center gap-3.5 min-w-0">
           {company.logoUrl ? (
-            <div className="w-14 h-14 rounded-2xl bg-white/10 p-1.5 border border-white/20 shadow-md flex items-center justify-center overflow-hidden shrink-0">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/10 p-1.5 border border-white/20 shadow-md flex items-center justify-center overflow-hidden shrink-0">
               {/* eslint-disable-next-js-next-image */}
               <img
                 src={company.logoUrl}
@@ -252,20 +270,20 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               />
             </div>
           ) : (
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-400 to-indigo-600 flex items-center justify-center shadow-md shrink-0">
-              <Building2 className="w-7 h-7 text-white" />
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-sky-400 to-indigo-600 flex items-center justify-center shadow-md shrink-0">
+              <Building2 className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
             </div>
           )}
-          <div>
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-lg sm:text-xl font-extrabold text-white tracking-tight">
+              <h1 className="text-base sm:text-xl font-extrabold text-white tracking-tight truncate">
                 {company.headerTitle || company.commercialName || company.legalName || 'ConstructERP Guatemala'}
               </h1>
               <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30">
                 NIT: {company.nit}
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug">
               {company.commercialName !== company.headerTitle && company.commercialName ? `${company.commercialName} • ` : ''}
               {company.architectName ? `${company.architectName} (${company.architectColNumber})` : 'Panel de Control de Obras'}
               {company.address ? ` • ${company.address}` : ''}
@@ -273,19 +291,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2 self-end sm:self-center">
+        <div className="flex items-center gap-2 self-stretch sm:self-center">
           <button
             onClick={() => onNavigateTab('reportes')}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs font-semibold text-slate-200 transition cursor-pointer"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs font-semibold text-slate-200 transition cursor-pointer flex-1 sm:flex-none"
           >
             <FileText className="w-3.5 h-3.5 text-amber-400" />
-            <span>Reportes con Logo</span>
+            <span>Reportes</span>
           </button>
         </div>
       </div>
 
       {/* Variation 5: Top 4 Metric Stat Cards with Glassmorphism */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="mobile-kpi-grid lg:grid-cols-4 gap-3 sm:gap-6">
 
         <div className="stat-card">
           <span className="font-mono text-[11px] uppercase tracking-wider text-slate-400 block mb-2">
@@ -327,6 +345,38 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             Capataces activos
           </div>
         </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {[
+          { label: 'Visita', icon: MapPinned, color: 'sky', action: () => onNavigateTab('proyectos') },
+          { label: 'Gasto', icon: NotebookPen, color: 'amber', action: () => onNavigateTab('gastos') },
+          { label: 'Asistencia', icon: Shield, color: 'emerald', action: () => onNavigateTab('personal') },
+          { label: 'IA', icon: Bot, color: 'violet', action: onTriggerAiWeather },
+        ].map(({ label, icon: Icon, color, action }) => (
+          <button
+            key={label}
+            type="button"
+            onClick={action}
+            className={`mobile-action-card flex items-center justify-between gap-3 text-left transition hover:border-sky-400/30 hover:bg-slate-800/70 cursor-pointer ${
+              color === 'sky' ? 'border-sky-400/20' :
+              color === 'amber' ? 'border-amber-400/20' :
+              color === 'emerald' ? 'border-emerald-400/20' : 'border-violet-400/20'
+            }`}
+          >
+            <div>
+              <div className="text-[10px] font-mono uppercase tracking-[0.15em] text-slate-400">Rápido</div>
+              <div className="mt-1 text-sm font-bold text-white">{label}</div>
+            </div>
+            <div className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
+              color === 'sky' ? 'bg-sky-500/15 border-sky-400/20 text-sky-300' :
+              color === 'amber' ? 'bg-amber-500/15 border-amber-400/20 text-amber-300' :
+              color === 'emerald' ? 'bg-emerald-500/15 border-emerald-400/20 text-emerald-300' : 'bg-violet-500/15 border-violet-400/20 text-violet-300'
+            }`}>
+              <Icon className="w-4 h-4" />
+            </div>
+          </button>
+        ))}
       </div>
 
       {/* D3.js Real-Time Project Budget Utilization & Spend Visualization */}

@@ -14,28 +14,16 @@ export async function googleSignIn(): Promise<{ user: User } | null> {
     }
     return result;
   } catch (error: any) {
-    // If popup is closed by user or domain requires new tab in iframe, fallback gracefully
+    // If popup is closed by user or domain requires new tab in iframe, return null gracefully
     if (
       error?.code === 'auth/api-key-not-valid' ||
       error?.code === 'auth/unauthorized-domain' ||
       error?.code === 'auth/popup-closed-by-user'
     ) {
       console.warn(
-        'Firebase auth notice: providing authenticated session for application.'
+        'Firebase auth notice: Google Sign-In cancelled or unavailable. Returning null.'
       );
-      const fallbackUser = {
-        uid: 'usr-salazar-guate',
-        email: 'salazaroliveros@gmail.com',
-        displayName: 'Ing. Oliveros Salazar',
-        photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
-        emailVerified: true,
-        isAnonymous: false,
-      } as unknown as User;
-
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(fallbackUser));
-      }
-      return { user: fallbackUser };
+      return null;
     }
 
     console.error('Google Sign-In Error:', error);

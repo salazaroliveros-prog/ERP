@@ -94,7 +94,7 @@ export const NotificationRemindersModal: React.FC<NotificationRemindersModalProp
 
     const newReminder: TaskReminder = {
       id: `rem-${Date.now()}`,
-      projectId: tasks[0]?.projectId || 'p1',
+      projectId: tasks[0]?.projectId || '',
       taskId: targetType === 'task' ? selectedTaskId : undefined,
       milestoneId: targetType === 'milestone' ? selectedMilestoneId : undefined,
       taskName: targetName,

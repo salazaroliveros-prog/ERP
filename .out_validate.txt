@@ -1,0 +1,6 @@
+firebase.json: /data/data/com.vscodroid/files/projects/ERP/firebase.json
+schema valid : false
+  - / should NOT have additional properties {"additionalProperty":"databaseId"}
+  - / should be array {"type":"array"}
+  - / should match some schema in anyOf
+exit=1

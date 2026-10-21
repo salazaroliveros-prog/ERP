@@ -91,6 +91,30 @@ export function clearOfflineQueue(): void {
   saveOfflineData('offline_queue', []);
 }
 
+// -------------------------------------------------------------
+// Limpieza completa de la base de datos local (localStorage)
+// -------------------------------------------------------------
+// Elimina toda la persistencia local para iniciar con una pizarra en blanco.
+export function clearAllLocalData(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const prefix = PREFIX;
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(prefix)) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+    // Asegurar que la cola quede vacía
+    saveOfflineData('offline_queue', []);
+    console.log('[ConstructERP] Datos locales limpiados:', keysToRemove.length, 'clave(s) eliminada(s)');
+  } catch (e) {
+    console.error('Error clearing local data:', e);
+  }
+}
+
 export async function processOfflineQueue(
   handler: (item: OfflineQueueItem) => Promise<boolean> | boolean
 ): Promise<{ processed: number; remaining: number }> {

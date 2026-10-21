@@ -45,7 +45,7 @@ export const FieldPhotoGallery: React.FC<FieldPhotoGalleryProps> = ({
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [capturedDataUrl, setCapturedDataUrl] = useState<string | null>(null);
   const [caption, setCaption] = useState('');
-  const [takenByName, setTakenByName] = useState('Don Mario Cifuentes');
+  const [takenByName, setTakenByName] = useState('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [gpsStatus, setGpsStatus] = useState<'acquiring' | 'ready' | 'fallback'>('acquiring');
 

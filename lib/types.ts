@@ -15,6 +15,8 @@ export interface CompanySettings {
   logoUrl?: string; // Base64 Data URL (PNG o JPEG) o URL del logotipo
   logoType?: 'image/png' | 'image/jpeg';
   updatedAt?: string;
+  ownerId?: string;
+  authorId?: string;
 }
 
 
@@ -35,6 +37,8 @@ export interface Project {
   lat: number;
   lng: number;
   expectedProfitMarginPercent?: number; // e.g. 15 for 15%
+  ownerId?: string;
+  authorId?: string;
 }
 
 export interface FieldPhoto {
@@ -69,6 +73,8 @@ export interface FieldVisit {
   gpsTimestamp?: string;
   status: 'Autorizado' | 'Pendiente' | 'Revisión';
   photos?: FieldPhoto[];
+  ownerId?: string;
+  authorId?: string;
 }
 
 export interface Machinery {
@@ -79,6 +85,8 @@ export interface Machinery {
   hourlyRateGTQ: number;
   currentHorometer: number;
   status: 'Disponible' | 'En Obra' | 'Mantenimiento';
+  ownerId?: string;
+  authorId?: string;
 }
 
 export interface MachineryLog {
@@ -93,6 +101,8 @@ export interface MachineryLog {
   costGTQ: number;
   signatureDataUrl?: string;
   signerName?: string;
+  ownerId?: string;
+  authorId?: string;
 }
 
 export interface Employee {
@@ -109,6 +119,8 @@ export interface Employee {
   overriddenIgssLaboral?: number;
   overriddenBono14?: number;
   overriddenAguinaldo?: number;
+  ownerId?: string;
+  authorId?: string;
 }
 
 export interface AttendanceRecord {
@@ -126,6 +138,8 @@ export interface AttendanceRecord {
   overrideReason?: string;
   approvalStatus?: string;
   auditObservations?: string;
+  ownerId?: string;
+  authorId?: string;
 }
 
 export interface ExpenseAuditEntry {
@@ -160,6 +174,8 @@ export interface ExpenseRecord {
   assignedApuId?: string;
   assignedApuCode?: string;
   assignedApuDescription?: string;
+  ownerId?: string;
+  authorId?: string;
 }
 
 export interface QuoteRecord {
@@ -172,6 +188,8 @@ export interface QuoteRecord {
   items: { description: string; qty: number; unit: string; unitPriceGTQ: number }[];
   totalGTQ: number;
   status: 'Aceptada' | 'Enviada' | 'Borrador' | 'Rechazada';
+  ownerId?: string;
+  authorId?: string;
 }
 
 export interface APUItem {
@@ -193,6 +211,8 @@ export interface APUItem {
     notes?: string;
     technicalNorm?: string;
   };
+  ownerId?: string;
+  authorId?: string;
 }
 
 export interface ScheduleTask {
@@ -211,6 +231,8 @@ export interface ScheduleTask {
   weightPercent?: number;
   notes?: string;
   milestoneId?: string;
+  ownerId?: string;
+  authorId?: string;
 }
 
 export interface Milestone {
@@ -225,6 +247,8 @@ export interface Milestone {
   weightPercent: number; // contribution to final goal (sum = 100%)
   description?: string;
   deliverable?: string;
+  ownerId?: string;
+  authorId?: string;
 }
 
 export type ReminderAdvanceOption =
@@ -252,6 +276,8 @@ export interface TaskReminder {
   createdAt: string;
   triggered?: boolean;
   followFlowRequirement?: boolean; // Ensure preceding milestones are met
+  ownerId?: string;
+  authorId?: string;
 }
 
 export interface AiRecommendation {

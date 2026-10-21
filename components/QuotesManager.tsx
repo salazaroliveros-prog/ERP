@@ -34,11 +34,13 @@ export const QuotesManager: React.FC<QuotesManagerProps> = ({
   const [clientNit, setClientNit] = useState('');
   const [total, setTotal] = useState('150000');
 
-  const activeProject = projects.find((p) => p.id === activeProjectId) || projects[0];
+  const activeProject = projects.find((p) => p.id === activeProjectId) || (projects.length > 0 ? projects[0] : undefined);
 
   const formatMoney = (amount: number) => {
     return currency === 'GTQ' ? formatGTQ(amount) : formatUSD(amount, company.exchangeRate);
   };
+
+  if (!activeProject) return null;
 
   const handlePrintQuote = () => {
     const cleanup = injectPrintPageStyles('carta', 'portrait', 'normal');
@@ -170,9 +172,9 @@ export const QuotesManager: React.FC<QuotesManagerProps> = ({
       </div>
 
       {isOpenModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
-            <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[85vh] overflow-y-auto sm:overflow-hidden border border-slate-200">
+            <div className="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
               <h3 className="font-bold text-base">Crear Cotización para Cliente</h3>
               <button onClick={() => setIsOpenModal(false)} className="text-slate-400 hover:text-white">✕</button>
             </div>
@@ -202,6 +204,8 @@ export const QuotesManager: React.FC<QuotesManagerProps> = ({
                 <label className="block text-xs font-semibold text-slate-700 mb-1">Monto Total Cotización (GTQ)</label>
                 <input
                   type="number"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   value={total}
                   onChange={(e) => setTotal(e.target.value)}
                   placeholder="0.00"

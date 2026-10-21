@@ -87,7 +87,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
   // Modal new field visit / bitácora with Digital Signature & Photos
   const [isNewVisitModalOpen, setIsNewVisitModalOpen] = useState(false);
   const [visitNotes, setVisitNotes] = useState('');
-  const [visitForeman, setVisitForeman] = useState('Don Mario Cifuentes');
+  const [visitForeman, setVisitForeman] = useState('');
   const [visitWeather, setVisitWeather] = useState<'Soleado' | 'Lluvia Moderada' | 'Tormenta Fuerte' | 'Nublado'>('Soleado');
   const [visitWorkersCount, setVisitWorkersCount] = useState('35');
   const [visitAttachedPhotos, setVisitAttachedPhotos] = useState<FieldPhoto[]>([]);
@@ -97,6 +97,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
   const [isCapturingGps, setIsCapturingGps] = useState(false);
 
   const handleAcquireExactGps = async (projLat?: number, projLng?: number) => {
+    if (!activeProject) return;
     setIsCapturingGps(true);
     try {
       const lat = projLat ?? activeProject.lat;
@@ -111,6 +112,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
   };
 
   const handleOpenNewVisitModal = () => {
+    if (!activeProject) return;
     setIsNewVisitModalOpen(true);
     // Automatically trigger GPS acquisition immediately
     handleAcquireExactGps(activeProject.lat, activeProject.lng);
@@ -128,11 +130,13 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
   const [isSiteCameraOpen, setIsSiteCameraOpen] = useState(false);
   const [cameraVisitTargetId, setCameraVisitTargetId] = useState<string | null>(null);
 
-  const activeProject = projects.find((p) => p.id === activeProjectId) || projects[0];
+  const activeProject = projects.find((p) => p.id === activeProjectId) || (projects.length > 0 ? projects[0] : undefined);
 
   const formatMoney = (amount: number) => {
     return currency === 'GTQ' ? formatGTQ(amount) : formatUSD(amount, company.exchangeRate);
   };
+
+  if (!activeProject) return null;
 
   const handlePrintVisit = () => {
     const cleanup = injectPrintPageStyles('carta', 'portrait', 'normal');
@@ -797,8 +801,8 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
 
       {/* New Project Modal */}
       {isNewProjectModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[85vh] overflow-y-auto sm:overflow-hidden border border-slate-200">
             <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
               <h3 className="font-bold text-base">Registrar Nueva Obra en Guatemala</h3>
               <button onClick={() => setIsNewProjectModalOpen(false)} className="text-slate-400 hover:text-white">
@@ -852,6 +856,8 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                 <label className="block text-xs font-semibold text-slate-700 mb-1">Presupuesto Inicial (GTQ)</label>
                 <input
                   type="number"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   value={newBudget}
                   onChange={(e) => setNewBudget(e.target.value)}
                   placeholder="0.00"
@@ -882,8 +888,8 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
       {/* New Visit / Bitácora Modal with Digital Signature & Photo Capture */}
       {isNewVisitModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-slate-200 overflow-hidden my-8">
-            <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto sm:overflow-hidden border border-slate-200 my-8">
+            <div className="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <PenTool className="w-5 h-5 text-amber-400" />
                 <h3 className="font-bold text-base">Nueva Bitácora con Firma de Capataz</h3>

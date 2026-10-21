@@ -1,0 +1,55 @@
+== 0. Init ==
+databaseId usado: ai-studio-constructerpguat-7f88275b-727f-4f45-af07-6953a1af46a0
+projectId: gen-lang-client-0638769629
+appId: 1:323366607563:web:274c8eb4ba33e1346ad94e
+apiKey prefix: AIzaSyDo14hN...
+
+== 1. signInWithEmailAndPassword ==
+uid: 4tWJR9X8adMJHXhJGRDgQua1BuW2 | emailVerified: false
+
+== 2. getUserOwnedDocuments("projects", uid) ==
+FALLO: {"name":"FirebaseError","code":"permission-denied","message":"Missing or insufficient permissions."}
+
+== 3. setDoc merge (create proyecto) ==
+OK create sdk_proj_1792537298178
+
+== 4. getDocs ownerId-filter (tras crear) ==
+OK docs: 1 [ 'sdk_proj_1792537298178' ]
+
+== 5. getDocs authorId-filter ==
+FALLO: {"name":"FirebaseError","code":"permission-denied","message":"Missing or insufficient permissions."}
+
+== 6. Todas las colecciones: query ownerId ==
+  projects.ownerId -> OK (1)
+  projects.authorId -> FALLO permission-denied: Missing or insufficient permissions.
+  fieldVisits.ownerId -> FALLO permission-denied: Missing or insufficient permissions.
+  fieldVisits.authorId -> OK (0)
+  expenses.ownerId -> FALLO permission-denied: Missing or insufficient permissions.
+  expenses.authorId -> OK (0)
+  attendance.ownerId -> FALLO permission-denied: Missing or insufficient permissions.
+  attendance.authorId -> OK (0)
+  companySettings.ownerId -> OK (0)
+  companySettings.authorId -> FALLO permission-denied: Missing or insufficient permissions.
+  machinery.ownerId -> FALLO permission-denied: Missing or insufficient permissions.
+  machinery.authorId -> FALLO permission-denied: Missing or insufficient permissions.
+  machineryLogs.ownerId -> FALLO permission-denied: Missing or insufficient permissions.
+  machineryLogs.authorId -> FALLO permission-denied: Missing or insufficient permissions.
+  employees.ownerId -> FALLO permission-denied: Missing or insufficient permissions.
+  employees.authorId -> FALLO permission-denied: Missing or insufficient permissions.
+  quotes.ownerId -> FALLO permission-denied: Missing or insufficient permissions.
+  quotes.authorId -> FALLO permission-denied: Missing or insufficient permissions.
+  apuItems.ownerId -> FALLO permission-denied: Missing or insufficient permissions.
+  apuItems.authorId -> FALLO permission-denied: Missing or insufficient permissions.
+  scheduleTasks.ownerId -> FALLO permission-denied: Missing or insufficient permissions.
+  scheduleTasks.authorId -> FALLO permission-denied: Missing or insufficient permissions.
+  milestones.ownerId -> FALLO permission-denied: Missing or insufficient permissions.
+  milestones.authorId -> FALLO permission-denied: Missing or insufficient permissions.
+  taskReminders.ownerId -> FALLO permission-denied: Missing or insufficient permissions.
+  taskReminders.authorId -> FALLO permission-denied: Missing or insufficient permissions.
+
+== 7. List SIN filtro (no usado por la app, referencia) ==
+FALLO (esperado por rules): permission-denied - Missing or insufficient permissions.
+
+== 8. Limpieza ==
+delete OK
+[2026-10-20T23:03:20.384Z]  @firebase/firestore: Firestore (12.19.0): GrpcConnection RPC 'Listen' stream 0x74c9e620 error. Code: 1 Message: 1 CANCELLED: Disconnecting idle stream. Timed out waiting for new targets.

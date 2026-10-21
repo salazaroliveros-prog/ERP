@@ -43,41 +43,7 @@ interface SampleLogbookItem {
   workersCount: number;
 }
 
-const SAMPLE_LOGBOOKS: SampleLogbookItem[] = [
-  {
-    id: 'sample-1',
-    visitId: 'fv-1',
-    date: '2025-05-12',
-    foremanName: 'Don Mario Cifuentes',
-    title: 'Bitácora Nivel 4: Fundición Losa & Columnas C-14',
-    imageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb180c5f5?w=800&auto=format&fit=crop&q=80',
-    notes: 'Vaciado exitoso de losa nivel 4 con concreto premezclado 4000 PSI de Cemex. Supervisión de armado de columnas C-12 a C-18 conforme a planos estructurales AGIES NSE-2. Sin incidentes laborales reportados.',
-    weather: 'Soleado',
-    workersCount: 42,
-  },
-  {
-    id: 'sample-2',
-    visitId: 'fv-2',
-    date: '2025-05-14',
-    foremanName: 'Esteban Morales',
-    title: 'Bitácora Pistas: Compactación Subrasante y Balasto',
-    imageUrl: 'https://images.unsplash.com/photo-1590402494682-cd3fb53b1f70?w=800&auto=format&fit=crop&q=80',
-    notes: 'Compactación de subrasante completada con rodillo vibratorio Caterpillar CS56B. Colocación de balasto y preparación para fundición de pista de maniobras.',
-    weather: 'Nublado',
-    workersCount: 28,
-  },
-  {
-    id: 'sample-3',
-    visitId: 'fv-3',
-    date: '2025-05-16',
-    foremanName: 'Don Mario Cifuentes',
-    title: 'Hoja de Bitácora Oficial: Armado Vigas & Desencofrado',
-    imageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&auto=format&fit=crop&q=80',
-    notes: 'Desencofrado parcial de vigas secundarias tras alcanzar el 75% de resistencia f\'c. Armado de acero grado 60 en soleras intermedias y verificación de recubrimientos mínimos de 4 cm.',
-    weather: 'Soleado',
-    workersCount: 38,
-  },
-];
+const SAMPLE_LOGBOOKS: SampleLogbookItem[] = [];
 
 export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({
   isOpen,
@@ -94,7 +60,7 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({
   // Logbook Analysis State
   const [selectedVisitId, setSelectedVisitId] = useState<string>('fv-1');
   const [logDate, setLogDate] = useState<string>('2025-05-12');
-  const [foremanName, setForemanName] = useState<string>('Don Mario Cifuentes');
+  const [foremanName, setForemanName] = useState<string>('');
   const [uploadedImage, setUploadedImage] = useState<string | null>(SAMPLE_LOGBOOKS[0].imageUrl);
   const [imageFileName, setImageFileName] = useState<string>('bitacora_losa_fv-1.jpg');
   const [logbookQuestion, setLogbookQuestion] = useState<string>(
@@ -182,7 +148,7 @@ Estoy contextualizado para su proyecto "${activeProject?.name || 'Obra'}" en ${d
           date: logDate,
           foremanName: foremanName,
           question: logbookQuestion.trim() || '¿Cuál es el progreso reportado por el capataz?',
-          projectName: activeProject?.name || 'Torre Residencial Vista Hermosa IV',
+          projectName: activeProject?.name || '',
           department,
           visitContext: visitRecord
             ? {
@@ -302,7 +268,7 @@ Estoy contextualizado para su proyecto "${activeProject?.name || 'Obra'}" en ${d
 
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-white/10 transition cursor-pointer"
+            className="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-white/10 transition cursor-pointer min-h-[44px]"
           >
             <X className="w-5 h-5" />
           </button>

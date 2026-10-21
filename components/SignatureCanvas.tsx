@@ -92,7 +92,7 @@ export const SignatureCanvas: React.FC<SignatureCanvasProps> = ({
 
   // Signer metadata state
   const [signerName, setSignerName] = useState<string>(
-    visit?.foremanName || defaultSignerName || 'Don Mario Cifuentes'
+    visit?.foremanName || defaultSignerName || ''
   );
   const [signerDpi, setSignerDpi] = useState<string>(
     visit?.signerDpi || defaultSignerDpi || '2489 10293 0101'
@@ -362,7 +362,7 @@ export const SignatureCanvas: React.FC<SignatureCanvasProps> = ({
       } else if (targetVisitId) {
         updatedVisit = {
           id: targetVisitId,
-          projectId: projectId || 'p1',
+          projectId: projectId || '',
           projectName: 'Visita de Campo',
           date: new Date().toISOString().split('T')[0],
           foremanName: metadata.signerName,
@@ -444,7 +444,7 @@ export const SignatureCanvas: React.FC<SignatureCanvasProps> = ({
               type="text"
               value={signerName}
               onChange={(e) => setSignerName(e.target.value)}
-              placeholder="Ej: Don Mario Cifuentes"
+              placeholder=""
               className="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-sky-400 font-medium"
             />
           </div>

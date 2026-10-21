@@ -1,0 +1,111 @@
+    return [];
+  }
+}
+
+
+// 2. Field Visits & Inspections
+export async function saveFieldVisitToFirestore(visit: FieldVisit, userId: string) {
+  const path = `fieldVisits/${visit.id}`;
+  try {
+    const docRef = doc(db, 'fieldVisits', visit.id);
+    await setDoc(
+      docRef,
+      withOwnershipMetadata(visit, userId),
+      { merge: true }
+    );
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.WRITE, path);
+    return false;
+  }
+}
+
+export function subscribeFieldVisits(userId: string, callback: (visits: FieldVisit[]) => void): Unsubscribe {
+  const path = 'fieldVisits';
+  try {
+    return subscribeUserOwnedDocuments<FieldVisit>(path, userId, callback);
+  } catch (err) {
+    handleFirestoreError(err, OperationType.LIST, path);
+    return () => {};
+  }
+}
+
+// 3. Expenses
+export async function saveExpenseToFirestore(expense: ExpenseRecord, userId: string) {
+  const path = `expenses/${expense.id}`;
+  try {
+    const docRef = doc(db, 'expenses', expense.id);
+    await setDoc(
+      docRef,
+      withOwnershipMetadata(expense, userId),
+      { merge: true }
+    );
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.WRITE, path);
+    return false;
+  }
+}
+
+export function subscribeExpenses(userId: string, callback: (expenses: ExpenseRecord[]) => void): Unsubscribe {
+  const path = 'expenses';
+  try {
+    return subscribeUserOwnedDocuments<ExpenseRecord>(path, userId, callback);
+  } catch (err) {
+    handleFirestoreError(err, OperationType.LIST, path);
+    return () => {};
+  }
+}
+
+// 4. Attendance
+export async function saveAttendanceToFirestore(record: AttendanceRecord, userId: string) {
+  const path = `attendance/${record.id}`;
+  try {
+    const docRef = doc(db, 'attendance', record.id);
+    await setDoc(
+      docRef,
+      withOwnershipMetadata(record, userId),
+      { merge: true }
+    );
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.WRITE, path);
+    return false;
+  }
+}
+
+export function subscribeAttendance(userId: string, callback: (records: AttendanceRecord[]) => void): Unsubscribe {
+  const path = 'attendance';
+  try {
+    return subscribeUserOwnedDocuments<AttendanceRecord>(path, userId, callback);
+  } catch (err) {
+    handleFirestoreError(err, OperationType.LIST, path);
+    return () => {};
+  }
+}
+
+// 5. Company Settings
+export async function saveCompanySettingsToFirestore(settings: CompanySettings, userId: string) {
+  const path = `companySettings/${userId}`;
+  try {
+    const docRef = doc(db, 'companySettings', userId);
+    await setDoc(
+      docRef,
+      withOwnershipMetadata(settings, userId),
+      { merge: true }
+    );
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.WRITE, path);
+    return false;
+  }
+}
+
+export function subscribeCompanySettings(userId: string, callback: (settings: CompanySettings | null) => void): Unsubscribe {
+  const path = `companySettings/${userId}`;
+  try {
+    const docRef = doc(db, 'companySettings', userId);
+    return onSnapshot(
+      docRef,
+      (docSnap) => {
+        if (docSnap.exists()) {

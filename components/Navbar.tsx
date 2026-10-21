@@ -78,7 +78,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   remindersCount = 0,
 }) => {
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
-  const activeProject = projects.find((p) => p.id === activeProjectId) || projects[0];
+  const activeProject = projects.find((p) => p.id === activeProjectId) || (projects.length > 0 ? projects[0] : undefined);
 
   const tabs = [
     { id: 'dashboard', label: 'Tablero', icon: LayoutDashboard },
@@ -93,6 +93,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'reportes', label: 'Reportes Finales', icon: PieChart },
     { id: 'gmail', label: 'Correo & Avisos', icon: Mail },
   ];
+
+  const mobileNavTabs = tabs.slice(0, 5);
 
   const currentTabName = tabs.find((t) => t.id === activeTab)?.label || 'Tablero';
 
@@ -382,10 +384,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
 
-
           {/* Right Controls */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Project Dropdown Selector */}
             <div className="relative">
               <button
                 onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}
@@ -425,7 +425,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* Notification Bell Button */}
             {onOpenNotifications && (
               <button
                 onClick={onOpenNotifications}
@@ -441,7 +440,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             )}
 
-            {/* Currency Pill Toggle */}
             <button
               onClick={onToggleCurrency}
               className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-xs font-bold text-amber-400 transition cursor-pointer"
@@ -452,7 +450,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="sm:hidden">{currency === 'GTQ' ? 'Q' : '$'}</span>
             </button>
 
-            {/* Branding & Logo Button */}
             <button
               onClick={onOpenBranding}
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs font-semibold text-sky-300 hover:text-white transition cursor-pointer"
@@ -462,7 +459,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="hidden md:inline">Logo & Empresa</span>
             </button>
 
-            {/* Bilateral DB Validation Button */}
             {onOpenBilateralValidation && (
               <button
                 onClick={onOpenBilateralValidation}
@@ -474,16 +470,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             )}
 
-
-            {/* User Pill with Status Dot */}
             <div className="user-pill hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.06] border border-white/15 text-xs text-slate-200">
               <span className="status-dot w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#4ade80]"></span>
               <span className="font-semibold truncate max-w-[140px] sm:max-w-[180px]">
-                {currentUser?.email || 'salazaroliveros@gmail.com'}
+                {currentUser?.email || 'Sin sesión'}
               </span>
             </div>
 
-            {/* Auth / Logout Button */}
             {currentUser ? (
               <button
                 onClick={onSignOut}
@@ -504,6 +497,25 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
       </header>
+
+      <nav className="mobile-bottom-nav lg:hidden" aria-label="Navegación móvil">
+        {mobileNavTabs.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => onSelectTab(tab.id)}
+              className={isActive ? 'active' : ''}
+              title={tab.label}
+            >
+              <Icon className="w-4 h-4" />
+              <span>{tab.label.split(' ')[0]}</span>
+            </button>
+          );
+        })}
+      </nav>
     </>
   );
 };

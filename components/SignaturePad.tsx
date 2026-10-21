@@ -34,7 +34,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
   onSaveSignature,
   onSave,
   onConfirm,
-  defaultSignerName = 'Don Mario Cifuentes',
+  defaultSignerName = '',
   defaultSignerDpi = '2489 10293 0101',
   defaultSignerRole = 'Capataz General de Obra',
   inline = false,
@@ -84,6 +84,20 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
     setHasDrawn(false);
     setStrokeHistory([]);
   }, [penColor]);
+
+  // Prevent body scroll while drawing on mobile (critical for canvas signature)
+  useEffect(() => {
+    if (!isDrawing) return;
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    return () => {
+      document.body.style.overflow = '';
+      document.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, [isDrawing]);
 
   const drawBaseline = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
     ctx.save();
@@ -264,7 +278,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
             type="text"
             value={signerName}
             onChange={(e) => setSignerName(e.target.value)}
-            placeholder="Ej. Don Mario Cifuentes"
+            placeholder="Ej. Nombre del firmante"
             className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 font-medium placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
             required
           />

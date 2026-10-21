@@ -29,6 +29,7 @@ import {
   Milestone,
   TaskReminder,
 } from './types';
+import { withOwnershipMetadata } from './firestoreOwnership';
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
@@ -103,6 +104,67 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
   throw new Error(JSON.stringify(errInfo));
 }
 
+function mergeById<T extends { id?: string }>(...batches: T[][]): T[] {
+  const map = new Map<string, T>();
+  batches.flat().forEach((item) => {
+    const key = item.id ?? `${Math.random()}`;
+    map.set(key, item);
+  });
+  return Array.from(map.values());
+}
+
+export async function getUserOwnedDocuments<T extends { id?: string; ownerId?: string; authorId?: string }>(
+  collectionPath: string,
+  userId: string
+): Promise<T[]> {
+  const ownerQuery = query(collection(db, collectionPath), where('ownerId', '==', userId));
+  const authorQuery = query(collection(db, collectionPath), where('authorId', '==', userId));
+
+  const [ownerSnapshot, authorSnapshot] = await Promise.all([getDocs(ownerQuery), getDocs(authorQuery)]);
+  return mergeById(
+    ownerSnapshot.docs.map((docSnap) => docSnap.data() as T),
+    authorSnapshot.docs.map((docSnap) => docSnap.data() as T)
+  );
+}
+
+export function subscribeUserOwnedDocuments<T extends { id?: string; ownerId?: string; authorId?: string }>(
+  collectionPath: string,
+  userId: string,
+  callback: (items: T[]) => void
+): Unsubscribe {
+  let ownerDocs: T[] = [];
+  let authorDocs: T[] = [];
+  const flush = () => {
+    callback(mergeById(ownerDocs, authorDocs));
+  };
+
+  const ownerQuery = query(collection(db, collectionPath), where('ownerId', '==', userId));
+  const authorQuery = query(collection(db, collectionPath), where('authorId', '==', userId));
+
+  const unsubscribeOwner = onSnapshot(
+    ownerQuery,
+    (snapshot) => {
+      ownerDocs = snapshot.docs.map((docSnap) => docSnap.data() as T);
+      flush();
+    },
+    (error) => handleFirestoreError(error, OperationType.LIST, collectionPath)
+  );
+
+  const unsubscribeAuthor = onSnapshot(
+    authorQuery,
+    (snapshot) => {
+      authorDocs = snapshot.docs.map((docSnap) => docSnap.data() as T);
+      flush();
+    },
+    (error) => handleFirestoreError(error, OperationType.LIST, collectionPath)
+  );
+
+  return () => {
+    unsubscribeOwner();
+    unsubscribeAuthor();
+  };
+}
+
 // -------------------------------------------------------------
 // Firestore Helpers for Application Entities
 // -------------------------------------------------------------
@@ -114,10 +176,7 @@ export async function saveProjectToFirestore(project: Project, userId: string) {
     const docRef = doc(db, 'projects', project.id);
     await setDoc(
       docRef,
-      {
-        ...project,
-        ownerId: userId,
-      },
+      withOwnershipMetadata(project, userId),
       { merge: true }
     );
     return true;
@@ -130,20 +189,7 @@ export async function saveProjectToFirestore(project: Project, userId: string) {
 export function subscribeProjects(userId: string, callback: (projects: Project[]) => void): Unsubscribe {
   const path = 'projects';
   try {
-    const q = query(collection(db, path), where('ownerId', '==', userId));
-    return onSnapshot(
-      q,
-      (snapshot) => {
-        const list: Project[] = [];
-        snapshot.forEach((docSnap) => {
-          list.push(docSnap.data() as Project);
-        });
-        callback(list);
-      },
-      (error) => {
-        handleFirestoreError(error, OperationType.LIST, path);
-      }
-    );
+    return subscribeUserOwnedDocuments<Project>(path, userId, callback);
   } catch (err) {
     handleFirestoreError(err, OperationType.LIST, path);
     return () => {};
@@ -178,13 +224,7 @@ export async function getProjectFromFirestore(projectId: string): Promise<Projec
 export async function getProjectsFromFirestore(userId: string): Promise<Project[]> {
   const path = 'projects';
   try {
-    const q = query(collection(db, path), where('ownerId', '==', userId));
-    const snapshot = await getDocs(q);
-    const list: Project[] = [];
-    snapshot.forEach((docSnap) => {
-      list.push(docSnap.data() as Project);
-    });
-    return list;
+    return await getUserOwnedDocuments<Project>(path, userId);
   } catch (err) {
     handleFirestoreError(err, OperationType.LIST, path);
     return [];
@@ -199,10 +239,7 @@ export async function saveFieldVisitToFirestore(visit: FieldVisit, userId: strin
     const docRef = doc(db, 'fieldVisits', visit.id);
     await setDoc(
       docRef,
-      {
-        ...visit,
-        authorId: userId,
-      },
+      withOwnershipMetadata(visit, userId),
       { merge: true }
     );
     return true;
@@ -215,20 +252,7 @@ export async function saveFieldVisitToFirestore(visit: FieldVisit, userId: strin
 export function subscribeFieldVisits(userId: string, callback: (visits: FieldVisit[]) => void): Unsubscribe {
   const path = 'fieldVisits';
   try {
-    const q = query(collection(db, path), where('authorId', '==', userId));
-    return onSnapshot(
-      q,
-      (snapshot) => {
-        const list: FieldVisit[] = [];
-        snapshot.forEach((docSnap) => {
-          list.push(docSnap.data() as FieldVisit);
-        });
-        callback(list);
-      },
-      (error) => {
-        handleFirestoreError(error, OperationType.LIST, path);
-      }
-    );
+    return subscribeUserOwnedDocuments<FieldVisit>(path, userId, callback);
   } catch (err) {
     handleFirestoreError(err, OperationType.LIST, path);
     return () => {};
@@ -242,10 +266,7 @@ export async function saveExpenseToFirestore(expense: ExpenseRecord, userId: str
     const docRef = doc(db, 'expenses', expense.id);
     await setDoc(
       docRef,
-      {
-        ...expense,
-        authorId: userId,
-      },
+      withOwnershipMetadata(expense, userId),
       { merge: true }
     );
     return true;
@@ -258,20 +279,7 @@ export async function saveExpenseToFirestore(expense: ExpenseRecord, userId: str
 export function subscribeExpenses(userId: string, callback: (expenses: ExpenseRecord[]) => void): Unsubscribe {
   const path = 'expenses';
   try {
-    const q = query(collection(db, path), where('authorId', '==', userId));
-    return onSnapshot(
-      q,
-      (snapshot) => {
-        const list: ExpenseRecord[] = [];
-        snapshot.forEach((docSnap) => {
-          list.push(docSnap.data() as ExpenseRecord);
-        });
-        callback(list);
-      },
-      (error) => {
-        handleFirestoreError(error, OperationType.LIST, path);
-      }
-    );
+    return subscribeUserOwnedDocuments<ExpenseRecord>(path, userId, callback);
   } catch (err) {
     handleFirestoreError(err, OperationType.LIST, path);
     return () => {};
@@ -285,10 +293,7 @@ export async function saveAttendanceToFirestore(record: AttendanceRecord, userId
     const docRef = doc(db, 'attendance', record.id);
     await setDoc(
       docRef,
-      {
-        ...record,
-        authorId: userId,
-      },
+      withOwnershipMetadata(record, userId),
       { merge: true }
     );
     return true;
@@ -301,20 +306,7 @@ export async function saveAttendanceToFirestore(record: AttendanceRecord, userId
 export function subscribeAttendance(userId: string, callback: (records: AttendanceRecord[]) => void): Unsubscribe {
   const path = 'attendance';
   try {
-    const q = query(collection(db, path), where('authorId', '==', userId));
-    return onSnapshot(
-      q,
-      (snapshot) => {
-        const list: AttendanceRecord[] = [];
-        snapshot.forEach((docSnap) => {
-          list.push(docSnap.data() as AttendanceRecord);
-        });
-        callback(list);
-      },
-      (error) => {
-        handleFirestoreError(error, OperationType.LIST, path);
-      }
-    );
+    return subscribeUserOwnedDocuments<AttendanceRecord>(path, userId, callback);
   } catch (err) {
     handleFirestoreError(err, OperationType.LIST, path);
     return () => {};
@@ -328,10 +320,7 @@ export async function saveCompanySettingsToFirestore(settings: CompanySettings, 
     const docRef = doc(db, 'companySettings', userId);
     await setDoc(
       docRef,
-      {
-        ...settings,
-        ownerId: userId,
-      },
+      withOwnershipMetadata(settings, userId),
       { merge: true }
     );
     return true;
@@ -369,7 +358,7 @@ export async function saveMachineryToFirestore(item: Machinery, userId: string) 
   const path = `machinery/${item.id}`;
   try {
     const docRef = doc(db, 'machinery', item.id);
-    await setDoc(docRef, { ...item, ownerId: userId }, { merge: true });
+    await setDoc(docRef, withOwnershipMetadata(item, userId), { merge: true });
     return true;
   } catch (err) {
     handleFirestoreError(err, OperationType.WRITE, path);
@@ -380,16 +369,7 @@ export async function saveMachineryToFirestore(item: Machinery, userId: string) 
 export function subscribeMachinery(userId: string, callback: (list: Machinery[]) => void): Unsubscribe {
   const path = 'machinery';
   try {
-    const q = query(collection(db, path), where('ownerId', '==', userId));
-    return onSnapshot(
-      q,
-      (snapshot) => {
-        const list: Machinery[] = [];
-        snapshot.forEach((docSnap) => list.push(docSnap.data() as Machinery));
-        callback(list);
-      },
-      (error) => handleFirestoreError(error, OperationType.LIST, path)
-    );
+    return subscribeUserOwnedDocuments<Machinery>(path, userId, callback);
   } catch (err) {
     handleFirestoreError(err, OperationType.LIST, path);
     return () => {};
@@ -401,7 +381,7 @@ export async function saveEmployeeToFirestore(employee: Employee, userId: string
   const path = `employees/${employee.id}`;
   try {
     const docRef = doc(db, 'employees', employee.id);
-    await setDoc(docRef, { ...employee, ownerId: userId }, { merge: true });
+    await setDoc(docRef, withOwnershipMetadata(employee, userId), { merge: true });
     return true;
   } catch (err) {
     handleFirestoreError(err, OperationType.WRITE, path);
@@ -412,16 +392,7 @@ export async function saveEmployeeToFirestore(employee: Employee, userId: string
 export function subscribeEmployees(userId: string, callback: (list: Employee[]) => void): Unsubscribe {
   const path = 'employees';
   try {
-    const q = query(collection(db, path), where('ownerId', '==', userId));
-    return onSnapshot(
-      q,
-      (snapshot) => {
-        const list: Employee[] = [];
-        snapshot.forEach((docSnap) => list.push(docSnap.data() as Employee));
-        callback(list);
-      },
-      (error) => handleFirestoreError(error, OperationType.LIST, path)
-    );
+    return subscribeUserOwnedDocuments<Employee>(path, userId, callback);
   } catch (err) {
     handleFirestoreError(err, OperationType.LIST, path);
     return () => {};
@@ -433,7 +404,7 @@ export async function saveQuoteToFirestore(quote: QuoteRecord, userId: string) {
   const path = `quotes/${quote.id}`;
   try {
     const docRef = doc(db, 'quotes', quote.id);
-    await setDoc(docRef, { ...quote, authorId: userId }, { merge: true });
+    await setDoc(docRef, withOwnershipMetadata(quote, userId), { merge: true });
     return true;
   } catch (err) {
     handleFirestoreError(err, OperationType.WRITE, path);
@@ -444,16 +415,7 @@ export async function saveQuoteToFirestore(quote: QuoteRecord, userId: string) {
 export function subscribeQuotes(userId: string, callback: (list: QuoteRecord[]) => void): Unsubscribe {
   const path = 'quotes';
   try {
-    const q = query(collection(db, path), where('authorId', '==', userId));
-    return onSnapshot(
-      q,
-      (snapshot) => {
-        const list: QuoteRecord[] = [];
-        snapshot.forEach((docSnap) => list.push(docSnap.data() as QuoteRecord));
-        callback(list);
-      },
-      (error) => handleFirestoreError(error, OperationType.LIST, path)
-    );
+    return subscribeUserOwnedDocuments<QuoteRecord>(path, userId, callback);
   } catch (err) {
     handleFirestoreError(err, OperationType.LIST, path);
     return () => {};
@@ -465,7 +427,7 @@ export async function saveAPUItemToFirestore(item: APUItem, userId: string) {
   const path = `apuItems/${item.id}`;
   try {
     const docRef = doc(db, 'apuItems', item.id);
-    await setDoc(docRef, { ...item, authorId: userId }, { merge: true });
+    await setDoc(docRef, withOwnershipMetadata(item, userId), { merge: true });
     return true;
   } catch (err) {
     handleFirestoreError(err, OperationType.WRITE, path);
@@ -476,16 +438,7 @@ export async function saveAPUItemToFirestore(item: APUItem, userId: string) {
 export function subscribeAPUItems(userId: string, callback: (list: APUItem[]) => void): Unsubscribe {
   const path = 'apuItems';
   try {
-    const q = query(collection(db, path), where('authorId', '==', userId));
-    return onSnapshot(
-      q,
-      (snapshot) => {
-        const list: APUItem[] = [];
-        snapshot.forEach((docSnap) => list.push(docSnap.data() as APUItem));
-        callback(list);
-      },
-      (error) => handleFirestoreError(error, OperationType.LIST, path)
-    );
+    return subscribeUserOwnedDocuments<APUItem>(path, userId, callback);
   } catch (err) {
     handleFirestoreError(err, OperationType.LIST, path);
     return () => {};
@@ -497,7 +450,7 @@ export async function saveScheduleTaskToFirestore(task: ScheduleTask, userId: st
   const path = `scheduleTasks/${task.id}`;
   try {
     const docRef = doc(db, 'scheduleTasks', task.id);
-    await setDoc(docRef, { ...task, authorId: userId }, { merge: true });
+    await setDoc(docRef, withOwnershipMetadata(task, userId), { merge: true });
     return true;
   } catch (err) {
     handleFirestoreError(err, OperationType.WRITE, path);
@@ -508,16 +461,7 @@ export async function saveScheduleTaskToFirestore(task: ScheduleTask, userId: st
 export function subscribeScheduleTasks(userId: string, callback: (list: ScheduleTask[]) => void): Unsubscribe {
   const path = 'scheduleTasks';
   try {
-    const q = query(collection(db, path), where('authorId', '==', userId));
-    return onSnapshot(
-      q,
-      (snapshot) => {
-        const list: ScheduleTask[] = [];
-        snapshot.forEach((docSnap) => list.push(docSnap.data() as ScheduleTask));
-        callback(list);
-      },
-      (error) => handleFirestoreError(error, OperationType.LIST, path)
-    );
+    return subscribeUserOwnedDocuments<ScheduleTask>(path, userId, callback);
   } catch (err) {
     handleFirestoreError(err, OperationType.LIST, path);
     return () => {};
@@ -529,7 +473,7 @@ export async function saveMilestoneToFirestore(milestone: Milestone, userId: str
   const path = `milestones/${milestone.id}`;
   try {
     const docRef = doc(db, 'milestones', milestone.id);
-    await setDoc(docRef, { ...milestone, authorId: userId }, { merge: true });
+    await setDoc(docRef, withOwnershipMetadata(milestone, userId), { merge: true });
     return true;
   } catch (err) {
     handleFirestoreError(err, OperationType.WRITE, path);
@@ -540,16 +484,7 @@ export async function saveMilestoneToFirestore(milestone: Milestone, userId: str
 export function subscribeMilestones(userId: string, callback: (list: Milestone[]) => void): Unsubscribe {
   const path = 'milestones';
   try {
-    const q = query(collection(db, path), where('authorId', '==', userId));
-    return onSnapshot(
-      q,
-      (snapshot) => {
-        const list: Milestone[] = [];
-        snapshot.forEach((docSnap) => list.push(docSnap.data() as Milestone));
-        callback(list);
-      },
-      (error) => handleFirestoreError(error, OperationType.LIST, path)
-    );
+    return subscribeUserOwnedDocuments<Milestone>(path, userId, callback);
   } catch (err) {
     handleFirestoreError(err, OperationType.LIST, path);
     return () => {};
@@ -561,7 +496,7 @@ export async function saveTaskReminderToFirestore(reminder: TaskReminder, userId
   const path = `taskReminders/${reminder.id}`;
   try {
     const docRef = doc(db, 'taskReminders', reminder.id);
-    await setDoc(docRef, { ...reminder, authorId: userId }, { merge: true });
+    await setDoc(docRef, withOwnershipMetadata(reminder, userId), { merge: true });
     return true;
   } catch (err) {
     handleFirestoreError(err, OperationType.WRITE, path);
@@ -572,16 +507,7 @@ export async function saveTaskReminderToFirestore(reminder: TaskReminder, userId
 export function subscribeTaskReminders(userId: string, callback: (list: TaskReminder[]) => void): Unsubscribe {
   const path = 'taskReminders';
   try {
-    const q = query(collection(db, path), where('authorId', '==', userId));
-    return onSnapshot(
-      q,
-      (snapshot) => {
-        const list: TaskReminder[] = [];
-        snapshot.forEach((docSnap) => list.push(docSnap.data() as TaskReminder));
-        callback(list);
-      },
-      (error) => handleFirestoreError(error, OperationType.LIST, path)
-    );
+    return subscribeUserOwnedDocuments<TaskReminder>(path, userId, callback);
   } catch (err) {
     handleFirestoreError(err, OperationType.LIST, path);
     return () => {};

@@ -1,0 +1,3 @@
+KEYS: motd
+has tokens: false | has user: false
+exit=0

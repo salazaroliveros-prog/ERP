@@ -57,11 +57,11 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
   currency,
   company,
 }) => {
-  const activeProject = projects.find((p) => p.id === activeProjectId) || projects[0];
+  const activeProject = projects.find((p) => p.id === activeProjectId) || (projects.length > 0 ? projects[0] : undefined);
 
   // Regional Department State
-  const [selectedDept, setSelectedDept] = useState<string>(activeProject.department || 'Guatemala');
-  const [appliedDept, setAppliedDept] = useState<string>(activeProject.department || 'Guatemala');
+  const [selectedDept, setSelectedDept] = useState<string>(activeProject?.department || 'Guatemala');
+  const [appliedDept, setAppliedDept] = useState<string>(activeProject?.department || 'Guatemala');
 
   // Modals
   const [isManualModalOpen, setIsManualModalOpen] = useState(false);
@@ -103,6 +103,8 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
   const formatMoney = (amount: number) => {
     return currency === 'GTQ' ? formatGTQ(amount) : formatUSD(amount, company.exchangeRate);
   };
+
+  if (!activeProject) return null;
 
   // Recalculate all APU items direct costs for target department
   const handleRecalculateBudgetForDepartment = () => {
@@ -294,7 +296,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
           <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={() => setIsAiStudioOpen(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-sm transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-sm transition cursor-pointer min-h-[44px]"
             >
               <Sparkles className="w-4 h-4 text-amber-300" />
               Generar APU con IA
@@ -302,7 +304,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
 
             <button
               onClick={handleRunAiAudit}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs transition cursor-pointer min-h-[44px]"
             >
               <ShieldCheck className="w-4 h-4 text-blue-600" />
               Auditar con IA
@@ -310,7 +312,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
 
             <button
               onClick={() => setIsMarketCatalogueOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs transition cursor-pointer min-h-[44px]"
             >
               <TrendingUp className="w-4 h-4 text-emerald-600" />
               Precios Mercado GT
