@@ -136,10 +136,31 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
     setTimeout(() => setRecalcToast(null), 5000);
   };
 
+  // Validación básica de formulario APU sin nuevas dependencias
+  const validateAPUForm = (): { valid: boolean; errors: string[] } => {
+    const errors: string[] = [];
+    if (!code.trim()) errors.push('El código es requerido');
+    if (!desc.trim()) errors.push('La descripción es requerido');
+    const q = Number(qty);
+    if (!q || q <= 0) errors.push('La cantidad debe ser mayor a 0');
+    const m = Number(matCost);
+    if (m < 0) errors.push('El costo de materiales no puede ser negativo');
+    const l = Number(labCost);
+    if (l < 0) errors.push('El costo de mano de obra no puede ser negativo');
+    const e = Number(eqCost);
+    if (e < 0) errors.push('El costo de equipo no puede ser negativo');
+    return { valid: errors.length === 0, errors };
+  };
+
   // Manual APU creation
   const handleCreateManualAPU = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!desc.trim()) return;
+    const validation = validateAPUForm();
+    if (!validation.valid) {
+      // Mostrar errores simples via toast o alert
+      setRecalcToast?.('Errores de validación: ' + validation.errors.join(', '));
+      return;
+    }
 
     const m = Number(matCost) || 0;
     const l = Number(labCost) || 0;

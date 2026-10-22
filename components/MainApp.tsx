@@ -573,7 +573,7 @@ export default function MainApp() {
   const handleResetSeedData = () => {
     if (
       window.confirm(
-        '¿Desea limpiar todo el sistema y reiniciar desde cero? Se borrarán todos los proyectos, bitácoras, personal, gastos y configuración guardados localmente. Esta acción no se puede deshacer.'
+        '¿Desea limpiar TODO el sistema y reiniciar desde cero? Se eliminarán TODOS los datos: proyectos, bitácoras, personal, gastos, configuración y empresa. Esto incluye datos en LocalStorage y en la nube (Firestore) si hay sesión activa. Esta acción NO se puede deshacer.'
       )
     ) {
       clearAllLocalData();
