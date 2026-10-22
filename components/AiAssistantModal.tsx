@@ -61,7 +61,9 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({
   const [selectedVisitId, setSelectedVisitId] = useState<string>('fv-1');
   const [logDate, setLogDate] = useState<string>('2025-05-12');
   const [foremanName, setForemanName] = useState<string>('');
-  const [uploadedImage, setUploadedImage] = useState<string | null>(SAMPLE_LOGBOOKS[0].imageUrl);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(
+    SAMPLE_LOGBOOKS.length > 0 ? SAMPLE_LOGBOOKS[0].imageUrl : null
+  );
   const [imageFileName, setImageFileName] = useState<string>('bitacora_losa_fv-1.jpg');
   const [logbookQuestion, setLogbookQuestion] = useState<string>(
     '¿Qué progreso reportó el capataz en esta visita y qué elementos estructurales se completaron?'
