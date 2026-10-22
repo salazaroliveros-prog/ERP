@@ -20,6 +20,15 @@ export interface CompanySettings {
 }
 
 
+export const PROJECT_STATUSES = {
+  PLANIFICACION: 'Planificación',
+  EJECUCION: 'En Ejecución',
+  FINALIZADO: 'Finalizado',
+  SUSPENDIDO: 'Suspendido',
+} as const;
+
+export type ProjectStatus = typeof PROJECT_STATUSES[keyof typeof PROJECT_STATUSES];
+
 export interface Project {
   id: string;
   code: string;
@@ -33,7 +42,7 @@ export interface Project {
   progressPercent: number;
   startDate: string;
   endDate: string;
-  status: 'En Ejecución' | 'Planificación' | 'Finalizado' | 'Suspendido';
+  status: ProjectStatus;
   lat: number;
   lng: number;
   expectedProfitMarginPercent?: number; // e.g. 15 for 15%

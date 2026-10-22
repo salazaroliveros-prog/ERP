@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   saveProjectToFirestore,
   deleteProjectFromFirestore,
@@ -276,10 +276,14 @@ export function useProjectLocalPersistence(projects: Project[] | undefined | nul
 }
 
 export function useProjectExternalSync(setProjects: (value: Project[]) => void) {
+  const lastSyncedRef = useRef<string | null>(null);
+
   useEffect(() => {
     const handleExternalProjectsUpdate = () => {
       const local = getLocalProjects();
-      if (local && local.length > 0) {
+      const localKey = JSON.stringify(local.map((p) => ({ id: p.id, updatedAt: p.progressPercent })));
+      if (local && local.length > 0 && localKey !== lastSyncedRef.current) {
+        lastSyncedRef.current = localKey;
         setProjects(local);
       }
     };

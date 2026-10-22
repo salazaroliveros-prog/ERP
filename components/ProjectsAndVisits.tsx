@@ -28,7 +28,7 @@ import {
   Edit2,
   ArrowRightLeft,
 } from 'lucide-react';
-import { Project, FieldVisit, FieldPhoto, CompanySettings, MachineryLog, ExpenseRecord, AttendanceRecord } from '@/lib/types';
+import { Project, FieldVisit, FieldPhoto, CompanySettings, MachineryLog, ExpenseRecord, AttendanceRecord, PROJECT_STATUSES } from '@/lib/types';
 import { formatGTQ, formatUSD } from '@/lib/data';
 import { captureExactFieldGps, ExactGpsCapture } from '@/lib/geofencing';
 import { SignaturePad, SignatureResult } from '@/components/SignaturePad';
@@ -167,7 +167,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
       progressPercent: 0,
       startDate: new Date().toISOString().split('T')[0],
       endDate: '2026-12-31',
-      status: 'Planificación',
+      status: PROJECT_STATUSES.PLANIFICACION,
       lat: 14.6349,
       lng: -90.5069,
     };
@@ -455,7 +455,7 @@ export const ProjectsAndVisits: React.FC<ProjectsAndVisitsProps> = ({
                     </span>
                     <span
                       className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                        proj.status === 'En Ejecución'
+                        proj.status === PROJECT_STATUSES.EJECUCION
                           ? 'bg-emerald-400/10 text-emerald-300 border border-emerald-400/30'
                           : 'bg-amber-400/10 text-amber-300 border border-amber-400/30'
                       }`}
