@@ -97,7 +97,9 @@ export async function processLogoFile(file: File): Promise<{
             originalDimensions: `${img.width}x${img.height}`,
             processedSizes: ['192x192', '512x512', '192x192-maskable', '512x512-maskable'],
           };
-          console.log('[ConstructERP] Logotipo subido y procesado:', uploadLog);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[ConstructERP] Logotipo subido y procesado:', uploadLog);
+          }
           
           // Guardar log en localStorage para auditoría
           if (typeof window !== 'undefined') {

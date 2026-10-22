@@ -109,7 +109,9 @@ export function clearAllLocalData(): void {
     keysToRemove.forEach((key) => localStorage.removeItem(key));
     // Asegurar que la cola quede vacía
     saveOfflineData('offline_queue', []);
-    console.log('[ConstructERP] Datos locales limpiados:', keysToRemove.length, 'clave(s) eliminada(s)');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[ConstructERP] Datos locales limpiados:', keysToRemove.length, 'clave(s) eliminada(s)');
+    }
   } catch (e) {
     console.error('Error clearing local data:', e);
   }
@@ -148,7 +150,9 @@ export function registerServiceWorker(): void {
       navigator.serviceWorker
         .register('/sw.js')
         .then((reg) => {
-          console.log('[ConstructERP SW] Service Worker registrado exitosamente:', reg.scope);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[ConstructERP SW] Service Worker registrado exitosamente:', reg.scope);
+          }
         })
         .catch((err) => {
           console.warn('[ConstructERP SW] Registro de Service Worker omitido:', err);

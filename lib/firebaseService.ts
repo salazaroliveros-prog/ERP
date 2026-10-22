@@ -37,6 +37,39 @@ const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 export const auth = getAuth(app);
 
+// -------------------------------------------------------------
+// Genéricos CRUD para Firestore (evitan duplicación de ~700 líneas)
+// Todas las funciones save*/delete* específicas delegan aquí.
+// -------------------------------------------------------------
+
+export async function saveToFirestore<T extends { id?: string; ownerId?: string; authorId?: string }>(
+  collection: string,
+  id: string,
+  data: T,
+  userId: string
+): Promise<boolean> {
+  const path = `${collection}/${id}`;
+  try {
+    const docRef = doc(db, collection, id);
+    await setDoc(docRef, withOwnershipMetadata(data, userId), { merge: true });
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.WRITE, path);
+    return false;
+  }
+}
+
+export async function deleteFromFirestore(collection: string, id: string): Promise<boolean> {
+  const path = `${collection}/${id}`;
+  try {
+    await deleteDoc(doc(db, collection, id));
+    return true;
+  } catch (err) {
+    handleFirestoreError(err, OperationType.DELETE, path);
+    return false;
+  }
+}
+
 // Connection test helper (called on demand if needed)
 export async function testConnection() {
   try {
@@ -171,19 +204,7 @@ export function subscribeUserOwnedDocuments<T extends { id?: string; ownerId?: s
 
 // 1. Projects
 export async function saveProjectToFirestore(project: Project, userId: string) {
-  const path = `projects/${project.id}`;
-  try {
-    const docRef = doc(db, 'projects', project.id);
-    await setDoc(
-      docRef,
-      withOwnershipMetadata(project, userId),
-      { merge: true }
-    );
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.WRITE, path);
-    return false;
-  }
+  return saveToFirestore('projects', project.id, project, userId);
 }
 
 export function subscribeProjects(userId: string, callback: (projects: Project[]) => void): Unsubscribe {
@@ -197,14 +218,7 @@ export function subscribeProjects(userId: string, callback: (projects: Project[]
 }
 
 export async function deleteProjectFromFirestore(projectId: string) {
-  const path = `projects/${projectId}`;
-  try {
-    await deleteDoc(doc(db, 'projects', projectId));
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.DELETE, path);
-    return false;
-  }
+  return deleteFromFirestore('projects', projectId);
 }
 
 export async function getProjectFromFirestore(projectId: string): Promise<Project | null> {
@@ -234,19 +248,7 @@ export async function getProjectsFromFirestore(userId: string): Promise<Project[
 
 // 2. Field Visits & Inspections
 export async function saveFieldVisitToFirestore(visit: FieldVisit, userId: string) {
-  const path = `fieldVisits/${visit.id}`;
-  try {
-    const docRef = doc(db, 'fieldVisits', visit.id);
-    await setDoc(
-      docRef,
-      withOwnershipMetadata(visit, userId),
-      { merge: true }
-    );
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.WRITE, path);
-    return false;
-  }
+  return saveToFirestore('fieldVisits', visit.id, visit, userId);
 }
 
 export function subscribeFieldVisits(userId: string, callback: (visits: FieldVisit[]) => void): Unsubscribe {
@@ -261,19 +263,7 @@ export function subscribeFieldVisits(userId: string, callback: (visits: FieldVis
 
 // 3. Expenses
 export async function saveExpenseToFirestore(expense: ExpenseRecord, userId: string) {
-  const path = `expenses/${expense.id}`;
-  try {
-    const docRef = doc(db, 'expenses', expense.id);
-    await setDoc(
-      docRef,
-      withOwnershipMetadata(expense, userId),
-      { merge: true }
-    );
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.WRITE, path);
-    return false;
-  }
+  return saveToFirestore('expenses', expense.id, expense, userId);
 }
 
 export function subscribeExpenses(userId: string, callback: (expenses: ExpenseRecord[]) => void): Unsubscribe {
@@ -288,19 +278,7 @@ export function subscribeExpenses(userId: string, callback: (expenses: ExpenseRe
 
 // 4. Attendance
 export async function saveAttendanceToFirestore(record: AttendanceRecord, userId: string) {
-  const path = `attendance/${record.id}`;
-  try {
-    const docRef = doc(db, 'attendance', record.id);
-    await setDoc(
-      docRef,
-      withOwnershipMetadata(record, userId),
-      { merge: true }
-    );
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.WRITE, path);
-    return false;
-  }
+  return saveToFirestore('attendance', record.id, record, userId);
 }
 
 export function subscribeAttendance(userId: string, callback: (records: AttendanceRecord[]) => void): Unsubscribe {
@@ -315,19 +293,7 @@ export function subscribeAttendance(userId: string, callback: (records: Attendan
 
 // 5. Company Settings
 export async function saveCompanySettingsToFirestore(settings: CompanySettings, userId: string) {
-  const path = `companySettings/${userId}`;
-  try {
-    const docRef = doc(db, 'companySettings', userId);
-    await setDoc(
-      docRef,
-      withOwnershipMetadata(settings, userId),
-      { merge: true }
-    );
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.WRITE, path);
-    return false;
-  }
+  return saveToFirestore('companySettings', userId, settings, userId);
 }
 
 export function subscribeCompanySettings(userId: string, callback: (settings: CompanySettings | null) => void): Unsubscribe {
@@ -378,15 +344,7 @@ export function subscribeMachinery(userId: string, callback: (list: Machinery[])
 
 // 7. Employees
 export async function saveEmployeeToFirestore(employee: Employee, userId: string) {
-  const path = `employees/${employee.id}`;
-  try {
-    const docRef = doc(db, 'employees', employee.id);
-    await setDoc(docRef, withOwnershipMetadata(employee, userId), { merge: true });
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.WRITE, path);
-    return false;
-  }
+  return saveToFirestore('employees', employee.id, employee, userId);
 }
 
 export function subscribeEmployees(userId: string, callback: (list: Employee[]) => void): Unsubscribe {
@@ -401,15 +359,7 @@ export function subscribeEmployees(userId: string, callback: (list: Employee[]) 
 
 // 8. Quotes
 export async function saveQuoteToFirestore(quote: QuoteRecord, userId: string) {
-  const path = `quotes/${quote.id}`;
-  try {
-    const docRef = doc(db, 'quotes', quote.id);
-    await setDoc(docRef, withOwnershipMetadata(quote, userId), { merge: true });
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.WRITE, path);
-    return false;
-  }
+  return saveToFirestore('quotes', quote.id, quote, userId);
 }
 
 export function subscribeQuotes(userId: string, callback: (list: QuoteRecord[]) => void): Unsubscribe {
@@ -424,15 +374,7 @@ export function subscribeQuotes(userId: string, callback: (list: QuoteRecord[]) 
 
 // 9. APU Items
 export async function saveAPUItemToFirestore(item: APUItem, userId: string) {
-  const path = `apuItems/${item.id}`;
-  try {
-    const docRef = doc(db, 'apuItems', item.id);
-    await setDoc(docRef, withOwnershipMetadata(item, userId), { merge: true });
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.WRITE, path);
-    return false;
-  }
+  return saveToFirestore('apuItems', item.id, item, userId);
 }
 
 export function subscribeAPUItems(userId: string, callback: (list: APUItem[]) => void): Unsubscribe {
@@ -447,15 +389,7 @@ export function subscribeAPUItems(userId: string, callback: (list: APUItem[]) =>
 
 // 10. Schedule Tasks
 export async function saveScheduleTaskToFirestore(task: ScheduleTask, userId: string) {
-  const path = `scheduleTasks/${task.id}`;
-  try {
-    const docRef = doc(db, 'scheduleTasks', task.id);
-    await setDoc(docRef, withOwnershipMetadata(task, userId), { merge: true });
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.WRITE, path);
-    return false;
-  }
+  return saveToFirestore('scheduleTasks', task.id, task, userId);
 }
 
 export function subscribeScheduleTasks(userId: string, callback: (list: ScheduleTask[]) => void): Unsubscribe {
@@ -470,15 +404,7 @@ export function subscribeScheduleTasks(userId: string, callback: (list: Schedule
 
 // 11. Milestones
 export async function saveMilestoneToFirestore(milestone: Milestone, userId: string) {
-  const path = `milestones/${milestone.id}`;
-  try {
-    const docRef = doc(db, 'milestones', milestone.id);
-    await setDoc(docRef, withOwnershipMetadata(milestone, userId), { merge: true });
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.WRITE, path);
-    return false;
-  }
+  return saveToFirestore('milestones', milestone.id, milestone, userId);
 }
 
 export function subscribeMilestones(userId: string, callback: (list: Milestone[]) => void): Unsubscribe {
@@ -493,15 +419,7 @@ export function subscribeMilestones(userId: string, callback: (list: Milestone[]
 
 // 12. Task Reminders
 export async function saveTaskReminderToFirestore(reminder: TaskReminder, userId: string) {
-  const path = `taskReminders/${reminder.id}`;
-  try {
-    const docRef = doc(db, 'taskReminders', reminder.id);
-    await setDoc(docRef, withOwnershipMetadata(reminder, userId), { merge: true });
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.WRITE, path);
-    return false;
-  }
+  return saveToFirestore('taskReminders', reminder.id, reminder, userId);
 }
 
 export function subscribeTaskReminders(userId: string, callback: (list: TaskReminder[]) => void): Unsubscribe {
@@ -519,113 +437,43 @@ export function subscribeTaskReminders(userId: string, callback: (list: TaskRemi
 // -------------------------------------------------------------
 
 export async function deleteFieldVisitFromFirestore(visitId: string) {
-  const path = `fieldVisits/${visitId}`;
-  try {
-    await deleteDoc(doc(db, 'fieldVisits', visitId));
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.DELETE, path);
-    return false;
-  }
+  return deleteFromFirestore('fieldVisits', visitId);
 }
 
 export async function deleteExpenseFromFirestore(expenseId: string) {
-  const path = `expenses/${expenseId}`;
-  try {
-    await deleteDoc(doc(db, 'expenses', expenseId));
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.DELETE, path);
-    return false;
-  }
+  return deleteFromFirestore('expenses', expenseId);
 }
 
 export async function deleteAttendanceFromFirestore(recordId: string) {
-  const path = `attendance/${recordId}`;
-  try {
-    await deleteDoc(doc(db, 'attendance', recordId));
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.DELETE, path);
-    return false;
-  }
+  return deleteFromFirestore('attendance', recordId);
 }
 
 export async function deleteMachineryFromFirestore(machineryId: string) {
-  const path = `machinery/${machineryId}`;
-  try {
-    await deleteDoc(doc(db, 'machinery', machineryId));
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.DELETE, path);
-    return false;
-  }
+  return deleteFromFirestore('machinery', machineryId);
 }
 
 export async function deleteEmployeeFromFirestore(employeeId: string) {
-  const path = `employees/${employeeId}`;
-  try {
-    await deleteDoc(doc(db, 'employees', employeeId));
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.DELETE, path);
-    return false;
-  }
+  return deleteFromFirestore('employees', employeeId);
 }
 
 export async function deleteQuoteFromFirestore(quoteId: string) {
-  const path = `quotes/${quoteId}`;
-  try {
-    await deleteDoc(doc(db, 'quotes', quoteId));
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.DELETE, path);
-    return false;
-  }
+  return deleteFromFirestore('quotes', quoteId);
 }
 
 export async function deleteAPUItemFromFirestore(apuId: string) {
-  const path = `apuItems/${apuId}`;
-  try {
-    await deleteDoc(doc(db, 'apuItems', apuId));
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.DELETE, path);
-    return false;
-  }
+  return deleteFromFirestore('apuItems', apuId);
 }
 
 export async function deleteScheduleTaskFromFirestore(taskId: string) {
-  const path = `scheduleTasks/${taskId}`;
-  try {
-    await deleteDoc(doc(db, 'scheduleTasks', taskId));
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.DELETE, path);
-    return false;
-  }
+  return deleteFromFirestore('scheduleTasks', taskId);
 }
 
 export async function deleteMilestoneFromFirestore(milestoneId: string) {
-  const path = `milestones/${milestoneId}`;
-  try {
-    await deleteDoc(doc(db, 'milestones', milestoneId));
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.DELETE, path);
-    return false;
-  }
+  return deleteFromFirestore('milestones', milestoneId);
 }
 
 export async function deleteTaskReminderFromFirestore(reminderId: string) {
-  const path = `taskReminders/${reminderId}`;
-  try {
-    await deleteDoc(doc(db, 'taskReminders', reminderId));
-    return true;
-  } catch (err) {
-    handleFirestoreError(err, OperationType.DELETE, path);
-    return false;
-  }
+  return deleteFromFirestore('taskReminders', reminderId);
 }
 
 
