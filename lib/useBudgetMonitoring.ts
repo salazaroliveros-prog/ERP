@@ -38,7 +38,11 @@ export function useBudgetMonitoring(
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      evaluateAndTriggerBudgetMarginAlerts(projects, false);
+      try {
+        evaluateAndTriggerBudgetMarginAlerts(projects, false);
+      } catch (err) {
+        console.warn('Error evaluando alertas de presupuesto:', err);
+      }
     }, 2000);
 
     return () => window.clearTimeout(timer);

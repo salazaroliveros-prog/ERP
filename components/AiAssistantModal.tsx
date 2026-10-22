@@ -26,7 +26,7 @@ import { GUATEMALA_DEPARTMENTS_INDEX } from '@/lib/guatemalaMarketData';
 interface AiAssistantModalProps {
   isOpen: boolean;
   onClose: () => void;
-  activeProject?: Project;
+  activeProject?: Project | null;
   budgetItems?: APUItem[];
   fieldVisits?: FieldVisit[];
 }

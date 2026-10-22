@@ -115,7 +115,7 @@ export default function MainApp() {
     return [];
   });
   const [activeProjectId, setActiveProjectId] = useState<string>('');
-  const activeProject = projects.find((p) => p.id === activeProjectId) || (projects.length > 0 ? projects[0] : undefined);
+  const activeProject = projects.find((p) => p.id === activeProjectId) || (projects.length > 0 ? projects[0] : null);
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [currency, setCurrency] = useState<'GTQ' | 'USD'>('GTQ');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
@@ -172,15 +172,23 @@ export default function MainApp() {
 
   useEffect(() => {
     // Cargar marca y logotipo guardados en LocalStorage inmediatamente
-    const saved = loadSavedCompanyBranding();
-    if (saved) {
-      setCompany(saved);
-      applyCompanyBrandingToDOM(saved);
+    try {
+      const saved = loadSavedCompanyBranding();
+      if (saved) {
+        setCompany(saved);
+        applyCompanyBrandingToDOM(saved);
+      }
+    } catch (err) {
+      console.warn('Error cargando branding guardado:', err);
     }
   }, []);
 
   useEffect(() => {
-    applyCompanyBrandingToDOM(company);
+    try {
+      applyCompanyBrandingToDOM(company);
+    } catch (err) {
+      console.warn('Error aplicando branding al DOM:', err);
+    }
   }, [company]);
 
   useEffect(() => {
@@ -853,8 +861,8 @@ export default function MainApp() {
           isOpen={isReminderModalOpen}
           onClose={() => setIsReminderModalOpen(false)}
           reminders={reminders}
-          tasks={tasks.filter((t) => t.projectId === activeProjectId || !t.projectId)}
-          milestones={milestones.filter((m) => m.projectId === activeProjectId || !m.projectId)}
+          tasks={tasks.filter((t) => (!activeProjectId ? true : t.projectId === activeProjectId || !t.projectId))}
+          milestones={milestones.filter((m) => (!activeProjectId ? true : m.projectId === activeProjectId || !m.projectId))}
           onAddReminder={handleAddReminder}
           onToggleReminder={handleToggleReminder}
           onDeleteReminder={handleDeleteReminder}

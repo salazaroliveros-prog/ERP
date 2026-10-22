@@ -263,10 +263,14 @@ export function useOfflineSync(
   }, [currentUserUid, handleTriggerToast]);
 }
 
-export function useProjectLocalPersistence(projects: Project[]) {
+export function useProjectLocalPersistence(projects: Project[] | undefined | null) {
   useEffect(() => {
-    if (projects && projects.length > 0) {
-      saveLocalProjects(projects);
+    try {
+      if (Array.isArray(projects) && projects.length > 0) {
+        saveLocalProjects(projects);
+      }
+    } catch (err) {
+      console.warn('Error persistiendo proyectos localmente:', err);
     }
   }, [projects]);
 }
