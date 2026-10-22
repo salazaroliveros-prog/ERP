@@ -1,18 +1,12 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 1. Global Default Deny
     match /{document=**} {
       allow read, write: if false;
     }
 
-    // Helper functions
     function isSignedIn() {
       return request.auth != null;
-    }
-
-    function isVerified() {
-      return isSignedIn() && request.auth.token.email_verified == true;
     }
 
     function incoming() {
@@ -27,22 +21,17 @@ service cloud.firestore {
       return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
     }
 
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
-    }
-
-    function isOwnedByCurrentUser(data) {
-      return isSignedIn() && data.ownerId == request.auth.uid;
-    }
-
-    function isLegacyOwnedByCurrentUser(data) {
+    function isOwned(data) {
       return isSignedIn() && data.keys().hasAny(['ownerId', 'authorId']) && (
         data.ownerId == request.auth.uid ||
         data.authorId == request.auth.uid
       );
     }
 
-    // Validation helpers
+    function canCreate(data) {
+      return isSignedIn() && data.ownerId == request.auth.uid;
+    }
+
     function isValidProject(data) {
       return data.keys().hasAll(['id', 'code', 'name', 'client', 'budgetTotal', 'spentTotal', 'status', 'ownerId', 'authorId']) &&
         data.id is string && data.id.size() <= 128 &&
@@ -73,6 +62,33 @@ service cloud.firestore {
         data.id is string && data.id.size() <= 128 &&
         data.projectId is string && data.projectId.size() <= 128 &&
         data.date is string && data.date.size() <= 30 &&
+    match /projects/{projectId} {
+      allow get, list: if isSignedIn() && isOwned(resource.data);
+      allow create: if isValidId(projectId) && isSignedIn() && canCreate(incoming()) && isValidProject(incoming());
+      allow update: if isValidId(projectId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidProject(incoming());
+      allow delete: if isValidId(projectId) && isSignedIn() && isOwned(existing());
+    }
+
+    match /fieldVisits/{visitId} {
+      allow get, list: if isSignedIn() && isOwned(resource.data);
+      allow create: if isValidId(visitId) && isSignedIn() && canCreate(incoming()) && isValidFieldVisit(incoming());
+      allow update: if isValidId(visitId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidFieldVisit(incoming());
+      allow delete: if isValidId(visitId) && isSignedIn() && isOwned(existing());
+    }
+
+    match /expenses/{expenseId} {
+      allow get, list: if isSignedIn() && isOwned(resource.data);
+      allow create: if isValidId(expenseId) && isSignedIn() && canCreate(incoming()) && isValidExpense(incoming());
+      allow update: if isValidId(expenseId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidExpense(incoming());
+      allow delete: if isValidId(expenseId) && isSignedIn() && isOwned(existing());
+    }
+
+    match /attendance/{attendanceId} {
+      allow get, list: if isSignedIn() && isOwned(resource.data);
+      allow create: if isValidId(attendanceId) && isSignedIn() && canCreate(incoming()) && isValidAttendance(incoming());
+      allow update: if isValidId(attendanceId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidAttendance(incoming());
+      allow delete: if isValidId(attendanceId) && isSignedIn() && isOwned(existing());
+    }
         data.category is string && data.category.size() <= 100 &&
         data.amount is number &&
         data.currency in ['GTQ', 'USD'] &&
@@ -88,14 +104,6 @@ service cloud.firestore {
         data.employeeId is string && data.employeeId.size() <= 128 &&
         data.employeeName is string && data.employeeName.size() <= 150 &&
         data.status in ['Presente', 'Ausente', 'Permiso', 'Incapacidad IGSS'] &&
-        data.ownerId == request.auth.uid &&
-        data.authorId == request.auth.uid;
-    }
-
-    function isValidCompanySettings(data) {
-      return data.keys().hasAll(['legalName', 'commercialName', 'ownerId', 'authorId']) &&
-        data.legalName is string && data.legalName.size() <= 250 &&
-        data.commercialName is string && data.commercialName.size() <= 250 &&
         data.ownerId == request.auth.uid &&
         data.authorId == request.auth.uid;
     }
@@ -131,36 +139,59 @@ service cloud.firestore {
     function isValidEmployee(data) {
       return data.keys().hasAll(['id', 'name', 'role', 'dailyRateGTQ', 'igssAffiliated', 'phone', 'ownerId', 'authorId']) &&
         data.id is string && data.id.size() <= 128 &&
-        data.name is string && data.name.size() <= 150 &&
+        data.name is string && data.name.size() <= 200 &&
         data.role in ['Capataz', 'Albañil', 'Ayudante', 'Arquitecto Residente', 'Bodeguero', 'Electricista'] &&
         data.dailyRateGTQ is number &&
-        data.igssAffiliated is boolean &&
+        data.igssAffiliated is bool &&
         data.phone is string && data.phone.size() <= 50 &&
         data.ownerId == request.auth.uid &&
         data.authorId == request.auth.uid;
     }
 
     function isValidQuote(data) {
-      return data.keys().hasAll(['id', 'projectId', 'clientName', 'clientNit', 'date', 'validUntil', 'items', 'totalGTQ', 'status', 'ownerId', 'authorId']) &&
+      return data.keys().hasAll(['id', 'projectId', 'clientName', 'items', 'totalGTQ', 'status', 'ownerId', 'authorId']) &&
         data.id is string && data.id.size() <= 128 &&
         data.projectId is string && data.projectId.size() <= 128 &&
         data.clientName is string && data.clientName.size() <= 200 &&
-        data.clientNit is string && data.clientNit.size() <= 50 &&
-        data.date is string && data.date.size() <= 30 &&
-        data.validUntil is string && data.validUntil.size() <= 30 &&
-        data.items is list &&
         data.totalGTQ is number &&
         data.status in ['Aceptada', 'Enviada', 'Borrador', 'Rechazada'] &&
         data.ownerId == request.auth.uid &&
         data.authorId == request.auth.uid;
     }
 
+    match /machinery/{machineryId} {
+      allow get, list: if isSignedIn() && isOwned(resource.data);
+      allow create: if isValidId(machineryId) && isSignedIn() && canCreate(incoming()) && isValidMachinery(incoming());
+      allow update: if isValidId(machineryId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidMachinery(incoming());
+      allow delete: if isValidId(machineryId) && isSignedIn() && isOwned(existing());
+    }
+
+    match /machineryLogs/{logId} {
+      allow get, list: if isSignedIn() && isOwned(resource.data);
+      allow create: if isValidId(logId) && isSignedIn() && canCreate(incoming()) && isValidMachineryLog(incoming());
+      allow update: if isValidId(logId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidMachineryLog(incoming());
+      allow delete: if isValidId(logId) && isSignedIn() && isOwned(existing());
+    }
+
+    match /employees/{employeeId} {
+      allow get, list: if isSignedIn() && isOwned(resource.data);
+      allow create: if isValidId(employeeId) && isSignedIn() && canCreate(incoming()) && isValidEmployee(incoming());
+      allow update: if isValidId(employeeId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidEmployee(incoming());
+      allow delete: if isValidId(employeeId) && isSignedIn() && isOwned(existing());
+    }
+
+    match /quotes/{quoteId} {
+      allow get, list: if isSignedIn() && isOwned(resource.data);
+      allow create: if isValidId(quoteId) && isSignedIn() && canCreate(incoming()) && isValidQuote(incoming());
+      allow update: if isValidId(quoteId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidQuote(incoming());
+      allow delete: if isValidId(quoteId) && isSignedIn() && isOwned(existing());
+    }
     function isValidAPUItem(data) {
       return data.keys().hasAll(['id', 'code', 'description', 'unit', 'quantity', 'materialUnitCostGTQ', 'laborUnitCostGTQ', 'equipmentUnitCostGTQ', 'totalUnitCostGTQ', 'totalPriceGTQ', 'ownerId', 'authorId']) &&
         data.id is string && data.id.size() <= 128 &&
         data.code is string && data.code.size() <= 64 &&
-        data.description is string && data.description.size() <= 500 &&
-        data.unit is string && data.unit.size() <= 50 &&
+        data.description is string && data.description.size() <= 300 &&
+        data.unit is string && data.unit.size() <= 30 &&
         data.quantity is number &&
         data.materialUnitCostGTQ is number &&
         data.laborUnitCostGTQ is number &&
@@ -176,11 +207,11 @@ service cloud.firestore {
         data.id is string && data.id.size() <= 128 &&
         data.projectId is string && data.projectId.size() <= 128 &&
         data.name is string && data.name.size() <= 200 &&
-        data.phase is string && data.phase.size() <= 100 &&
+        data.phase is string && data.phase.size() <= 200 &&
         data.startDate is string && data.startDate.size() <= 30 &&
         data.endDate is string && data.endDate.size() <= 30 &&
         data.progress is number &&
-        data.criticalPath is boolean &&
+        data.criticalPath is bool &&
         data.predecessors is list &&
         data.ownerId == request.auth.uid &&
         data.authorId == request.auth.uid;
@@ -191,135 +222,81 @@ service cloud.firestore {
         data.id is string && data.id.size() <= 128 &&
         data.projectId is string && data.projectId.size() <= 128 &&
         data.title is string && data.title.size() <= 200 &&
-        data.phase is string && data.phase.size() <= 100 &&
+        data.phase is string && data.phase.size() <= 200 &&
         data.targetDate is string && data.targetDate.size() <= 30 &&
-        data.completed is boolean &&
+        data.completed is bool &&
         data.progress is number &&
         data.weightPercent is number &&
         data.ownerId == request.auth.uid &&
         data.authorId == request.auth.uid;
-    }
-
     function isValidTaskReminder(data) {
       return data.keys().hasAll(['id', 'projectId', 'taskName', 'title', 'description', 'targetDate', 'advanceOption', 'priority', 'channel', 'enabled', 'createdAt', 'ownerId', 'authorId']) &&
         data.id is string && data.id.size() <= 128 &&
         data.projectId is string && data.projectId.size() <= 128 &&
         data.taskName is string && data.taskName.size() <= 200 &&
         data.title is string && data.title.size() <= 200 &&
-        data.description is string && data.description.size() <= 1000 &&
+        data.description is string && data.description.size() <= 500 &&
         data.targetDate is string && data.targetDate.size() <= 30 &&
         data.advanceOption in ['same_day', '1_day_before', '2_days_before', '3_days_before', '1_week_before', 'custom'] &&
         data.priority in ['Alta', 'Media', 'Baja'] &&
         data.channel in ['in_app', 'sound', 'email'] &&
-        data.enabled is boolean &&
-        data.createdAt is string && data.createdAt.size() <= 50 &&
+        data.enabled is bool &&
+        data.createdAt is string &&
         data.ownerId == request.auth.uid &&
         data.authorId == request.auth.uid;
     }
 
-    // Projects collection
-    match /projects/{projectId} {
-      allow get, list: if isSignedIn() && isOwnedByCurrentUser(resource.data);
-      allow create: if isValidId(projectId) && isSignedIn() && isValidProject(incoming());
-      allow update: if isValidId(projectId) && isSignedIn() && isOwnedByCurrentUser(existing()) && incoming().ownerId == request.auth.uid && incoming().authorId == request.auth.uid && isValidProject(incoming());
-      allow delete: if isValidId(projectId) && isSignedIn() && isOwnedByCurrentUser(existing());
+    function isValidCompanySettings(data) {
+      return data.keys().hasAll(['id', 'legalName', 'commercialName', 'nit', 'architectName', 'architectColNumber', 'address', 'phone', 'email', 'exchangeRate', 'primaryColor', 'secondaryColor', 'ownerId', 'authorId']) &&
+        data.id is string && data.id.size() <= 128 &&
+        data.legalName is string && data.legalName.size() <= 200 &&
+        data.commercialName is string && data.commercialName.size() <= 200 &&
+        data.nit is string && data.nit.size() <= 50 &&
+        data.architectName is string && data.architectName.size() <= 200 &&
+        data.architectColNumber is string && data.architectColNumber.size() <= 50 &&
+        data.address is string && data.address.size() <= 300 &&
+        data.phone is string && data.phone.size() <= 50 &&
+        data.email is string && data.email.size() <= 200 &&
+        data.exchangeRate is number &&
+        data.primaryColor is string && data.primaryColor.size() <= 20 &&
+        data.secondaryColor is string && data.secondaryColor.size() <= 20 &&
+        data.ownerId == request.auth.uid &&
+        data.authorId == request.auth.uid;
     }
-
-    // Field visits collection
-    match /fieldVisits/{visitId} {
-      allow get, list: if isSignedIn() && (resource.data.ownerId == request.auth.uid || resource.data.authorId == request.auth.uid);
-      allow create: if isValidId(visitId) && isSignedIn() && isValidFieldVisit(incoming());
-      allow update: if isValidId(visitId) && isSignedIn() && ((existing().ownerId == request.auth.uid) || (existing().authorId == request.auth.uid)) && incoming().ownerId == request.auth.uid && incoming().authorId == request.auth.uid && isValidFieldVisit(incoming());
-      allow delete: if isValidId(visitId) && isSignedIn() && ((existing().ownerId == request.auth.uid) || (existing().authorId == request.auth.uid));
-    }
-
-    // Expenses collection
-    match /expenses/{expenseId} {
-      allow get, list: if isSignedIn() && (resource.data.ownerId == request.auth.uid || resource.data.authorId == request.auth.uid);
-      allow create: if isValidId(expenseId) && isSignedIn() && isValidExpense(incoming());
-      allow update: if isValidId(expenseId) && isSignedIn() && ((existing().ownerId == request.auth.uid) || (existing().authorId == request.auth.uid)) && incoming().ownerId == request.auth.uid && incoming().authorId == request.auth.uid && isValidExpense(incoming());
-      allow delete: if isValidId(expenseId) && isSignedIn() && ((existing().ownerId == request.auth.uid) || (existing().authorId == request.auth.uid));
-    }
-
-    // Attendance collection
-    match /attendance/{attendanceId} {
-      allow get, list: if isSignedIn() && (resource.data.ownerId == request.auth.uid || resource.data.authorId == request.auth.uid);
-      allow create: if isValidId(attendanceId) && isSignedIn() && isValidAttendance(incoming());
-      allow update: if isValidId(attendanceId) && isSignedIn() && ((existing().ownerId == request.auth.uid) || (existing().authorId == request.auth.uid)) && incoming().ownerId == request.auth.uid && incoming().authorId == request.auth.uid && isValidAttendance(incoming());
-      allow delete: if isValidId(attendanceId) && isSignedIn() && ((existing().ownerId == request.auth.uid) || (existing().authorId == request.auth.uid));
-    }
-
-    // Company Settings collection
-    match /companySettings/{settingId} {
-      allow get, list: if isSignedIn() && isOwnedByCurrentUser(resource.data);
-      allow create: if isValidId(settingId) && isSignedIn() && isValidCompanySettings(incoming());
-      allow update: if isValidId(settingId) && isSignedIn() && isOwnedByCurrentUser(existing()) && incoming().ownerId == request.auth.uid && incoming().authorId == request.auth.uid && isValidCompanySettings(incoming());
-      allow delete: if isValidId(settingId) && isSignedIn() && isOwnedByCurrentUser(existing());
-    }
-
-    // Machinery collection
-    match /machinery/{machineryId} {
-      allow get, list: if isSignedIn() && isLegacyOwnedByCurrentUser(resource.data);
-      allow create: if isValidId(machineryId) && isSignedIn() && isValidMachinery(incoming());
-      allow update: if isValidId(machineryId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing()) && isValidMachinery(incoming());
-      allow delete: if isValidId(machineryId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing());
-    }
-
-    // Machinery Logs collection
-    match /machineryLogs/{logId} {
-      allow get, list: if isSignedIn() && isLegacyOwnedByCurrentUser(resource.data);
-      allow create: if isValidId(logId) && isSignedIn() && isValidMachineryLog(incoming());
-      allow update: if isValidId(logId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing()) && isValidMachineryLog(incoming());
-      allow delete: if isValidId(logId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing());
-    }
-
-    // Employees collection
-    match /employees/{employeeId} {
-      allow get, list: if isSignedIn() && isLegacyOwnedByCurrentUser(resource.data);
-      allow create: if isValidId(employeeId) && isSignedIn() && isValidEmployee(incoming());
-      allow update: if isValidId(employeeId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing()) && isValidEmployee(incoming());
-      allow delete: if isValidId(employeeId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing());
-    }
-
-    // Quotes collection
-    match /quotes/{quoteId} {
-      allow get, list: if isSignedIn() && isLegacyOwnedByCurrentUser(resource.data);
-      allow create: if isValidId(quoteId) && isSignedIn() && isValidQuote(incoming());
-      allow update: if isValidId(quoteId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing()) && isValidQuote(incoming());
-      allow delete: if isValidId(quoteId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing());
-    }
-
-    // APU Items collection
     match /apuItems/{itemId} {
-      allow get, list: if isSignedIn() && isLegacyOwnedByCurrentUser(resource.data);
-      allow create: if isValidId(itemId) && isSignedIn() && isValidAPUItem(incoming());
-      allow update: if isValidId(itemId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing()) && isValidAPUItem(incoming());
-      allow delete: if isValidId(itemId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing());
+      allow get, list: if isSignedIn() && isOwned(resource.data);
+      allow create: if isValidId(itemId) && isSignedIn() && canCreate(incoming()) && isValidAPUItem(incoming());
+      allow update: if isValidId(itemId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidAPUItem(incoming());
+      allow delete: if isValidId(itemId) && isSignedIn() && isOwned(existing());
     }
 
-    // Schedule Tasks collection
     match /scheduleTasks/{taskId} {
-      allow get, list: if isSignedIn() && isLegacyOwnedByCurrentUser(resource.data);
-      allow create: if isValidId(taskId) && isSignedIn() && isValidScheduleTask(incoming());
-      allow update: if isValidId(taskId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing()) && isValidScheduleTask(incoming());
-      allow delete: if isValidId(taskId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing());
+      allow get, list: if isSignedIn() && isOwned(resource.data);
+      allow create: if isValidId(taskId) && isSignedIn() && canCreate(incoming()) && isValidScheduleTask(incoming());
+      allow update: if isValidId(taskId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidScheduleTask(incoming());
+      allow delete: if isValidId(taskId) && isSignedIn() && isOwned(existing());
     }
 
-    // Milestones collection
     match /milestones/{milestoneId} {
-      allow get, list: if isSignedIn() && isLegacyOwnedByCurrentUser(resource.data);
-      allow create: if isValidId(milestoneId) && isSignedIn() && isValidMilestone(incoming());
-      allow update: if isValidId(milestoneId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing()) && isValidMilestone(incoming());
-      allow delete: if isValidId(milestoneId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing());
+      allow get, list: if isSignedIn() && isOwned(resource.data);
+      allow create: if isValidId(milestoneId) && isSignedIn() && canCreate(incoming()) && isValidMilestone(incoming());
+      allow update: if isValidId(milestoneId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidMilestone(incoming());
+      allow delete: if isValidId(milestoneId) && isSignedIn() && isOwned(existing());
     }
 
-    // Task Reminders collection
     match /taskReminders/{reminderId} {
-      allow get, list: if isSignedIn() && isLegacyOwnedByCurrentUser(resource.data);
-      allow create: if isValidId(reminderId) && isSignedIn() && isValidTaskReminder(incoming());
-      allow update: if isValidId(reminderId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing()) && isValidTaskReminder(incoming());
-      allow delete: if isValidId(reminderId) && isSignedIn() && isLegacyOwnedByCurrentUser(existing());
+      allow get, list: if isSignedIn() && isOwned(resource.data);
+      allow create: if isValidId(reminderId) && isSignedIn() && canCreate(incoming()) && isValidTaskReminder(incoming());
+      allow update: if isValidId(reminderId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidTaskReminder(incoming());
+      allow delete: if isValidId(reminderId) && isSignedIn() && isOwned(existing());
+    }
+
+    match /companySettings/{settingsId} {
+      allow get, list: if isSignedIn() && isOwned(resource.data);
+      allow create: if isValidId(settingsId) && isSignedIn() && canCreate(incoming()) && isValidCompanySettings(incoming());
+      allow update: if isValidId(settingsId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidCompanySettings(incoming());
+      allow delete: if isValidId(settingsId) && isSignedIn() && isOwned(existing());
     }
   }
 }
-
+    }
