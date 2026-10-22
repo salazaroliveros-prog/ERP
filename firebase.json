@@ -1,8 +1,12 @@
 {
-  "firestore": [
-    {
-      "database": "ai-studio-constructerpguat-7f88275b-727f-4f45-af07-6953a1af46a0",
-      "rules": "firestore.rules"
-    }
-  ]
+  "firestore": {
+    "databases": [
+      {
+        "databaseId": "ai-studio-constructerpguat-7f88275b-727f-4f45-af07-6953a1af46a0",
+        "rules": "firestore.rules",
+        "edition": "ENTERPRISE",
+        "dataAccessMode": "FIRESTORE_NATIVE"
+      }
+    ]
+  }
 }

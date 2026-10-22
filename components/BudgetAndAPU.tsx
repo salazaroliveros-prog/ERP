@@ -427,8 +427,8 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
         </div>
       </div>
 
-      {/* APU ITEMS TABLE */}
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+      {/* APU ITEMS - Desktop Table */}
+      <div className="hidden lg:block bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
         <div className="p-4 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Layers className="w-4 h-4 text-blue-600" />
@@ -440,7 +440,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+          <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-slate-700 font-semibold uppercase border-b border-slate-200">
               <tr>
                 <th className="p-3.5">Código</th>
@@ -462,7 +462,7 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                   <td className="p-3.5 font-medium text-slate-900 max-w-xs">
                     <p className="truncate" title={item.description}>{item.description}</p>
                     {item.department && item.department !== appliedDept && (
-                      <span className="text-[10px] text-amber-600 font-medium">
+                      <span className="text-xs text-amber-600 font-medium">
                         (Base: {item.department})
                       </span>
                     )}
@@ -475,20 +475,22 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                   <td className="p-3.5 font-bold text-slate-900">{formatMoney(item.totalUnitCostGTQ)}</td>
                   <td className="p-3.5 font-bold text-blue-900">{formatMoney(item.totalPriceGTQ)}</td>
                   <td className="p-3.5 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
+                    <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => setInspectingItem(item)}
-                        className="p-1.5 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition cursor-pointer"
+                        className="p-3 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
                         title="Ver desglose detallado de materiales, mano de obra y equipo"
+                        aria-label={`Ver desglose de ${item.code}`}
                       >
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-5 h-5" />
                       </button>
                       <button
                         onClick={() => setEditingAPUItem(item)}
-                        className="p-1.5 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition cursor-pointer"
+                        className="p-3 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
                         title="Editar renglón APU"
+                        aria-label={`Editar ${item.code}`}
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <Edit2 className="w-5 h-5" />
                       </button>
                       {onDeleteBudgetItem && (
                         <button
@@ -497,10 +499,11 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
                               onDeleteBudgetItem(item.id);
                             }
                           }}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                          className="p-3 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
                           title="Eliminar partida"
+                          aria-label={`Eliminar ${item.code}`}
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-5 h-5" />
                         </button>
                       )}
                     </div>
@@ -510,6 +513,92 @@ export const BudgetAndAPU: React.FC<BudgetAndAPUProps> = ({
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* APU ITEMS - Mobile Card Layout */}
+      <div className="lg:hidden space-y-3">
+        {budgetItems.map((item) => (
+          <div
+            key={item.id}
+            className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4 space-y-3"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-mono font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg text-sm">
+                    {item.code}
+                  </span>
+                  {item.department && item.department !== appliedDept && (
+                    <span className="text-xs text-amber-600 font-medium px-2 py-0.5 rounded bg-amber-50">
+                      Base: {item.department}
+                    </span>
+                  )}
+                </div>
+                <p className="font-medium text-slate-900 mt-1 text-sm">{item.description}</p>
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  onClick={() => setInspectingItem(item)}
+                  className="p-3 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  aria-label={`Ver desglose de ${item.code}`}
+                >
+                  <Eye className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => setEditingAPUItem(item)}
+                  className="p-3 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  aria-label={`Editar ${item.code}`}
+                >
+                  <Edit2 className="w-5 h-5" />
+                </button>
+                {onDeleteBudgetItem && (
+                  <button
+                    onClick={() => {
+                      if (window.confirm(`¿Eliminar partida ${item.code} (${item.description})?`)) {
+                        onDeleteBudgetItem(item.id);
+                      }
+                    }}
+                    className="p-3 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
+                    aria-label={`Eliminar ${item.code}`}
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100">
+              <div className="space-y-1">
+                <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Unidad</p>
+                <p className="font-mono text-slate-900 text-sm">{item.unit}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Cantidad</p>
+                <p className="font-bold text-slate-900 text-sm">{item.quantity}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Materiales</p>
+                <p className="font-bold text-slate-900 text-sm">{formatMoney(item.materialUnitCostGTQ)}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Mano Obra</p>
+                <p className="font-bold text-slate-900 text-sm">{formatMoney(item.laborUnitCostGTQ)}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Equipo</p>
+                <p className="font-bold text-slate-900 text-sm">{formatMoney(item.equipmentUnitCostGTQ)}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Costo Unit.</p>
+                <p className="font-bold text-slate-900 text-sm">{formatMoney(item.totalUnitCostGTQ)}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Total Parcial</p>
+                <p className="font-bold text-blue-900 text-sm">{formatMoney(item.totalPriceGTQ)}</p>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* MODAL 1: AI APU GENERATION STUDIO */}
