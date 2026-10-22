@@ -1,4 +1,4 @@
-import { Project, OfflineActionType } from './types';
+import { Project, OfflineActionType, PROJECT_STATUSES } from './types';
 import {
   saveLocalProject,
   getLocalProject,
@@ -15,63 +15,18 @@ import {
   deleteProjectFromFirestore,
   testConnection,
 } from './firebaseService';
+import {
+  TEST_PROJECT_1,
+  TEST_PROJECT_2,
+  TEST_PROJECT_1_MODIFIED,
+  TEST_PROJECT_2_MODIFIED,
+} from './testData';
 
-// ============================================================================
-// DATOS REALES DE PROYECTOS DE CONSTRUCCIÓN EN GUATEMALA
-// ============================================================================
-
-export const REAL_PROJECT_1: Project = {
-  id: 'proj-gt-z14-gemelas',
-  code: 'OBRA-2026-GT01',
-  name: 'Torre Residencial Las Gemelas - Zona 14',
-  client: 'Desarrolladora Urbana Cayalá, S.A.',
-  location: '10a Avenida 14-32, Zona 14, Ciudad de Guatemala',
-  municipality: 'Guatemala',
-  department: 'Guatemala',
-  budgetTotal: 18450000, // Q 18,450,000.00
-  spentTotal: 4250000,   // Q 4,250,000.00
-  progressPercent: 23,   // 23% avance físico
-  startDate: '2026-02-01',
-  endDate: '2027-08-30',
-  status: 'En Ejecución',
-  lat: 14.5839,
-  lng: -90.5142,
-  expectedProfitMarginPercent: 18,
-};
-
-export const REAL_PROJECT_2: Project = {
-  id: 'proj-gt-esc-pacifico',
-  code: 'OBRA-2026-GT02',
-  name: 'Parque Industrial y Logístico Pacífico Sur',
-  client: 'Corporación Logística Portuaria de Guatemala, S.A.',
-  location: 'Km 64.5 Autopista Puerto Quetzal, Escuintla',
-  municipality: 'Escuintla',
-  department: 'Escuintla',
-  budgetTotal: 24800000, // Q 24,800,000.00
-  spentTotal: 8900000,   // Q 8,900,000.00
-  progressPercent: 36,   // 36% avance físico
-  startDate: '2026-01-10',
-  endDate: '2027-04-15',
-  status: 'En Ejecución',
-  lat: 14.3015,
-  lng: -90.7854,
-  expectedProfitMarginPercent: 15,
-};
-
-// Versiones modificadas para validar la fase UPDATE
-export const REAL_PROJECT_1_MODIFIED: Project = {
-  ...REAL_PROJECT_1,
-  name: 'Torre Residencial Las Gemelas - Zona 14 (Fase Estructural)',
-  spentTotal: 6800000,  // Incremento de gastos ejecutados
-  progressPercent: 38,  // Avance sube a 38%
-};
-
-export const REAL_PROJECT_2_MODIFIED: Project = {
-  ...REAL_PROJECT_2,
-  name: 'Parque Industrial y Logístico Pacífico Sur (Naves A & B)',
-  spentTotal: 12100000, // Incremento de gastos ejecutados
-  progressPercent: 51,  // Avance sube a 51%
-};
+// Datos de prueba re-exportados para retrocompatibilidad con BilateralValidationModal
+export const REAL_PROJECT_1: Project = TEST_PROJECT_1;
+export const REAL_PROJECT_2: Project = TEST_PROJECT_2;
+export const REAL_PROJECT_1_MODIFIED: Project = TEST_PROJECT_1_MODIFIED;
+export const REAL_PROJECT_2_MODIFIED: Project = TEST_PROJECT_2_MODIFIED;
 
 // ============================================================================
 // TIPOS DE LOG Y RESULTADO DE VALIDACIÓN
