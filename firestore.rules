@@ -18,7 +18,7 @@ service cloud.firestore {
     }
 
     function isValidId(id) {
-      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_-]+$');
     }
 
     function isOwned(data) {
@@ -62,6 +62,25 @@ service cloud.firestore {
         data.id is string && data.id.size() <= 128 &&
         data.projectId is string && data.projectId.size() <= 128 &&
         data.date is string && data.date.size() <= 30 &&
+        data.category is string && data.category.size() <= 100 &&
+        data.amount is number &&
+        data.currency in ['GTQ', 'USD'] &&
+        data.ownerId == request.auth.uid &&
+        data.authorId == request.auth.uid;
+    }
+
+    function isValidAttendance(data) {
+      return data.keys().hasAll(['id', 'projectId', 'date', 'employeeId', 'employeeName', 'status', 'ownerId', 'authorId']) &&
+        data.id is string && data.id.size() <= 128 &&
+        data.projectId is string && data.projectId.size() <= 128 &&
+        data.date is string && data.date.size() <= 30 &&
+        data.employeeId is string && data.employeeId.size() <= 128 &&
+        data.employeeName is string && data.employeeName.size() <= 150 &&
+        data.status in ['Presente', 'Ausente', 'Permiso', 'Incapacidad IGSS'] &&
+        data.ownerId == request.auth.uid &&
+        data.authorId == request.auth.uid;
+    }
+
     match /projects/{projectId} {
       allow get, list: if isSignedIn() && isOwned(resource.data);
       allow create: if isValidId(projectId) && isSignedIn() && canCreate(incoming()) && isValidProject(incoming());
@@ -88,24 +107,6 @@ service cloud.firestore {
       allow create: if isValidId(attendanceId) && isSignedIn() && canCreate(incoming()) && isValidAttendance(incoming());
       allow update: if isValidId(attendanceId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidAttendance(incoming());
       allow delete: if isValidId(attendanceId) && isSignedIn() && isOwned(existing());
-    }
-        data.category is string && data.category.size() <= 100 &&
-        data.amount is number &&
-        data.currency in ['GTQ', 'USD'] &&
-        data.ownerId == request.auth.uid &&
-        data.authorId == request.auth.uid;
-    }
-
-    function isValidAttendance(data) {
-      return data.keys().hasAll(['id', 'projectId', 'date', 'employeeId', 'employeeName', 'status', 'ownerId', 'authorId']) &&
-        data.id is string && data.id.size() <= 128 &&
-        data.projectId is string && data.projectId.size() <= 128 &&
-        data.date is string && data.date.size() <= 30 &&
-        data.employeeId is string && data.employeeId.size() <= 128 &&
-        data.employeeName is string && data.employeeName.size() <= 150 &&
-        data.status in ['Presente', 'Ausente', 'Permiso', 'Incapacidad IGSS'] &&
-        data.ownerId == request.auth.uid &&
-        data.authorId == request.auth.uid;
     }
 
     function isValidMachinery(data) {
@@ -186,49 +187,6 @@ service cloud.firestore {
       allow update: if isValidId(quoteId) && isSignedIn() && isOwned(existing()) && canCreate(incoming()) && isValidQuote(incoming());
       allow delete: if isValidId(quoteId) && isSignedIn() && isOwned(existing());
     }
-    function isValidAPUItem(data) {
-      return data.keys().hasAll(['id', 'code', 'description', 'unit', 'quantity', 'materialUnitCostGTQ', 'laborUnitCostGTQ', 'equipmentUnitCostGTQ', 'totalUnitCostGTQ', 'totalPriceGTQ', 'ownerId', 'authorId']) &&
-        data.id is string && data.id.size() <= 128 &&
-        data.code is string && data.code.size() <= 64 &&
-        data.description is string && data.description.size() <= 300 &&
-        data.unit is string && data.unit.size() <= 30 &&
-        data.quantity is number &&
-        data.materialUnitCostGTQ is number &&
-        data.laborUnitCostGTQ is number &&
-        data.equipmentUnitCostGTQ is number &&
-        data.totalUnitCostGTQ is number &&
-        data.totalPriceGTQ is number &&
-        data.ownerId == request.auth.uid &&
-        data.authorId == request.auth.uid;
-    }
-
-    function isValidScheduleTask(data) {
-      return data.keys().hasAll(['id', 'projectId', 'name', 'phase', 'startDate', 'endDate', 'progress', 'criticalPath', 'predecessors', 'ownerId', 'authorId']) &&
-        data.id is string && data.id.size() <= 128 &&
-        data.projectId is string && data.projectId.size() <= 128 &&
-        data.name is string && data.name.size() <= 200 &&
-        data.phase is string && data.phase.size() <= 200 &&
-        data.startDate is string && data.startDate.size() <= 30 &&
-        data.endDate is string && data.endDate.size() <= 30 &&
-        data.progress is number &&
-        data.criticalPath is bool &&
-        data.predecessors is list &&
-        data.ownerId == request.auth.uid &&
-        data.authorId == request.auth.uid;
-    }
-
-    function isValidMilestone(data) {
-      return data.keys().hasAll(['id', 'projectId', 'title', 'phase', 'targetDate', 'completed', 'progress', 'weightPercent', 'ownerId', 'authorId']) &&
-        data.id is string && data.id.size() <= 128 &&
-        data.projectId is string && data.projectId.size() <= 128 &&
-        data.title is string && data.title.size() <= 200 &&
-        data.phase is string && data.phase.size() <= 200 &&
-        data.targetDate is string && data.targetDate.size() <= 30 &&
-        data.completed is bool &&
-        data.progress is number &&
-        data.weightPercent is number &&
-        data.ownerId == request.auth.uid &&
-        data.authorId == request.auth.uid;
     function isValidTaskReminder(data) {
       return data.keys().hasAll(['id', 'projectId', 'taskName', 'title', 'description', 'targetDate', 'advanceOption', 'priority', 'channel', 'enabled', 'createdAt', 'ownerId', 'authorId']) &&
         data.id is string && data.id.size() <= 128 &&
@@ -299,4 +257,3 @@ service cloud.firestore {
     }
   }
 }
-    }
