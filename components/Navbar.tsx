@@ -55,6 +55,11 @@ interface NavbarProps {
   onToggleMobileSidebar?: () => void;
   onOpenNotifications?: () => void;
   remindersCount?: number;
+  /**
+   * IDs de pestañas que se mostrarán en la navegación móvil (bottom nav).
+   * Si no se proporciona, se usan las primeras 5 pestañas (comportamiento por defecto).
+   */
+  mobileTabIds?: string[];
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -76,6 +81,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleMobileSidebar,
   onOpenNotifications,
   remindersCount = 0,
+  mobileTabIds,
 }) => {
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
   const activeProject = projects.find((p) => p.id === activeProjectId) || (projects.length > 0 ? projects[0] : undefined);
@@ -94,7 +100,9 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'gmail', label: 'Correo & Avisos', icon: Mail },
   ];
 
-  const mobileNavTabs = tabs.slice(0, 5);
+  const mobileNavTabs = mobileTabIds
+    ? tabs.filter((t) => mobileTabIds.includes(t.id))
+    : tabs.slice(0, 5);
 
   const currentTabName = tabs.find((t) => t.id === activeTab)?.label || 'Tablero';
 
